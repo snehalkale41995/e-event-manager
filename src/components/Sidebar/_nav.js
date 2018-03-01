@@ -1,6 +1,5 @@
 export default {
-  items: [
-    {
+  items: [{
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
@@ -8,6 +7,43 @@ export default {
         variant: 'info',
         text: 'NEW'
       }
-    }
+    },{
+      name: 'Session',
+      url: '/session',
+      icon: 'icon-microphone'
+    },
+    {
+      name: 'Reports',
+      url: '/reports',
+      icon: 'icon-pie-chart',
+    },
+    {
+      name: 'Attendance',
+      url: '/attendance',
+      icon: 'icon-note'
+    },
+    {
+      title: true,
+      name: 'Users',
+      wrapper: {
+        element: '',
+        attributes: {}
+      },
+    },
+    {
+      name: 'User',
+      url: '/user',
+      icon: 'icon-user',
+    },
+    {
+      name: 'Role',
+      url: '/role',
+      icon: 'icon-trophy',
+    },
+    {
+      name: 'Logout',
+      url: '/login',
+      icon: 'icon-lock'
+    },
   ]
 };

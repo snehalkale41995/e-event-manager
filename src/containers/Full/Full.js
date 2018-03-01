@@ -8,6 +8,11 @@ import Aside from '../../components/Aside/';
 import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
+import User from '../../views/Users/User/';
+import Role from '../../views/Users/Role/';
+import Reports from '../../views/Reports/Reports';
+import Attendance from '../../views/Attendance/Attendance';
+import Session from '../../views/Sessions/Sessions';
 
 class Full extends Component {
   render() {
@@ -21,6 +26,11 @@ class Full extends Component {
             <Container fluid>
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
+                <Route path="/user" name="User" component={User} />
+                <Route path="/role" name="Role" component={Role} />
+                <Route path='/reports' name='Reports' component={Reports} />
+                <Route path='/attendance' name='Attendance' component={Attendance} />
+                <Route path='/session' name='Session' component={Session} />
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>

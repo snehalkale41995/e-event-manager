@@ -1,0 +1,7 @@
+{
+    "name": "Sessions",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./Sessions.js"
+  }
+  
