@@ -168,7 +168,7 @@ class User extends React.Component {
                   <Col xs="12">        
                   <FormGroup>
                  <input type="checkbox"  value = {this.state.isChecked}  onChange={this.toggleChange} />
-                  <Label> Contact Number : </Label>
+                  <Label> Reset Password on sign on  </Label>
                   </FormGroup>
                  </Col>
                 </Row>
