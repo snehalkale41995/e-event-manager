@@ -23,6 +23,11 @@ export default {
       icon: 'icon-note'
     },
     {
+      name: 'Registration',
+      url: '/registration',
+      icon: 'icon-note'
+    },
+    {
       title: true,
       name: 'Users',
       wrapper: {
