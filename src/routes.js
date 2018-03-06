@@ -6,6 +6,7 @@ const routes = {
   '/reports' : 'Reports',
   '/attendance' : 'Attendance',
   '/session' : 'Session',
-  '/registration' : 'Registration'
+  '/registration' : 'Registration',
+  '/rooms' : 'Rooms'
 };
 export default routes;

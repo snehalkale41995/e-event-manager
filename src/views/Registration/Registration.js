@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Bar, Line} from 'react-chartjs-2';
-import {
-Container,Input, InputGroup, InputGroupText,InputGroupAddon,Badge,Row,Col,Progress,Dropdown,DropdownToggle,
+import { Container,Input, InputGroup, InputGroupText,InputGroupAddon,Badge,Row,Col,Progress,Dropdown,DropdownToggle,
   DropdownMenu,DropdownItem,Card,CardHeader,CardBody,CardFooter,CardTitle,Button,ButtonToolbar,
   ButtonGroup,ButtonDropdown,Label,Table,Form,FormGroup,FormText,} from 'reactstrap';
 import {createBrowserHistory } from 'history';  
