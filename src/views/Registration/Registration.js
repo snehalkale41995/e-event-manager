@@ -81,7 +81,7 @@ class Registration extends Component {
       <div className="animated fadeIn">
        <Container>
           <Row className="justify-content-center">
-            <Col md="6">
+            <Col md="12">
               <Card className="mx-4">
                 <CardBody className="p-4">  
                   <h1>Register</h1>
@@ -89,7 +89,7 @@ class Registration extends Component {
 
                   {/* //////////////////////////////////////////////// */}
                   <FormGroup row>
-                 <Col xs="12" className={(submitted && !user.firstName ? ' has-error' : '')}  >
+                 <Col xs="12" md= "6" className={(submitted && !user.firstName ? ' has-error' : '')}  >
                   <InputGroup className="mb-3">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
@@ -105,11 +105,11 @@ class Registration extends Component {
                         
                   </InputGroup>
                   </Col>
-                  </FormGroup>
+                  {/* </FormGroup> */}
 
                   {/* ///////////////////////////////////////////// */}
-                  <FormGroup row>
-                  <Col  xs="12"  className={(submitted && !user.lastName ? ' has-error' : '')} >
+                  {/* <FormGroup row> */}
+                  <Col md= "6"  className={(submitted && !user.lastName ? ' has-error' : '')} >
                   <InputGroup className="mb-3">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
@@ -127,7 +127,7 @@ class Registration extends Component {
                   {/* ///////////////////////////////////// */}
                   
                   <FormGroup row>
-                  <Col xs="12"  className={(submitted && !user.Email ? ' has-error' : '')}>
+                  <Col xs="12"  md= "6" className={(submitted && !user.Email ? ' has-error' : '')}>
                   <InputGroup className="mb-3">
                   <InputGroupAddon addonType="prepend">
                       <InputGroupText>@</InputGroupText>
@@ -138,10 +138,10 @@ class Registration extends Component {
                          }
                   </InputGroup>
                   </Col>
-                  </FormGroup>
+                  {/* </FormGroup>
                   {/* ///////////////////////////////////// */}
-                  <FormGroup row>
-                  <Col   xs="12"  >
+                  {/* <FormGroup row> */} 
+                  <Col   md="6"  >
                   <InputGroup className="mb-3">
                   <InputGroupAddon addonType="prepend">
                       <InputGroupText><i className="icon-phone"></i></InputGroupText>
@@ -154,7 +154,7 @@ class Registration extends Component {
                 {/* ///////////////////////////////////// */}
 
                   <FormGroup row>
-                    <Col xs="12">
+                    <Col xs="12" md= "6">
                     <InputGroup className="mb-3">
                       <Input type="select" name="City" id="City" placeholder="City" checked={this.state.user.City}  onChange={this.changeFunction}>
                         <option value="">Select City</option>
@@ -164,9 +164,9 @@ class Registration extends Component {
                       </Input>
                       </InputGroup>
                     </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                    <Col  xs="12">
+                    {/* </FormGroup>
+                    <FormGroup row> */}
+                    <Col  xs="12"  md= "6">
                     <InputGroup className="mb-3">
                       <Input type="select" name="Conference" id="Conference" placeholder="Conference" checked={this.state.user.Conference}  onChange={this.changeFunction}>
                         <option value="">Select Conference</option>
@@ -180,10 +180,10 @@ class Registration extends Component {
 
                   <FormGroup row>
                   <InputGroup className="mb-3">
-                  <Col md="3">
+                  <Col md="1">
                     <Label>Role </Label>
                   </Col>
-                  <Col md="9">
+                  <Col md="5">
 
                     <FormGroup check inline>
                       <Input className="form-check-input" type="radio" id="inline-radio1" name="Role" value="Delegate" onChange={this.changeFunction} checked={this.state.user.Role === "Delegate"}/>
@@ -202,10 +202,10 @@ class Registration extends Component {
                 </FormGroup>
                 
                 <FormGroup row>
-                  <Col xs="6" >
+                  <Col xs="6" md="3" >
                   <Button type="submit" size="md" color="primary" onClick={this.submitFunction} >Create Account</Button>
                   </Col>
-                  <Col  xs="6">
+                  <Col  md="3">
                 <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                 </Col>
                 </FormGroup>
