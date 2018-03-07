@@ -12,6 +12,7 @@ export default {
       url: '/session',
       icon: 'icon-microphone'
     },
+    
     {
       name: 'Reports',
       url: '/reports',

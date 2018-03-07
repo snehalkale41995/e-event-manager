@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import {Link, Switch, Route, Redirect} from 'react-router-dom';
 
 
 import Select from 'react-select';
@@ -32,7 +32,7 @@ import {
 
 
 
-class Sessions extends Component {
+class SessionForm extends Component {
     constructor(props) {
         super(props);
        
@@ -131,6 +131,11 @@ toggleChange()
         const { EventObj, submitted, speakersValue, volunteersValue } = this.state;
         
 		return (
+           <div> 
+          <div>
+
+          <td><Link to="/session"> <Button type="button" color="secondary"> Back to List </Button></Link></td>
+           </div>     
           <div className="app flex-row align-items-center">
           <Container>
           <Row className="justify-content-center">
@@ -149,7 +154,7 @@ toggleChange()
            <Row>
            <Col xs="12" className={(submitted && !EventObj.eventName ? ' has-error' : '')}>        
            <FormGroup>
-           <Label> First Name : </Label>
+           <Label> Event Name : </Label>
            <Input type="text" placeholder="Event Name" name="eventName" value={this.state.EventObj.eventName}  onChange={this.changeFunction} />
            {submitted && !EventObj.eventName && <div className="help-block">Event Name is required</div> }
            </FormGroup>
@@ -261,14 +266,9 @@ toggleChange()
          </Row>
          </Container>
      </div>
-
+</div>
         )
     }
 }
 
-export default Sessions;
-
-
-
-
-
+export default SessionForm;

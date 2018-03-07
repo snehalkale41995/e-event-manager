@@ -12,7 +12,9 @@ import User from '../../views/Users/User/';
 import Role from '../../views/Users/Role/';
 import Reports from '../../views/Reports/Reports';
 import Attendance from '../../views/Attendance/Attendance';
-import Session from '../../views/Sessions/Sessions';
+import Session from '../../views/Sessions/Session';
+
+
 
 class Full extends Component {
   render() {
@@ -30,7 +32,9 @@ class Full extends Component {
                 <Route path="/role" name="Role" component={Role} />
                 <Route path='/reports' name='Reports' component={Reports} />
                 <Route path='/attendance' name='Attendance' component={Attendance} />
-                <Route path='/session' name='Session' component={Session} />
+                <Route path='/Session' name='Session' component={Session} />
+               
+               
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>
