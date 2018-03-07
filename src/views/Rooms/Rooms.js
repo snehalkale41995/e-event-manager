@@ -5,23 +5,16 @@ import {
     DropdownMenu, DropdownItem, Card, CardHeader, CardBody, CardFooter, CardTitle, Button, ButtonToolbar,
     ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,
 } from 'reactstrap';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import { createBrowserHistory } from 'history';
 var history = createBrowserHistory();
-import Select from 'react-select';
 
-const FLAVOURS = [
-	{ label: 'Chocolate', value: 'chocolate' },
-	{ label: 'Vanilla', value: 'vanilla' },
-	{ label: 'Strawberry', value: 'strawberry' },
-	{ label: 'Caramel', value: 'caramel' },
-	{ label: 'Cookies and Cream', value: 'cookiescream' },
-	{ label: 'Peppermint', value: 'peppermint' },
+const Services = [
+    { label: 'Projector', value: 'Projector' },
+    { label: 'VOIP', value: 'VOIP' },
+    { label: 'LAN connection', value: 'LAN connection' },
 ];
-
-const WHY_WOULD_YOU = [
-	{ label: 'Chocolate (are you crazy?)', value: 'chocolate', disabled: true },
-].concat(FLAVOURS.slice(1));
-
 
 class Rooms extends Component {
     constructor(props) {
@@ -32,19 +25,16 @@ class Rooms extends Component {
             Room: {
                 RoomName: '',
                 Capacity: '',
+                bufferCapacity : '',
                 AvailableServices: []
             },
             submitted: false,
-            isChecked: true,
-            //show : " "
+            isChecked: true
         };
-
-        //this.FLAVOURS = ['P', 'K', 'S'];
-        // this.toggle = this.toggle.bind(this);
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
         this.resetField = this.resetField.bind(this);
-        this.toggleChange = this.toggleChange.bind(this);
+       // this.toggleChange = this.toggleChange.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
@@ -63,14 +53,20 @@ class Rooms extends Component {
         event.preventDefault();
         this.setState({ submitted: true });
         const { Room } = this.state;
-        let length = this.state.Room.AvailableServices.length;
-        let s = this.state.Room.AvailableServices[length -1]
-        let ss= s.split(',');
-        this.state.Room.AvailableServices= ss;
+        if(this.state.Room.AvailableServices.length > 0){
+            let length = this.state.Room.AvailableServices.length;
+            let serviceString = this.state.Room.AvailableServices[length - 1]
+            if(serviceString == ""){
+                this.state.Room.AvailableServices = [];
+            }
+            else{
+                let serviceArray = serviceString.split(',');
+                this.state.Room.AvailableServices = serviceArray;
+            }
+        } 
         console.log('New Room', Room)
-        //alert('Success');
-        //console.log(this.state.Room);
-        if (Room.RoomName && Room.Capacity) {
+        //&& Room.AvailableServices.length != 0
+        if (Room.RoomName && Room.Capacity ) {
             //console.log("yess")
             this.props.history.push('/login');
         }
@@ -80,52 +76,29 @@ class Rooms extends Component {
             Room: {
                 RoomName: '',
                 Capacity: '',
+                bufferCapacity : '',
                 AvailableServices: []
             },
             isChecked: false
         });
     }
-    toggleChange() {
-        this.setState({ isChecked: !this.state.isChecked })
-        console.log("checkbox", this.state.isChecked)
+    // toggleChange() {
+    //     this.setState({ isChecked: !this.state.isChecked })
+    //     console.log("checkbox", this.state.isChecked)
+    // }
+    
+    handleSelectChange(value) {
+        this.state.Room.AvailableServices.push(value);
+       // console.log('You have selected:', value);
+        this.setState({ value });
     }
-//////////////////////////////
-
-getInitialState () {
-    return {
-        removeSelected: true,
-        disabled: false,
-        crazy: false,
-        stayOpen: false,
-        value: [],
-        rtl: false,
-    };
-}
-handleSelectChange (value) {
-    this.state.Room.AvailableServices.push(value);
-    console.log('You have selected:', value);
-    this.setState({value });
-}
-toggleCheckbox (e) {
-    this.setState({
-        [e.target.name]: e.target.checked,
-    });
-}
-toggleRtl (e) {
-    let rtl = e.target.checked;
-    this.setState({ rtl });
-}
-///////////////////////////////
+    
+    ///////////////////////////////
     render() {
-        const { Room, submitted, value ,crazy, disabled, stayOpen, } = this.state;
-        //const options = FLAVOURS;
-        //const { crazy, disabled, stayOpen, value } = this.state;
-		const options = crazy ? WHY_WOULD_YOU : FLAVOURS;
-      
-        let optionItems = FLAVOURS.map((Fplanet) =>
-            <option key={Fplanet.value}>{Fplanet.value}</option>
-        );
+        const { Room, submitted, value } = this.state;   
+        const options = Services;
 
+    
         return (
             <div className="animated fadeIn">
                 <Container>
@@ -163,24 +136,29 @@ toggleRtl (e) {
                                             }
                                         </Col>
                                     </FormGroup>
-                                    <FormGroup row>
+                                    <Row>
+                                    <Col xs="12"  md="6"  >
+                                            <InputGroup className="mb-3">
+                                                <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText><i className="icon-pie-chart"></i></InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input type="number" placeholder="Buffer Capacity" name="bufferCapacity" value={this.state.Room.bufferCapacity} onChange={this.changeFunction} />
+                                            </InputGroup>
+                                        </Col>
+                                        <Col  md="6" className={(submitted && !Room.AvailableServices ? ' has-error' : '')}>
+                                            <FormGroup>
+                                                <Select
+                                                    multi
+                                                    onChange={this.handleSelectChange}
+                                                    placeholder="Select Services"
+                                                    simpleValue
+                                                    value={value}
+                                                    options={options}
+                                                />
+                                            </FormGroup>
+                                        </Col>
                                        
-                                        <Select
-                                            closeOnSelect={!stayOpen}
-                                            disabled={disabled}
-                                            multi
-                                            //onChange={this.changeFunction}
-                                            onChange={this.handleSelectChange}
-                                            options={options}
-                                            placeholder="Select your favourite(s)"
-                                            removeSelected={this.state.removeSelected}
-                                            rtl={this.state.rtl}
-                                            simpleValue
-                                            value={value}
-                                        />
-                                        
-                                    </FormGroup>
-
+                                    </Row>
                                     <FormGroup row>
                                         <Col xs="6" md="3" >
                                             <Button type="submit" size="md" color="primary" onClick={this.submitFunction} >Create Room</Button>
@@ -201,22 +179,3 @@ toggleRtl (e) {
 
 export default Rooms;
 
-
-{/* <FormGroup row>
-                  <Col xs ="12"  md="6"  >
-                  <Select
-                 // closeOnSelect={!stayOpen}
-                  //disabled={disabled}
-                  name="AvailableServices"
-                  multi
-                  onChange={this.handleSelectChange}
-                  options={options}
-                  placeholder="Select Available Services"
-                  removeSelected={this.state.removeSelected}
-                //  rtl={this.state.rtl}
-                  simpleValue
-                  value={item}
-              />
-             <div> {this.state.Room.AvailableServices} </div>
-               </Col>
-                  </FormGroup> */}
