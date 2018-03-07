@@ -37,7 +37,7 @@ class Sessions extends Component {
         super(props);
        
         this.state = {
-            session: {
+            EventObj: {
                 eventName: '',
                 room : '',
                 extraServices:'',
@@ -61,10 +61,10 @@ class Sessions extends Component {
 
     changeFunction(event) {
         const { name, value } = event.target;
-        const { session } = this.state;
+        const { EventObj } = this.state;
         this.setState({
-            session: {
-                ...session,
+            EventObj: {
+                ...EventObj,
                 [name]: value
             }
         });
@@ -73,26 +73,26 @@ class Sessions extends Component {
     submitFunction(event) {
         event.preventDefault();
         this.setState({ submitted: true });
-        const { session } = this.state;
+        const { EventObj } = this.state;
         
-        let length = session.speakers.length;
-       let lastElement = session.speakers[length -1]
+        let length = EventObj.speakers.length;
+       let lastElement = EventObj.speakers[length -1]
        let speakerArray= lastElement.split(',');
-       this.state.session.speakers= speakerArray;
+       this.state.EventObj.speakers= speakerArray;
 
-       let len = session.volunteers.length;
-       let lastEle = session.volunteers[len -1]
+       let len = EventObj.volunteers.length;
+       let lastEle = EventObj.volunteers[len -1]
        let volunteersArray= lastEle.split(',');
-       this.state.session.volunteers= volunteersArray;
+       this.state.EventObj.volunteers= volunteersArray;
 
 
-        console.log('session object', session)
+        console.log('EventObj', EventObj)
        
        
     }
     resetField() {
         this.setState({
-            session: {
+            EventObj: {
                 eventName: '',
                 room: '',
                 extraServices:'',
@@ -111,12 +111,12 @@ class Sessions extends Component {
     
 
 multichangeSpeakers (speakersValue) {
-    this.state.session.speakers.push(speakersValue);
+    this.state.EventObj.speakers.push(speakersValue);
     this.setState({speakersValue });
 }
 
 multichangeVolunteers (volunteersValue) {
-  this.state.session.volunteers.push(volunteersValue);
+  this.state.EventObj.volunteers.push(volunteersValue);
   this.setState({volunteersValue });
 }
 
@@ -128,7 +128,7 @@ toggleChange()
 
 
     render() {
-        const { session, submitted, speakersValue, volunteersValue } = this.state;
+        const { EventObj, submitted, speakersValue, volunteersValue } = this.state;
         
 		return (
           <div className="app flex-row align-items-center">
@@ -147,11 +147,11 @@ toggleChange()
 
              
            <Row>
-           <Col xs="12" className={(submitted && !session.eventName ? ' has-error' : '')}>        
+           <Col xs="12" className={(submitted && !EventObj.eventName ? ' has-error' : '')}>        
            <FormGroup>
            <Label> First Name : </Label>
-           <Input type="text" placeholder="session Name" name="eventName" value={this.state.session.eventName}  onChange={this.changeFunction} />
-           {submitted && !session.eventName && <div className="help-block">session Name is required</div> }
+           <Input type="text" placeholder="Event Name" name="eventName" value={this.state.EventObj.eventName}  onChange={this.changeFunction} />
+           {submitted && !EventObj.eventName && <div className="help-block">Event Name is required</div> }
            </FormGroup>
            </Col>
            </Row>
@@ -159,24 +159,24 @@ toggleChange()
 
              
            <Row>
-           <Col xs="12" className={(submitted && !session.room ? ' has-error' : '')}>        
+           <Col xs="12" className={(submitted && !EventObj.room ? ' has-error' : '')}>        
            <FormGroup>
            <Label>room :</Label>
-           <Input type="select" name="room" value={this.state.session.room} onChange={this.changeFunction}>
+           <Input type="select" name="room" value={this.state.EventObj.room} onChange={this.changeFunction}>
            <option>select room</option>
             <option>room1</option>
            <option>room2</option>
            <option>room3</option>
            <option>room4</option>
            </Input>
-           {submitted && !session.room && <div className="help-block">please select room</div> }
+           {submitted && !EventObj.room && <div className="help-block">please select room</div> }
           </FormGroup>
           </Col>
          </Row>
 
 
            <Row>
-           <Col xs="12" className={(submitted && !session.speakers ? ' has-error' : '')}>        
+           <Col xs="12" className={(submitted && !EventObj.speakers ? ' has-error' : '')}>        
            <FormGroup>
            <Label> select speakers </Label>
            <Select
@@ -198,7 +198,7 @@ toggleChange()
 
 
          <Row>
-           <Col xs="12" className={(submitted && !session.speakers ? ' has-error' : '')}>        
+           <Col xs="12" className={(submitted && !EventObj.speakers ? ' has-error' : '')}>        
            <FormGroup>
            <Label> select volunteers </Label>
            <Select
@@ -223,7 +223,7 @@ toggleChange()
            <Col xs="12">        
            <FormGroup>
            <Label> Extra Services : </Label>
-           <Input type="textarea" placeholder="extra services" name="extraServices" value={this.state.session.extraServices}  onChange={this.changeFunction} />
+           <Input type="textarea" placeholder="extra services" name="extraServices" value={this.state.EventObj.extraServices}  onChange={this.changeFunction} />
           </FormGroup>
            </Col>
            </Row>     
