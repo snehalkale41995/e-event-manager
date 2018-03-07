@@ -1,129 +1,165 @@
 import React, {Component} from 'react';
-// import {
-//     Container, Input, InputGroup, InputGroupText, InputGroupAddon, Badge, Row, Col, Progress, Dropdown, DropdownToggle,
-//     DropdownMenu, DropdownItem, Card, CardHeader, CardBody, CardFooter, CardTitle, Button, ButtonToolbar,
-//     ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,
-// } from 'reactstrap';
+import {
+    Container, Input, InputGroup, InputGroupText, InputGroupAddon, Badge, Row, Col, Progress, Dropdown, DropdownToggle,
+    DropdownMenu, DropdownItem, Card, CardHeader, CardBody, CardFooter, CardTitle, Button, ButtonToolbar,
+    ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,
+} from 'reactstrap';
 
 class Role extends Component{
     constructor(props){
         super(props);
 
         this.state = {
-            roleName: '',           
-            roleFeatures: [{
-                Id: 1,
-                Name: 'User',
-                isChecked: false
+            role : {
+                name: '',   
+                features: [{
+                        id: 1,
+                        name: 'User',
+                        isChecked: false
+                    },
+                    {
+                        id: 2,
+                        name: 'Role',
+                        isChecked: false
+                    },
+                    {
+                        id: 3,
+                        name: 'Session',
+                        isChecked: false
+                    },
+                    {
+                        id: 4,
+                        name: 'Reports',
+                        isChecked: false
+                    },
+                    {
+                        id: 5,
+                        name: 'Attendance',
+                        isChecked: false
+                    }            
+                ],
             },
-            {
-                Id: 2,
-                Name: 'Role',
-                isChecked: false
-            },
-            {
-                Id: 3,
-                Name: 'Session',
-                isChecked: false
-            },
-            {
-                Id: 4,
-                Name: 'Reports',
-                isChecked: false
-            },
-            {
-                Id: 5,
-                Name: 'Attendance',
-                isChecked: false
-            }            
-        ],
-        showErrorLabel: false      
-        }
+            submitted: false    
+        };
 
-        this.updateRoleNameState = this.updateRoleNameState.bind(this);
-        this.saveForm = this.saveForm.bind(this);
-        this.resetFrom = this.resetFrom.bind(this);
+        this.changeRoleNameState = this.changeRoleNameState.bind(this);
+        this.submitFunction = this.submitFunction.bind(this);
+        this.resetFields = this.resetFields.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        //this.showError = this.showError.bind(this);
     };
 
-    updateRoleNameState(e){
-        this.setState({roleName: e.target.value, showErrorLabel: false});
+    changeRoleNameState(e){
+        const { name, value } = e.target;
+        const { role } = this.state;
+        this.setState({
+            role: {
+                ...role,
+                [name]: value
+            }});            
     }
 
-    resetFrom(){
-        this.setState({roleName: ''});
-        this.state.roleName = '';
-        var features = this.state.roleFeatures;
+    resetFields(){
+        const { role } = this.state;       
+        this.state.role.name = '';
+        var features = this.state.role.features;
         features.forEach(function(element) {
             if(element.isChecked == true){
                 element.isChecked = false
             }            
         }, this);
         this.setState({
-            roleFeatures: features
+            role: {
+                ...role,   
+                [name]: '',           
+                [features]: features
+            }
         });
     }
 
-    saveForm(){
-        // if(this.state.roleName == ''){
-        //     this.setState({
-        //         showErrorLabel: true
-        //     });
-        // }
-        console.log('Role name: ', this.state.roleName);
-        console.log('Features' , this.state.roleFeatures);
+    submitFunction(event){
+        event.preventDefault();        
+        this.setState({ submitted: true });        
+        console.log('Role name: ', this.state.role.name);
+        console.log('Features' , this.state.role.features);
     }
 
     handleInputChange(event) {
-        console.log(event);
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        var features = this.state.roleFeatures;
+        var features = this.state.role.features;
         features.forEach(function(element) {
-            if(element.Name == target.value){
+            if(element.name == target.value){
                 element.isChecked = target.checked
             }            
         }, this);
+
+        const { test, value } = event.target;
+        const { role } = this.state;
         this.setState({
-            roleFeatures: features
+            role: {
+                ...role,
+                [features]: features
+            }
         });
       }
 
-    //   showError(){
-    //       if(this.state.showErrorLabel){
-    //         return  <label id="lblerror">test</label>
-    //       }
-    //   }
-
     render(){
+        const { role, submitted } = this.state;   
         var tempThis = this;
-        var checkList = this.state.roleFeatures.map(function(item){
-            return <label key={item.Id}><input key={item.Id} name="isGoing" type="checkbox" value={item.Name} checked={item.isChecked} onChange={tempThis.handleInputChange} /> &nbsp;{item.Name}&nbsp;&nbsp; </label>;
+        var checkList = this.state.role.features.map(function(item){
+            return <label key={item.id}><input key={item.id} type="checkbox" name="features" value={item.name} checked={item.isChecked} onChange={tempThis.handleInputChange} /> &nbsp;{item.name}&nbsp;&nbsp; </label>;
           })
+       
         return (
-        <div className="container">
-            <div className="row">
-                <div className="col-sm-12">
-                     <form > 
-                        <div>
-                            <label>Name</label>&nbsp;&nbsp;
-                            <input type = 'text' value = {this.state.roleName} onChange = {this.updateRoleNameState} />
-                           {/* {this.showError} */}
-                        </div>  
-                        <div>   
-                            <label>Features</label>&nbsp;&nbsp;
-                            { checkList }
-                        </div>          
-                        <div>
-                            <button type="button" name="save" onClick={this.saveForm}>Save</button> &nbsp;
-                            <button className="" type="button" name="reset" onClick={this.resetFrom}>Reset</button>
-                        </div>                         
-                    </form> 
-                </div>    
+            <div className="app flex-row"> 
+                <Container>
+                    <Row>
+                        <Col md="6">
+                            <Card className="mx-4">
+                                <CardHeader color="primary">
+                                    <strong>Role Creation</strong>
+                                </CardHeader>
+                                <CardBody className="p-4">                            
+                                    <form name="form" onSubmit={this.submitFunction}> 
+                                        <Row>
+                                            <Col xs="12" className={(submitted && !this.state.role.name ? ' has-error' : '')}>        
+                                                <FormGroup>
+                                                    <Label> Name : </Label>
+                                                    <Input type="text" placeholder="Enter Role Name" name="name" value={this.state.role.name} 
+                                                        onChange={this.changeRoleNameState}/>
+                                                        { submitted && !this.state.role.name &&
+                                                                <div className="help-block">Role name is required</div>
+                                                        }
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs="12">        
+                                                <FormGroup>
+                                                    <Label>Features : </Label> <br/>
+                                                    { checkList }  
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs="12">  
+                                                <br/>
+                                            </Col>
+                                        </Row>  
+                                        <Row>
+                                            <Col sm={{ size: 'auto'}}>
+                                                <Button type="submit" color="primary">Submit</Button>
+                                            </Col>
+                                            <Col sm={{ size: 'auto'}}>
+                                                <Button onClick={this.resetFields} color="primary">Reset</Button>
+                                            </Col>
+                                        </Row>
+                                    </form>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
-        </div>
         );
     }
 }
