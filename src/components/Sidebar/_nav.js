@@ -13,6 +13,7 @@ export default {
       url: '/session',
       icon: 'icon-microphone'
     },
+    
     {
       name: 'Rooms',
       url: '/rooms',

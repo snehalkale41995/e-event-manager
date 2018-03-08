@@ -12,7 +12,7 @@ import User from '../../views/Users/User/';
 import Role from '../../views/Users/Role/';
 import Reports from '../../views/Reports/Reports';
 import Attendance from '../../views/Attendance/Attendance';
-import Session from '../../views/Sessions/Sessions';
+import Session from '../../views/Sessions/Session';
 import Registration from '../../views/Registration/Registration';
 import Rooms from '../../views/Rooms/Rooms';
 
