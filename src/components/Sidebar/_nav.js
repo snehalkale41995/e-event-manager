@@ -7,10 +7,16 @@ export default {
         variant: 'info',
         text: 'NEW'
       }
-    },{
+    },
+    {
       name: 'Session',
       url: '/session',
       icon: 'icon-microphone'
+    },
+    {
+      name: 'Rooms',
+      url: '/rooms',
+      icon: 'icon-home'
     },
     {
       name: 'Reports',
@@ -20,6 +26,11 @@ export default {
     {
       name: 'Attendance',
       url: '/attendance',
+      icon: 'icon-note'
+    },
+    {
+      name: 'Registration',
+      url: '/registration',
       icon: 'icon-note'
     },
     {
