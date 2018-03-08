@@ -1,6 +1,68 @@
 import React, {Component} from 'react';
 import { Badge,  Row,  Col,  Card,  CardHeader,  CardBody,  Table,
   Pagination,  PaginationItem,  PaginationLink } from 'reactstrap';
+
+
+
+
+class Attendance extends React.Component {  
+    constructor () {
+      super();
+      this.data = 	[
+        { 
+            "name": "James Angus", 
+            "date" : "22/11/2018", 
+            "Registerfor": "Main Entrance" 
+        },
+        { 
+            "name": "Milan Howen", 
+            "date" : "11/11/2018", 
+            "Registerfor": "Event - tiECon" 
+        }	
+    ];
+    
+    }
+   
+      render(){
+        this.rows = this.data.map(function(row){
+            return <tr >
+                    <td>{row.name}</td>
+                    <td>{row.date}</td>
+                    <td>{row.Registerfor}</td>
+                </tr>
+            });
+
+        return (
+  <div className="animated fadeIn">
+            <Row>
+                <Col xs="12" >
+                    <Card>
+                        <CardHeader>
+                            <i className="fa fa-align-justify"></i> Attendance Table
+                          </CardHeader>
+                        <CardBody>
+                            <Table responsive>
+                                <thead>
+                                    <th>Name</th>
+                                    <th>Date</th>
+                                    <th>Register for</th>
+                                </thead>
+                                {this.rows}
+                            </Table>
+                        </CardBody>
+                    </Card>
+                </Col>            </Row>
+        </div>
+        )
+      
+
+      }  
+      
+   
+  }
+  export default Attendance;
+
+
 // class Attendance extends Component{
 //     render() {
 //         return (
@@ -94,68 +156,6 @@ import { Badge,  Row,  Col,  Card,  CardHeader,  CardBody,  Table,
 //       }
 // }
 
-
-
-
-class Attendance extends React.Component {  
-    constructor () {
-      super();
-      this.data = 	[
-        { 
-            "name": "James Angus", 
-            "date" : "22/11/2018", 
-            "Registerfor": "Main Entrance" 
-        },
-        { 
-            "name": "Milan Howen", 
-            "date" : "11/11/2018", 
-            "Registerfor": "Event - tiECon" 
-        }	
-    ];
-    
-    }
-   
-      render(){
-        this.rows = this.data.map(function(row){
-            return <tr>
-                    <td>{row.name}</td>
-                    <td>{row.date}</td>
-                    <td>{row.Registerfor}</td>
-                </tr>
-            });
-
-        return (
-  <div className="animated fadeIn">
-            <Row>
-                <Col xs="12" >
-                    <Card>
-                        <CardHeader>
-                            <i className="fa fa-align-justify"></i> Attendance Table
-                          </CardHeader>
-                        <CardBody>
-                            <Table responsive>
-                                <thead>
-                                    <th>Name</th>
-                                    <th>Date</th>
-                                    <th>Register for</th>
-                                </thead>
-                                {this.rows}
-                            </Table>
-                        </CardBody>
-                    </Card>
-                </Col>            </Row>
-        </div>
-        )
-      
-
-      }  
-      
-   
-  }
-  export default Attendance;
-
-
-  
 
 
             
