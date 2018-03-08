@@ -7,35 +7,26 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { firebasedb } from '../../index';
 
-
-
+//fire.settings = {};
+firebasedb.ref = firebasedb.collection('Users');
+//https://stackoverflow.com/questions/42882825/firebase-data-to-react-component
 class Attendance extends React.Component {
     constructor() {
         super();
         this.state = {
             items : []
         }
-        this.data = [
-            {
-                "name": "James Angus",
-                "date": "22/11/2018",
-                "Registerfor": "Main Entrance"
-            },
-            {
-                "name": "Milan Howen",
-                "date": "11/11/2018",
-                "Registerfor": "Event - tiECon"
-            }
-        ];
+        this.onSettingsChanged = this.onSettingsChanged.bind(this);
 
     }
-    // getInitialState() {
-    //     return {
-    //       items: [],
-    //      // text: ''
-    //     };
-    //   }
     
+      onSettingsChanged(data){
+        this.setState({items: data.val()});
+      }
+    
+      componentDidMount() {
+        fire.settings.ref.on('value', this.onSettingsChanged);
+      }
     componentWillMount() {
         let items = [];
         firebasedb.collection("Users").get().then((querySnapshot) => {
@@ -52,24 +43,14 @@ class Attendance extends React.Component {
             });
         });
     }
-
+    componentDidMount(){
+        fire.settings.ref.on('value', this.onSettingsChanged);
+    }
+    // componentWillUnmount() {
+    //     this.firebasedb.off();
+    //   }
 
     render() {
-        // let obj = [];
-        // firebasedb.collection("Users").get().then((querySnapshot) => {
-        //     querySnapshot.forEach((doc) => {
-        //         var item = doc.data();
-        //         item['.key'] = doc.key;
-        //         items.push(item);
-        //         //obj.push(doc.data());
-        //         //let objString = JSON.stringify(obj);
-        //         console.log(items);
-        //     });
-        //     this.setState({
-        //         items: items
-        //       });
-        // });
-   
         this.rows = this.state.items.map(function (row) {
             return <tr >
                 <td>{row.firstName}</td>
