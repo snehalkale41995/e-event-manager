@@ -11,9 +11,10 @@ class Session extends Component {
     
     render() {
         //console.log(this.props.match);
-        firebasedb.collection("Users").get().then((querySnapshot) => {
+        let obj =[];
+                firebasedb.collection("Users").get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            let obj = doc.data(); 
+            obj.push(doc.data()); 
             console.log(">>>>>>>>>>>> ");
             let objString = JSON.stringify(obj);
             console.log(objString);
