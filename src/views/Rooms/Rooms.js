@@ -98,7 +98,6 @@ class Rooms extends Component {
         const { Room, submitted, value } = this.state;   
         const options = Services;
 
-    
         return (
             <div className="animated fadeIn">
                 <Container>
@@ -136,7 +135,7 @@ class Rooms extends Component {
                                             }
                                         </Col>
                                     </FormGroup>
-                                    <Row>
+                                    <FormGroup row>
                                     <Col xs="12"  md="6"  >
                                             <InputGroup className="mb-3">
                                                 <InputGroupAddon addonType="prepend">
@@ -156,12 +155,11 @@ class Rooms extends Component {
                                                     options={options}
                                                 />
                                             </FormGroup>
-                                        </Col>
-                                       
-                                    </Row>
+                                        </Col>                                      
+                                        </FormGroup>
                                     <FormGroup row>
                                         <Col xs="6" md="3" >
-                                            <Button type="submit" size="md" color="primary" onClick={this.submitFunction} >Create Room</Button>
+                                            <Button type="button" size="md" color="primary" onClick={this.submitFunction} >Create Room</Button>
                                         </Col>
                                         <Col md="3">
                                             <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
