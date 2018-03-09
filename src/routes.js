@@ -5,6 +5,9 @@ const routes = {
   '/role' : 'Role',
   '/reports' : 'Reports',
   '/attendance' : 'Attendance',
-  '/session' : 'Session'
+  '/session' : 'Session',
+  'session/sessionForm' : 'sessionForm',
+  '/registration' : 'Registration',
+  '/rooms' : 'Rooms',
 };
 export default routes;
