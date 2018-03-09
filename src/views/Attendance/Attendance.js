@@ -6,7 +6,7 @@ import {
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
-import { IntlProvider, FormattedDate } from 'react-intl';
+import { IntlProvider, FormattedDate ,FormattedTime } from 'react-intl';
 class Attendance extends React.Component {
     constructor() {
         super();
@@ -27,7 +27,7 @@ class Attendance extends React.Component {
                     UsersID.push(doc.id);
                     Users.push({ UserID: doc.id, UserData: doc.data() });
                 });
-                console.log(" docs  ", Users);
+               // console.log(" docs  ", Users);
                 componentRef.setState({
                     items: Users,
                     itemsID: UsersID
@@ -43,7 +43,7 @@ class Attendance extends React.Component {
             return <tr >
                 <td>{row.UserID}</td>
                 <td>{row.UserData.confRoom}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} /> </td>
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()} format="hhmm" /> </td>
 
             </tr>
         });
