@@ -31,7 +31,12 @@ export default {
     },
     {
       name: 'Registration',
-      url: '/registration',
+      url: '/registration',     
+      icon: 'icon-note'
+    },
+    {
+      name: 'Registration List',
+      url: '/registrationList',
       icon: 'icon-note'
     },
     {
