@@ -6,61 +6,60 @@ import {
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { firebasedb } from '../../index';
-
-//fire.settings = {};
-firebasedb.ref = firebasedb.collection('Users');
-//https://stackoverflow.com/questions/42882825/firebase-data-to-react-component
+//import {FormattedDate} from 'ReactIntl';
+import { IntlProvider ,FormattedDate} from 'react-intl';
+//var FormattedNumber = ReactIntl.FormattedNumber;
 class Attendance extends React.Component {
     constructor() {
         super();
         this.state = {
-            items : []
+            items : [],
+            itemsID : []
         }
-        this.onSettingsChanged = this.onSettingsChanged.bind(this);
-
     }
     
-      onSettingsChanged(data){
-        this.setState({items: data.val()});
-      }
-    
-      componentDidMount() {
-        fire.settings.ref.on('value', this.onSettingsChanged);
-      }
     componentWillMount() {
-        let items = [];
-        firebasedb.collection("Users").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                var item = doc.data();
-                item['.key'] = doc.key;
-                items.push(item);
-                //obj.push(doc.data());
-                //let objString = JSON.stringify(obj);
-                console.log(this.items);
-            });
-            this.setState({
-                items: items
-            });
-        });
-    }
-    componentDidMount(){
-        fire.settings.ref.on('value', this.onSettingsChanged);
-    }
-    // componentWillUnmount() {
-    //     this.firebasedb.off();
-    //   }
+        let Users = [];
+        let UsersID = [];
+        let componentRef = this;
+        firebasedb.collection("Attendance")
+        .onSnapshot(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    UsersID.push(doc.id);
+                    Users.push({UserID :doc.id, UserData: doc.data()});
+                });
+                console.log(" docs  ", Users);
+               componentRef.setState({
+                    items: Users,
+                    itemsID : UsersID
+                })
+                Users = [];
+                UsersID = [];
+            });   
 
+            // firebasedb.collection("Attendance").doc("Shreyas Merchant")
+            // .getCollections().then(collections => {
+            //     collections.forEach(collection => {
+            //         console.log('Found subcollection with id:', collection.id);
+            //     });
+            // });
+        }
+   //format="short"
     render() {
         this.rows = this.state.items.map(function (row) {
             return <tr >
-                <td>{row.firstName}</td>
-                <td>{row.lastName}</td>
-                <td>{row.contactNo}</td>
+                <td>{row.UserID}</td>
+                <td>{row.UserData.confRoom}</td>
+                <td><FormattedDate value={row.UserData.timesteamp.toString()}  /> </td>
+                
             </tr>
         });
 
         return (
             <div className="animated fadeIn">
+                 <IntlProvider locale="en">
+       
+    
                 <Row>
                     <Col xs="12" >
                         <Card>
@@ -71,17 +70,34 @@ class Attendance extends React.Component {
                                 <Table responsive>
                                     <thead>
                                         <th>Name</th>
+                                        <th>Registered for</th>
                                         <th>Date</th>
-                                        <th>Register for</th>
+                                        
                                     </thead>
                                     {this.rows}
                                 </Table>
                             </CardBody>
                         </Card>
                     </Col>            </Row>
+                    </IntlProvider>
             </div>
         )
     }
 }
 export default Attendance;
 
+
+
+        // firebasedb.collection("Users").get().then((querySnapshot) => {
+        //     querySnapshot.forEach((doc) => {
+        //         var item = doc.data();
+        //         item['.key'] = doc.key;
+        //         items.push(item);
+        //         //obj.push(doc.data());
+        //         //let objString = JSON.stringify(obj);
+        //         console.log(this.items);
+        //     });
+        //     this.setState({
+        //         items: items
+        //     });
+        // });

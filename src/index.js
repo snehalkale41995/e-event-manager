@@ -21,6 +21,8 @@ import Login from './views/Pages/Login/'
 import Page404 from './views/Pages/Page404/'
 import Page500 from './views/Pages/Page500/'
 
+<<<<<<< Updated upstream
+=======
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -31,13 +33,24 @@ const firebaseConfig = {
   projectId: "tie-con-management",
   storageBucket: "tie-con-management.appspot.com",
   messagingSenderId: "852890830155"
-} // from Firebase Console
+} // from Firebase Console                                         ///mahesh firestore
+
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyDM4bfZawYFEvNsYlNyNZLEfTPSPsbtUkQ',
+//   authDomain: 'tiecon-b3493.firebaseapp.com',
+//   databaseURL: 'https://tiecon-b3493.firebaseio.com',
+//   projectId: 'tiecon-b3493',
+//   storageBucket: 'tiecon-b3493.appspot.com',
+//   messagingSenderId: '489302991624'
+// };                                                                      //sagar firestore
+
 
 // Initialize firebase instance
 firebase.initializeApp(firebaseConfig)
 // Initialize Cloud Firestore through Firebase
 export const firebasedb = firebase.firestore();
 
+>>>>>>> Stashed changes
 ReactDOM.render((
   <HashRouter>
     <Switch>
