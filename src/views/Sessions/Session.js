@@ -3,25 +3,10 @@ import  SessionForm    from './SessionForm'
 
 import React, { Component } from 'react';
 import {Link, Switch, Route, Redirect} from 'react-router-dom';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import {firebasedb} from '../../index';
 
 class Session extends Component {
     
     render() {
-        //console.log(this.props.match);
-        firebasedb.collection("Users").get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            let obj = doc.data(); 
-            console.log(">>>>>>>>>>>> ");
-            let objString = JSON.stringify(obj);
-            console.log(objString);
-            console.log("<<<<<<< ");
-            //console.log(`${doc.id} => ${doc.data()}`);
-            //console.dir(`${doc.data()}`);
-          });
-      });
       return <div>
         <Route exact path={this.props.match.path} component={SessionList} />
         <Route path={`${this.props.match.path}/sessionForm`} component={SessionForm} />
