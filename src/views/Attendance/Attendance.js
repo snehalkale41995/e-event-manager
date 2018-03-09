@@ -5,81 +5,73 @@ import {
 } from 'reactstrap';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { firebasedb } from '../../index';
-//import {FormattedDate} from 'ReactIntl';
-import { IntlProvider ,FormattedDate} from 'react-intl';
-//var FormattedNumber = ReactIntl.FormattedNumber;
+import { DBUtil } from '../../services';
+import { IntlProvider, FormattedDate } from 'react-intl';
 class Attendance extends React.Component {
     constructor() {
         super();
         this.state = {
-            items : [],
-            itemsID : []
+            items: [],
+            itemsID: []
         }
     }
-    
+
     componentWillMount() {
         let Users = [];
         let UsersID = [];
         let componentRef = this;
-        firebasedb.collection("Attendance")
-        .onSnapshot(function (querySnapshot) {
+        DBUtil.getDocRef("Attendance")
+            //firebasedb.collection("Attendance")
+            .onSnapshot(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
                     UsersID.push(doc.id);
-                    Users.push({UserID :doc.id, UserData: doc.data()});
+                    Users.push({ UserID: doc.id, UserData: doc.data() });
                 });
                 console.log(" docs  ", Users);
-               componentRef.setState({
+                componentRef.setState({
                     items: Users,
-                    itemsID : UsersID
+                    itemsID: UsersID
                 })
                 Users = [];
                 UsersID = [];
-            });   
+            });
 
-            // firebasedb.collection("Attendance").doc("Shreyas Merchant")
-            // .getCollections().then(collections => {
-            //     collections.forEach(collection => {
-            //         console.log('Found subcollection with id:', collection.id);
-            //     });
-            // });
-        }
-   //format="short"
+    }
+    //format="short"
     render() {
         this.rows = this.state.items.map(function (row) {
             return <tr >
                 <td>{row.UserID}</td>
                 <td>{row.UserData.confRoom}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()}  /> </td>
-                
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} /> </td>
+
             </tr>
         });
 
         return (
             <div className="animated fadeIn">
-                 <IntlProvider locale="en">
-       
-    
-                <Row>
-                    <Col xs="12" >
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Attendance Table
+                <IntlProvider locale="en">
+                    <Row>
+                        <Col xs="12" >
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i> Attendance Table
                           </CardHeader>
-                            <CardBody>
-                                <Table responsive>
-                                    <thead>
-                                        <th>Name</th>
-                                        <th>Registered for</th>
-                                        <th>Date</th>
-                                        
-                                    </thead>
-                                    {this.rows}
-                                </Table>
-                            </CardBody>
-                        </Card>
-                    </Col>            </Row>
-                    </IntlProvider>
+                                <CardBody>
+                                    <Table responsive>
+                                        <thead>
+                                            <th>Name</th>
+                                            <th>Registered for</th>
+                                            <th>Date</th>
+
+                                        </thead>
+                                        {this.rows}
+                                    </Table>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                </IntlProvider>
             </div>
         )
     }
@@ -87,17 +79,3 @@ class Attendance extends React.Component {
 export default Attendance;
 
 
-
-        // firebasedb.collection("Users").get().then((querySnapshot) => {
-        //     querySnapshot.forEach((doc) => {
-        //         var item = doc.data();
-        //         item['.key'] = doc.key;
-        //         items.push(item);
-        //         //obj.push(doc.data());
-        //         //let objString = JSON.stringify(obj);
-        //         console.log(this.items);
-        //     });
-        //     this.setState({
-        //         items: items
-        //     });
-        // });
