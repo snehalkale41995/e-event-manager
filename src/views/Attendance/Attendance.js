@@ -11,8 +11,8 @@ class Attendance extends React.Component {
     constructor() {
         super();
         this.state = {
-            items: [],
-            itemsID: []
+            items: []
+            //itemsID: []
         }
     }
 
@@ -29,35 +29,39 @@ class Attendance extends React.Component {
                 });
                // console.log(" docs  ", Users);
                 componentRef.setState({
-                    items: Users,
-                    itemsID: UsersID
+                    items: Users
+                   // itemsID: UsersID
                 })
                 Users = [];
-                UsersID = [];
+               // UsersID = [];
             });
 
     }
+    //format="hhmm"
     //format="short"
     render() {
         this.rows = this.state.items.map(function (row) {
             return <tr >
                 <td>{row.UserID}</td>
                 <td>{row.UserData.confRoom}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()} format="hhmm" /> </td>
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
 
             </tr>
         });
 
         return (
             <div className="animated fadeIn">
+           
                 <IntlProvider locale="en">
+                
                     <Row>
-                        <Col xs="12" >
+                        <Col md="12" >
                             <Card>
-                                <CardHeader>
+                                {/* <CardHeader>
                                     <i className="fa fa-align-justify"></i> Attendance Table
-                          </CardHeader>
-                                <CardBody>
+                          </CardHeader> */}
+                                <CardBody className="p-4">
+                                <h1>Attendance Table</h1>
                                     <Table responsive>
                                         <thead>
                                             <th>Name</th>
@@ -71,7 +75,9 @@ class Attendance extends React.Component {
                             </Card>
                         </Col>
                     </Row>
+                  
                 </IntlProvider>
+              
             </div>
         )
     }

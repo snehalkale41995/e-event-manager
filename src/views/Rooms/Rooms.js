@@ -103,7 +103,7 @@ class Rooms extends Component {
                 <Container>
                     <Row className="justify-content-center">
                         <Col md="12">
-                            <Card className="mx-4">
+                            <Card className="mx-6">
                                 <CardBody className="p-4">
                                     <h1>Room</h1>
 
