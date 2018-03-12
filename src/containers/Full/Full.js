@@ -15,6 +15,7 @@ import Attendance from '../../views/Attendance/Attendance';
 import Session from '../../views/Sessions/Session';
 import Registration from '../../views/Registration/Registration';
 import Rooms from '../../views/Rooms/Rooms';
+import RegistrationList from '../../views/RegistrationList/RegistrationList';
 
 class Full extends Component {
   render() {
@@ -35,6 +36,7 @@ class Full extends Component {
                 <Route path='/attendance' name='Attendance' component={Attendance} />
                 <Route path='/session' name='Session' component={Session} />
                 <Route path='/rooms' name='Rooms' component={Rooms} />
+                <Route path='/registrationList' name='Registration List' component={RegistrationList} />
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>
