@@ -9,5 +9,6 @@ const routes = {
   'session/sessionForm' : 'sessionForm',
   '/registration' : 'Registration',
   '/rooms' : 'Rooms',
+  '/registrationList' : 'Registration List',
 };
 export default routes;
