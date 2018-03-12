@@ -45,7 +45,7 @@ export class DBUtil {
             });
     }
  
-    static addChangeListener(tableName, callbackFn, errorFn){
+  static addChangeListener(tableName, callbackFn, errorFn){
         this.getDocRef(tableName).onSnapshot((querySnapshot) =>{
             //Audit listener
             callbackFn(querySnapshot);

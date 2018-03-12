@@ -1,84 +1,86 @@
 import React, {Component} from 'react';
 import { Badge,  Row,  Col,  Card,  CardHeader,  CardBody,  Table,
-  Pagination,  PaginationItem,  PaginationLink , Button} from 'reactstrap';
-  import {Link, Switch, Route, Redirect} from 'react-router-dom';
+Pagination,  PaginationItem,  PaginationLink , Button} from 'reactstrap';
+import {Link, Switch, Route, Redirect} from 'react-router-dom';
 
 
+import {DBUtil} from '../../../services';
+import *as firebase from 'firebase';
+import 'firebase/firestore';
 
-class UserList extends React.Component {  
-    constructor (props) {
-      super(props);
-      this.state =
-      {
-       data :	[
-        { 
-            "id" : 1,
-            "name": "Mark passinson", 
-            "emailid" : "Mark.pattinson@gmail.com", 
-            "contactNo": "+91-9890546789",
-            "profile": "volunteer"
+class UserList extends Component
+{
 
-        },
-        { 
-            "id" : 2,
-            "name": "Snehal Kale", 
-            "emailid" : "Snehal.Kale@gmail.com", 
-            "contactNo": "+91-9897897876",
-            "profile": "Charter member"
-        }	,
-        { 
-            "id" : 3,
-            "name": "Arkita Toshniwal", 
-            "emailid" : "Arkita.Toshniwal@gmail.com", 
-            "contactNo": "+91-8909876688",
-            "profile": "Attendee"
-
-        },
-        { 
-            "id" : 4,
-            "name": "Shivani Kadam", 
-            "emailid" : "Shivani.Kadam@gmail.com", 
-            "contactNo": "+91-7275722466",
-            "profile": "volunteer"
-        },
-        { 
-            "id" : 5,
-            "name": "Swapnil pathak", 
-            "emailid" : "Swapnil.pathak@gmail.com", 
-            "contactNo": "+91-8642347890",
-            "profile": "sponser"
-
-        },
-        { 
-            "id" : 6,
-            "name": "Sonali Bhat", 
-            "emailid" : "Sonali.Bhat@gmail.com", 
-            "contactNo": "+91-7678909089",
-            "profile": "Charter member"
-        }	
-    ],
-       Qrurl : '' 
-  }
-
-    this.openWin = this.openWin.bind(this);
-    this.fetchDetails= this.fetchDetails.bind(this);
-    this.createQR = this.createQR.bind(this);
+    constructor(props)
+    {
+        super(props);
+        this.state =
+        {
+          userObj: [],
+          Qrurl : '' 
+        }
+       this.openWin = this.openWin.bind(this);
+       this.fetchDetails= this.fetchDetails.bind(this);
+       this.createQR = this.createQR.bind(this);
+       this.deleteUser = this.deleteUser.bind(this);
+       this.getUserList= this.getUserList.bind(this);
     }
 
 
-
-       createQR(row) {
-         console.log(row)
-       console.log("increateQR");
-          let nameArray;
-          nameArray = row.name.split(" ");
+     componentWillMount()
+     {
          
-          let fname= nameArray[0]
-          let lname =nameArray[1]
-          let contactNo = row.contactNo;
-          let emailid = row.emailid;
-          let profile = row.profile;
-          console.log(contactNo, emailid, profile )
+      this.getUserList();
+    }
+
+       
+
+        getUserList()
+        {
+          let thisRef = this;
+            let listItem = [];
+
+       DBUtil.addChangeListener("Attendee", function(list)
+       {
+           
+         list.forEach(function(document) {
+           
+           console.log("document", document.id);  
+           console.log("document", document.data()); 
+          
+           listItem.push({userId :document.id , userInfo:document.data()})
+         });
+     
+         thisRef.setState({userObj : listItem});
+         console.log("userObj", thisRef.state.userObj)
+       })
+  
+        }
+
+
+       deleteUser(user)
+    {
+  
+        console.log(user.userId)
+        DBUtil.getDocRef("Attendee").doc(user.userId).delete().then(function(response) {
+        console.log("Document successfully deleted!");
+        console.log(response, "response");
+    //    this.getUserList();
+   
+    });
+
+       
+      }
+   
+       createQR(user) {
+        //  
+      
+          let fname = user.userInfo.firstName;
+          let lname = user.userInfo.lastName;
+          let contactNo = user.userInfo.contactNo;
+          let emailid = user.userInfo.emailId;
+          let profile = user.userInfo.profiles[0];
+        //   console.log(contactNo, emailid, profile )
          
 	 let  cardDetails= {
 				version: '3.0',
@@ -106,30 +108,30 @@ class UserList extends React.Component {
    }
 
 
-     fetchDetails(row)
+     fetchDetails(user)
      {
-       console.log("hello",row.id);
-       console.log(this, "this")
-        this.createQR(row); 
+
+       console.log("in fetch details")
+       console.log(user, "row");
+        this.createQR(user); 
         
 
           
         setTimeout(() => {
-           this.openWin(row)
+           this.openWin(user)
         }, 250);
      }
 
 
 
-    openWin(row) {
+    openWin(user) {
      console.log("hello form openwin")
-   
-     console.log("this in openwin",this.state.Qrurl)
-     console.log("row in openwin", row)
-     let name =   row.name;
-     let contactNo = row.contactNo;
-     let emailid = row.emailid;
-     let profile = row.profile;
+          let fname = user.userInfo.firstName;
+          let lname = user.userInfo.lastName;
+          let name = fname +" "+lname;
+          let contactNo = user.userInfo.contactNo;
+          let emailid = user.userInfo.emailId;
+          let profile = user.userInfo.profiles[0];
 
 
     var newWindow = window.open('','','width=200,height=100');
@@ -154,75 +156,98 @@ class UserList extends React.Component {
     newWindow.print();
     newWindow.close();
 }, 1000);
- 
-    }
+  }
 
+  
 
-
-
-
-
-
-   
-      render(props){
-          
-           let componentRef = this;
-        this.rows = this.state.data.map(function(row){
-              
-            return <tr key= {row.id} >
-                    <td>{row.name}</td>
-                    <td>{row.emailid}</td>
-                    <td>{row.contactNo}</td>
-                    <td>{row.profile}</td>
-                    <td><Button  onClick={() => componentRef.fetchDetails(row)} color="secondary">Print card</Button></td>     
-                    <td> <Button color="danger">Delete</Button></td> 
-                   <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>                 </tr>
-                 });
+   render() {
+     let componentRef = this;
+        this.users = this
+            .state
+            .userObj
+            .map(function (user) {
+                return <tr >
+                   
+                    <td>{user.userInfo.firstName} {user.userInfo.lastName}</td>
+                    <td>{user.userInfo.contactNo}</td>
+                    <td>{user.userInfo.emailId}</td>
+                    <td>{user.userInfo.profiles[0]}</td>
+                    <td><Button  onClick={() => componentRef.fetchDetails(user)} color="secondary">Print card</Button></td>     
+                    <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger">Delete</Button></td> 
+                    <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
+                </tr>
+            });
 
         return (
-            
-        <div>
-           
-   <div>     
-     <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
-     </div>       
-  <br/>
-  <br/>
-  <div className="animated fadeIn">
-            <Row>
-                <Col xs="12" >
-                    <Card>
-                        <CardHeader>
-                          User List
-                          </CardHeader>
-                        <CardBody>
-                            <Table bordered hover size="xs">
-                                <thead>
-                                    <th>Name</th>
-                                    <th>Email Id</th>
-                                    <th>contact No</th>
-                                    <th>profile</th>
-                                    <th>       </th>
-                                    <th>       </th>
-                                    <th>       </th>
-                                </thead>
-                                {this.rows}
-                            </Table>
-                        </CardBody>
-                    </Card>
-                </Col>            </Row>
-        </div>
-        </div>
+            <div className="animated fadeIn">
+            <div>     
+      <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
+          </div>       
+          <br/>
+          <br/>
+                    <Row>
+                        <Col xs="12">
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i>
+                                   User Table
+                                </CardHeader>
+                                <CardBody>
+                                    <Table responsive>
+                                        <thead>
+                                           
+                                            <th>firstName</th>
+                                            <th>contactNo</th>
+                                            <th>emailId</th>
+                                            <th>profile</th>
+                                            <th>        </th>
+                                            <th>        </th>
+                                            <th>        </th>
+                                        </thead>
+                                        {this.users}
+                                    </Table>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+              
+            </div>
         )
-      
-
-      }  
-      
-   
-  }
+    }
+}
 
 
 export default UserList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

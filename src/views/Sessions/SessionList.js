@@ -46,17 +46,17 @@ class SessionList extends Component {
             <td>Nana Patekar</td>
             <td>Volunteer1</td>
             <td></td>
-           <td> <Link to={`${this.props.match.url}/sessionForm/1`}> <Button type="button" color="primary"> Edit </Button></Link></td>
+           <td> <Button type="button" color="primary"> Edit </Button></td>
             <td><Button color="danger">Delete</Button></td>     
             {/* <td><input type="button" value="Open window" onclick={this.openWin} /> </td>    */}
            </tr>
          <tr>
-           <td>Tiecon</td>
+            <td>Tiecon</td>
             <td>Room2</td>
             <td>Satish Roy</td>
             <td>Volunteer2</td>
             <td></td>
-            <td> <Link to={`${this.props.match.url}/sessionForm/2`}> <Button type="button" color="primary"> Edit </Button></Link></td>
+            <td>  <Button type="button" color="primary"> Edit </Button></td>
             <td><Button color="danger">Delete</Button></td>
             
           </tr>
@@ -67,7 +67,7 @@ class SessionList extends Component {
             <td>Neha Mahajan</td>
             <td>Volunteer1</td>
             <td></td>
-            <td> <Link to={`${this.props.match.url}/sessionForm/3`}> <Button type="button" color="primary"> Edit </Button></Link></td>
+            <td>  <Button type="button" color="primary"> Edit </Button></td>
             <td><Button color="danger">Delete</Button></td>
           </tr>
 
