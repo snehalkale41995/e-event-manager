@@ -6,21 +6,20 @@ import {
     ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,
 } from 'reactstrap';
 import Select from 'react-select';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import { DBUtil } from '../../services';
 import 'react-select/dist/react-select.css';
 import { createBrowserHistory } from 'history';
-var history = createBrowserHistory();
 
-const Services = [
-    { label: 'Projector', value: 'Projector' },
-    { label: 'VOIP', value: 'VOIP' },
-    { label: 'LAN connection', value: 'LAN connection' },
-];
+var history = createBrowserHistory();
+let ArrayService = [];
 
 class Rooms extends Component {
     constructor(props) {
         super(props);
         var history = { history }
-        this.items = [];
+        this.items = []; 
         this.state = {
             Room: {
                 RoomName: '',
@@ -28,14 +27,30 @@ class Rooms extends Component {
                 bufferCapacity : '',
                 AvailableServices: []
             },
+            ServiceDropDown: [],
             submitted: false,
             isChecked: true
         };
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
         this.resetField = this.resetField.bind(this);
-       // this.toggleChange = this.toggleChange.bind(this);
-        this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.handleSelectChange = this.handleSelectChange.bind(this);   
+    }
+
+    componentWillMount() {
+        let componentRef = this;
+        DBUtil.addChangeListener("AvailableServices", function (objectList) {
+            let Services = [];
+            let ArrayService = [];
+            objectList.forEach(function (doc) {
+               Services.push(doc.data());
+            });            
+            const ServicesArray = Services[0].Services;
+            ServicesArray.forEach(function (item){
+                ArrayService.push({label : item , value : item });
+            });
+            componentRef.setState({ServiceDropDown : ArrayService})
+        });
     }
 
     changeFunction(event) {
@@ -53,22 +68,37 @@ class Rooms extends Component {
         event.preventDefault();
         this.setState({ submitted: true });
         const { Room } = this.state;
-        if(this.state.Room.AvailableServices.length > 0){
-            let length = this.state.Room.AvailableServices.length;
-            let serviceString = this.state.Room.AvailableServices[length - 1]
-            if(serviceString == ""){
-                this.state.Room.AvailableServices = [];
-            }
-            else{
-                let serviceArray = serviceString.split(',');
-                this.state.Room.AvailableServices = serviceArray;
-            }
-        } 
-        console.log('New Room', Room)
-        //&& Room.AvailableServices.length != 0
+       // console.log('New Room', Room)
         if (Room.RoomName && Room.Capacity ) {
-            //console.log("yess")
-            this.props.history.push('/login');
+            if(this.state.Room.AvailableServices.length > 0){
+                let length = this.state.Room.AvailableServices.length;
+                let serviceString = this.state.Room.AvailableServices[length - 1]
+                if(serviceString == ""){
+                    this.state.Room.AvailableServices = [];
+                }
+                else{
+                    let serviceArray = serviceString.split(',');
+                    this.state.Room.AvailableServices = serviceArray;
+                }
+            } 
+            //parameters to add doc function
+            let componentRef = this;
+            let tableName = "Rooms";
+            let docName = Room.RoomName;
+            let doc= {
+                RoomName: Room.RoomName,
+                Capacity: Room.Capacity,
+                bufferCapacity: Room.bufferCapacity,
+                AvailableServices: Room.AvailableServices
+            }
+            DBUtil.addDoc(tableName, docName, doc ,function(){          //add doc to firebase
+                console.log('added');
+                componentRef.props.history.push('/login');
+            },
+            function(err){
+                console.log('Error' , err);
+            });
+          //  this.props.history.push('/login');
         }
     }
     resetField() {
@@ -77,26 +107,20 @@ class Rooms extends Component {
                 RoomName: '',
                 Capacity: '',
                 bufferCapacity : '',
-                AvailableServices: []
+                AvailableServices: [], 
             },
             isChecked: false
         });
     }
-    // toggleChange() {
-    //     this.setState({ isChecked: !this.state.isChecked })
-    //     console.log("checkbox", this.state.isChecked)
-    // }
-    
+   
     handleSelectChange(value) {
         this.state.Room.AvailableServices.push(value);
-       // console.log('You have selected:', value);
         this.setState({ value });
     }
     
-    ///////////////////////////////
     render() {
-        const { Room, submitted, value } = this.state;   
-        const options = Services;
+        const { Room, submitted, value ,ServiceDropDown} = this.state;   
+        const options = this.state.ServiceDropDown;
 
         return (
             <div className="animated fadeIn">
@@ -106,7 +130,6 @@ class Rooms extends Component {
                             <Card className="mx-6">
                                 <CardBody className="p-4">
                                     <h1>Room</h1>
-
                                     <FormGroup row>
                                         <Col xs="12" md="6" className={(submitted && !Room.RoomName ? ' has-error' : '')}  >
                                             <InputGroup className="mb-3">
@@ -176,4 +199,4 @@ class Rooms extends Component {
 }
 
 export default Rooms;
-
+    

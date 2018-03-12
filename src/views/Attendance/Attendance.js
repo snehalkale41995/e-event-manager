@@ -1,7 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-    Badge, Row, Col, Card, CardHeader, CardBody, Table,
-    Pagination, PaginationItem, PaginationLink
+    Badge,
+    Row,
+    Col,
+    Card,
+    CardHeader,
+    CardBody,
+    Table,
+    Pagination,
+    PaginationItem,
+    PaginationLink
 } from 'reactstrap';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -12,33 +20,25 @@ class Attendance extends React.Component {
         super();
         this.state = {
             items: []
-            //itemsID: []
         }
     }
 
     componentWillMount() {
-        let Users = [];
-        let UsersID = [];
         let componentRef = this;
-        DBUtil.getDocRef("Attendance")
-            //firebasedb.collection("Attendance")
-            .onSnapshot(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    UsersID.push(doc.id);
-                    Users.push({ UserID: doc.id, UserData: doc.data() });
+        DBUtil.addChangeListener("Attendance", function (objectList) {
+            let Users = [];
+            let UsersID = [];
+            objectList.forEach(function (doc) {
+                UsersID.push(doc.id);
+                Users.push({
+                    UserID: doc.id,
+                    UserData: doc.data()
                 });
-               // console.log(" docs  ", Users);
-                componentRef.setState({
-                    items: Users
-                   // itemsID: UsersID
-                })
-                Users = [];
-               // UsersID = [];
             });
+            componentRef.setState({items: Users, itemsID: UsersID})
+        });
 
     }
-    //format="hhmm"
-    //format="short"
     render() {
         this.rows = this.state.items.map(function (row) {
             return <tr >
@@ -46,20 +46,15 @@ class Attendance extends React.Component {
                 <td>{row.UserData.confRoom}</td>
                 <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
 
-            </tr>
-        });
+                </tr>
+            });
 
         return (
             <div className="animated fadeIn">
-           
                 <IntlProvider locale="en">
-                
                     <Row>
                         <Col md="12" >
                             <Card>
-                                {/* <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Attendance Table
-                          </CardHeader> */}
                                 <CardBody className="p-4">
                                 <h1>Attendance Table</h1>
                                     <Table responsive>
@@ -67,7 +62,6 @@ class Attendance extends React.Component {
                                             <th>Name</th>
                                             <th>Registered for</th>
                                             <th>Date</th>
-
                                         </thead>
                                         {this.rows}
                                     </Table>
@@ -75,13 +69,9 @@ class Attendance extends React.Component {
                             </Card>
                         </Col>
                     </Row>
-                  
-                </IntlProvider>
-              
+                </IntlProvider>             
             </div>
         )
     }
 }
 export default Attendance;
-
-
