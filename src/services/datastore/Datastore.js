@@ -1,7 +1,10 @@
+/**
+ * File Name: Datastore.js
+ * Description: This file is a data access layer for integrating with Firestore database
+ * Created by: Mahesh Kedari <mahesh.kedari@eternussolutions.com>
+ * Created on: 
+ */
 import {firebaseConfig, firestoredb} from '../config';
-
-// Initialize firebase instance
-
 
 export class DBUtil {
 
@@ -40,5 +43,13 @@ export class DBUtil {
             .catch((ex) => {
                 errorFn(ex);
             });
+    }
+ 
+    static addChangeListener(tableName, callbackFn, errorFn){
+        this.getDocRef(tableName).onSnapshot((querySnapshot) =>{
+            //Audit listener
+            callbackFn(querySnapshot);
+
+        });
     }
 }

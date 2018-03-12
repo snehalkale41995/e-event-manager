@@ -1,7 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-    Badge, Row, Col, Card, CardHeader, CardBody, Table,
-    Pagination, PaginationItem, PaginationLink
+    Badge,
+    Row,
+    Col,
+    Card,
+    CardHeader,
+    CardBody,
+    Table,
+    Pagination,
+    PaginationItem,
+    PaginationLink
 } from 'reactstrap';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -17,15 +25,16 @@ class Attendance extends React.Component {
     }
 
     componentWillMount() {
-        let Users = [];
-        let UsersID = [];
         let componentRef = this;
-        DBUtil.getDocRef("Attendance")
-            //firebasedb.collection("Attendance")
-            .onSnapshot(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    UsersID.push(doc.id);
-                    Users.push({ UserID: doc.id, UserData: doc.data() });
+        DBUtil.addChangeListener("Attendance", function (objectList) {
+            let Users = [];
+            let UsersID = [];
+            
+            objectList.forEach(function (doc) {
+                UsersID.push(doc.id);
+                Users.push({
+                    UserID: doc.id,
+                    UserData: doc.data()
                 });
                // console.log(" docs  ", Users);
                 componentRef.setState({
@@ -35,6 +44,8 @@ class Attendance extends React.Component {
                 Users = [];
                // UsersID = [];
             });
+            componentRef.setState({items: Users, itemsID: UsersID})
+        });
 
     }
     //format="hhmm"
@@ -44,10 +55,10 @@ class Attendance extends React.Component {
             return <tr >
                 <td>{row.UserID}</td>
                 <td>{row.UserData.confRoom}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
-
-            </tr>
-        });
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   
+                  <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
+                </tr>
+            });
 
         return (
             <div className="animated fadeIn">
@@ -82,6 +93,5 @@ class Attendance extends React.Component {
         )
     }
 }
+
 export default Attendance;
-
-
