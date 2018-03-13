@@ -13,15 +13,13 @@ import {
 } from 'reactstrap';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import {DBUtil} from '../../services';
-import {IntlProvider, FormattedDate} from 'react-intl';
-
+import { DBUtil } from '../../services';
+import { IntlProvider, FormattedDate ,FormattedTime } from 'react-intl';
 class Attendance extends React.Component {
     constructor() {
         super();
         this.state = {
-            items: [],
-            itemsID: []
+            items: []
         }
     }
 
@@ -30,7 +28,6 @@ class Attendance extends React.Component {
         DBUtil.addChangeListener("Attendance", function (objectList) {
             let Users = [];
             let UsersID = [];
-            
             objectList.forEach(function (doc) {
                 UsersID.push(doc.id);
                 Users.push({
@@ -42,21 +39,12 @@ class Attendance extends React.Component {
         });
 
     }
-    //format="short"
     render() {
-        this.rows = this
-            .state
-            .items
-            .map(function (row) {
-                return <tr >
-                    <td>{row.UserID}</td>
-                    <td>{row.UserData.confRoom}</td>
-                    <td><FormattedDate
-                        value={row
-                    .UserData
-                    .timesteamp
-                    .toString()}/>
-                    </td>
+        this.rows = this.state.items.map(function (row) {
+            return <tr >
+                <td>{row.UserID}</td>
+                <td>{row.UserData.confRoom}</td>
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
 
                 </tr>
             });
@@ -65,19 +53,15 @@ class Attendance extends React.Component {
             <div className="animated fadeIn">
                 <IntlProvider locale="en">
                     <Row>
-                        <Col xs="12">
+                        <Col md="12" >
                             <Card>
-                                <CardHeader>
-                                    <i className="fa fa-align-justify"></i>
-                                    Attendance Table
-                                </CardHeader>
-                                <CardBody>
+                                <CardBody className="p-4">
+                                <h1>Attendance Table</h1>
                                     <Table responsive>
                                         <thead>
                                             <th>Name</th>
                                             <th>Registered for</th>
                                             <th>Date</th>
-
                                         </thead>
                                         {this.rows}
                                     </Table>
@@ -85,10 +69,9 @@ class Attendance extends React.Component {
                             </Card>
                         </Col>
                     </Row>
-                </IntlProvider>
+                </IntlProvider>             
             </div>
         )
     }
 }
-
 export default Attendance;
