@@ -44,7 +44,6 @@ export class DBUtil {
                 errorFn(ex);
             });
     }
-    //added by snehal patil
     static addDoc(tableName ,docName ,doc ,callbackFn ,errorFn){
         this.getDocRef(tableName)
         .doc(docName)
@@ -56,6 +55,7 @@ export class DBUtil {
             errorFn(ex);
         });
     }
+    
     static addChangeListener(tableName, callbackFn, errorFn){
         this.getDocRef(tableName).onSnapshot((querySnapshot) =>{
             //Audit listener
