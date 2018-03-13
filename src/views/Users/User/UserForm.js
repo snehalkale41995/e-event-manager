@@ -21,8 +21,7 @@ class UserForm extends React.Component {
                 lastName: '',
                 emailId: '',
                 contactNo: '',
-                profile: '',
-                profiles: []
+                profile: ''
             },
             submitted: false,
             isChecked: true,
@@ -35,7 +34,7 @@ class UserForm extends React.Component {
         this.resetField = this.resetField.bind(this);
         this.toggleChange =this.toggleChange.bind(this);
         this.getProfileList = this.getProfileList.bind(this);
-        this.multichangeprofiles=this.multichangeprofiles.bind(this);
+        this.changeprofile=this.changeprofile.bind(this);
     }
 
 
@@ -45,9 +44,14 @@ class UserForm extends React.Component {
       this.getProfileList();
     }
      
-     multichangeprofiles (profilesValue) {
-    this.state.user.profiles.push(profilesValue);
-    this.setState({profilesValue });
+     changeprofile (profilesValue) {
+        const profile = 'profile';
+        const user = this.state.user;
+        user[profile] = profilesValue;
+        this.setState({user: user});
+    
+        this.setState({profilesValue });
+        console.log(this.state.user.profile);
     }
 
 
@@ -58,30 +62,16 @@ class UserForm extends React.Component {
          let i;
        DBUtil.addChangeListener("Profiles", function(list)
        {
-           
-         list.forEach(function(document) {
-           
-           console.log("document", document.id);  
-           console.log("document", document.data().profile); 
-        
-             for(var i=0;i<document.data().profile.length;i++)
-                {
-                  console.log(document.data().profile[i])
-                  listItem.push({label:document.data().profile[i] , value:document.data().profile[i]})
-                }
-          
-            // listItem.push({label:document.data().profile,value:document.data().profile})
-            // console.log(listItem, "listItem");
-           });
+        list.forEach(function(document) {
+        for(var i=0;i<document.data().profile.length;i++)
+         {
+         listItem.push({label:document.data().profile[i] , value:document.data().profile[i]})
+         }});
      
-            console.log(listItem);
-
-         thisRef.setState(
+        thisRef.setState(
              {profileData : listItem});
-         console.log("profileData", thisRef.state.profileData)
-       })
-  
-        }
+        })
+      }
 
 
     changeFunction(event) {
@@ -103,23 +93,17 @@ class UserForm extends React.Component {
 
         this.setState({ submitted: true });
         const { user } = this.state;
-         console.log("user", user)
-          console.log(this.state.profilesValue, "profilesValue")
+       
         if (user.firstName && user.lastName && user.emailId) {
-          console.log("yess")
-          console.log(this,"this")
+         
           let compRef = this;
          DBUtil.addObj("Attendee", user, function(response)
         {
-            console.log(response);
-            console.log("this", compRef);
-            compRef.props.history.push('/user');
+             alert("added successfully")
+             compRef.props.history.push('/user');
         })
-
-   
-
-    }
-    }
+        }
+       }
 
    
 
@@ -143,100 +127,120 @@ class UserForm extends React.Component {
        toggleChange()
        {
            this.setState({isChecked : !this.state.isChecked})
-           console.log("chekbox",this.state.isChecked )
+          // console.log("chekbox",this.state.isChecked )
        }
 
 
     render() {
        
         const { user, submitted, profilesValue ,profileData} = this.state;
-         console.log(profileData, "profiledata")
+     
          let options =profileData;
-         console.log(options, "options")
-       // const { EventObj, submitted, profilesValue, volunteersValue } = this.state;
+     
         return (
-            <div>
-            <div>
+            <div className="animated fadeIn">
+             <div>
             <Link to="/user"> <Button type="button" color="secondary"> Back to List </Button></Link>
-               </div>
-            <div className="app flex-row align-items-center">
-                <Container>
+            </div>
+            <br/>
+            <br/>
+              <Container>
+            
                  <Row className="justify-content-center">
-                 <Col md="6">
+                 <Col md="12">
                  <Card className="mx-4">
-                <CardHeader color="primary">
-                <strong>User Creation Form</strong>
-
+                <CardHeader>
+                 <i className="fa fa-align-justify"></i>
+                  User Form
                 </CardHeader>
+
+           
                  <CardBody className="p-4">
                  
                   
                 <form name="form" onSubmit={this.submitFunction}>
 
                     
-                  <Row>
-                  <Col xs="12" className={(submitted && !user.firstName ? ' has-error' : '')}>        
-                  <FormGroup>
-                  <Label> First Name : </Label>
+                <FormGroup row>
+                  <Col md="6" className={(submitted && !user.firstName ? ' has-error' : '')}>        
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                    <i className="icon-user"></i>
+                    </InputGroupText>
+                    </InputGroupAddon>
                   <Input type="text" placeholder="Enter First Name" name="firstName" value={this.state.user.firstName} 
                    onChange={this.changeFunction}/>
                     {submitted && !user.firstName &&
                             <div className="help-block">First Name is required</div>
                         }
-                 </FormGroup>
+                 </InputGroup>
                  </Col>
-                </Row>
 
-                 
-                    
-                  <Row>
-                  <Col xs="12" className={(submitted && !user.lastName ? ' has-error' : '')}>        
-                  <FormGroup>
-                  <Label> Last Name : </Label>
+                  <Col  md="6" className={(submitted && !user.lastName ? ' has-error' : '')}>        
+                  <InputGroup>
+                   <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                    <i className="icon-user"></i>
+                    </InputGroupText>
+                    </InputGroupAddon>
                   <Input type="text" placeholder="Enter Last Name" name="lastName" value={this.state.user.lastName} 
                    onChange={this.changeFunction}/>
                    {submitted && !user.lastName &&
                              <div className="help-block">last name is required</div>
                          }
-                 </FormGroup>
+                 </InputGroup>
                  </Col>
-                </Row>
+                </FormGroup>
+  
+                <br/>
+              
 
 
-                  <Row>
-                  <Col xs="12" className={(submitted && !user.emailId ? ' has-error' : '')}>        
-                  <FormGroup>
-                  <Label> Email Id : </Label>
+                  <FormGroup row>
+                  <Col md="6" className={(submitted && !user.emailId ? ' has-error' : '')}>        
+                  <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                   
+                   <InputGroupText>@</InputGroupText>
+                   
+                    </InputGroupAddon>
                   <Input type="text" placeholder="Enter valid Email Id" name="emailId" value={this.state.user.emailId} 
                    onChange={this.changeFunction}/>
                    {submitted && !user.emailId &&
                              <div className="help-block">emailId is required</div>
                          }
-                 </FormGroup>
+                 </InputGroup>
                  </Col>
-                </Row>
 
-                      
-
-                  <Row>
-                  <Col xs="12">        
-                  <FormGroup>
-                  <Label> Contact Number : </Label>
+                  <Col  md="6">        
+                  <InputGroup>
+                 <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                    <i className="icon-phone"></i>
+                    </InputGroupText>
+                    </InputGroupAddon>
                   <Input type="numner" placeholder="Enter Contact Number " name="contactNo" value={this.state.user.contactNo} 
                    onChange={this.changeFunction}/>
-                 </FormGroup>
+                 </InputGroup>
                  </Col>
-                </Row> 
+
+                </FormGroup>
+
+                <br/>
+
+                  
+                
+               
                
 
 
            <Row>
-           <Col xs="12" className={(submitted && !user.profiles ? ' has-error' : '')}>        
+           <Col md="6" className={(submitted && !user.profiles ? ' has-error' : '')}>        
            <FormGroup>
-           <Label> select profiles </Label>
            <Select
-           onChange={this.multichangeprofiles}
-           placeholder="---Select---"
+           onChange={this.changeprofile}
+           placeholder="Select Profile"
             simpleValue
             value={profilesValue}
            options={options}
@@ -244,7 +248,7 @@ class UserForm extends React.Component {
           </FormGroup>
           </Col>
          </Row>
-             
+             <br/>
                <Row>
                   <Col xs="12">        
                   <FormGroup>
@@ -275,9 +279,11 @@ class UserForm extends React.Component {
                 </Card>
                 </Col>
                 </Row>
+                 
                 </Container>
+          
             </div>
-            </div>
+      
         );
     }
 }

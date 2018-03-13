@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Badge,  Row,  Col,  Card,  CardHeader,  CardBody,  Table,
-Pagination,  PaginationItem,  PaginationLink , Button} from 'reactstrap';
+Pagination,  PaginationItem,  PaginationLink , Button, Container} from 'reactstrap';
 import {Link, Switch, Route, Redirect} from 'react-router-dom';
 
 
@@ -79,7 +79,7 @@ class UserList extends Component
           let lname = user.userInfo.lastName;
           let contactNo = user.userInfo.contactNo;
           let emailid = user.userInfo.emailId;
-          let profile = user.userInfo.profiles[0];
+          let profile = user.userInfo.profile
         //   console.log(contactNo, emailid, profile )
          
 	 let  cardDetails= {
@@ -131,7 +131,7 @@ class UserList extends Component
           let name = fname +" "+lname;
           let contactNo = user.userInfo.contactNo;
           let emailid = user.userInfo.emailId;
-          let profile = user.userInfo.profiles[0];
+          let profile = user.userInfo.profile;
 
 
     var newWindow = window.open('','','width=200,height=100');
@@ -171,7 +171,7 @@ class UserList extends Component
                     <td>{user.userInfo.firstName} {user.userInfo.lastName}</td>
                     <td>{user.userInfo.contactNo}</td>
                     <td>{user.userInfo.emailId}</td>
-                    <td>{user.userInfo.profiles[0]}</td>
+                    <td>{user.userInfo.profile}</td>
                     <td><Button  onClick={() => componentRef.fetchDetails(user)} color="secondary">Print card</Button></td>     
                     <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger">Delete</Button></td> 
                     <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
@@ -181,11 +181,12 @@ class UserList extends Component
         return (
             <div className="animated fadeIn">
             <div>     
-      <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
-          </div>       
-          <br/>
-          <br/>
-                    <Row>
+           <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
+           </div>       
+           <br/>
+           <br/>
+                   <Container>
+                    <Row className="justify-content-center">
                         <Col xs="12">
                             <Card>
                                 <CardHeader>
@@ -210,7 +211,7 @@ class UserList extends Component
                             </Card>
                         </Col>
                     </Row>
-              
+              </Container>
             </div>
         )
     }
