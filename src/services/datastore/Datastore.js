@@ -52,4 +52,26 @@ export class DBUtil {
 
         });
     }
+
+     
+    static addDoc(tableName ,docName ,doc ,callbackFn ,errorFn){
+        this.getDocRef(tableName)
+        .doc(docName)
+        .set(doc)
+        .then((docRef) =>{
+            callbackFn(docRef);
+        })
+        .catch((ex) => {
+            errorFn(ex);
+        });
+    }
+
+    // Method for update only delete flag
+    static deleteDoc(tableName,param){
+        this.getDocRef(tableName).doc(param[0].docName).update({
+            "isDelete": param[0].deleteFlag
+          });
+    }
+
+
 }

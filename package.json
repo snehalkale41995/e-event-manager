@@ -44,6 +44,7 @@
     "react-redux-firebase": "^2.0.4",
     "react-router-dom": "4.2.2",
     "react-select": "^1.2.1",
+    "react-toastify": "^3.4.1",
     "react-transition-group": "2.2.1",
     "reactstrap": "5.0.0-beta",
     "redux-firestore": "^0.3.2",
