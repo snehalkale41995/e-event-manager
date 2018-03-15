@@ -1,0 +1,133 @@
+{ 
+  "name": "",
+  "features": [
+    {
+      "id": 1,
+      "title": "User",
+      "access": [
+        {
+          "id": 1,
+          "title": "Create",
+          "value": false
+        },
+        {
+          "id": 2,
+          "title": "Update",
+          "value": false
+        },
+        {
+          "id": 3,
+          "title": "Delete",
+          "value": false
+        },
+        {
+          "id": 4,
+          "title": "List",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Role",
+      "access": [
+        {
+          "id": 1,
+          "title": "Create",
+          "value": false
+        },
+        {
+          "id": 2,
+          "title": "Update",
+          "value": false
+        },
+        {
+          "id": 3,
+          "title": "Delete",
+          "value": false
+        },
+        {
+          "id": 4,
+          "title": "List",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Session",
+      "access": [
+        {
+          "id": 1,
+          "title": "Create",
+          "value": false
+        },
+        {
+          "id": 2,
+          "title": "Update",
+          "value": false
+        },
+        {
+          "id": 3,
+          "title": "Delete",
+          "value": false
+        },
+        {
+          "id": 4,
+          "title": "List",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Attendance",
+      "access": [
+        {
+          "id": 1,
+          "title": "Create",
+          "value": false
+        },
+        {
+          "id": 2,
+          "title": "Update",
+          "value": false
+        },
+        {
+          "id": 3,
+          "title": "Delete",
+          "value": false
+        },
+        {
+          "id": 4,
+          "title": "List",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Reports",
+      "access": [
+        {
+          "id": 1,
+          "title": "Create",
+          "value": false
+        },
+        {
+          "id": 2,
+          "title": "Share",
+          "value": false
+        },
+        {
+          "id": 3,
+          "title": "View",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "isSelectChk": false,
+  "isDelete": false,
+  "submitted": false
+}

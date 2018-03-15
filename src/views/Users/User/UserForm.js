@@ -3,29 +3,86 @@
 import React from 'react';
 import {Label, CardHeader, Container, Row, Col, Card, CardBody, CardFooter, Button, Input, InputGroup, InputGroupAddon, InputGroupText, FormGroup} from 'reactstrap';
 import {Link, Switch, Route, Redirect} from 'react-router-dom';
-
+import {DBUtil} from '../../../services';
+import *as firebase from 'firebase';
+import 'firebase/firestore';
+import {createBrowserHistory } from 'history';  
+var history = createBrowserHistory()
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 class UserForm extends React.Component {
     constructor(props) {
         super(props);
-       
+        var history= {history}
         this.state = {
             user: {
                 firstName: '',
                 lastName: '',
                 emailId: '',
                 contactNo: '',
-                profile: ''
+                profile: '',
+                profiles: []
             },
             submitted: false,
-            isChecked: true
+            isChecked: true,
+            profilesValue: '',
+            profileData :[]
         };
 
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
         this.resetField = this.resetField.bind(this);
         this.toggleChange =this.toggleChange.bind(this);
+        this.getProfileList = this.getProfileList.bind(this);
+        this.multichangeprofiles=this.multichangeprofiles.bind(this);
     }
+
+
+    componentWillMount()
+     {
+         
+      this.getProfileList();
+    }
+     
+     multichangeprofiles (profilesValue) {
+    this.state.user.profiles.push(profilesValue);
+    this.setState({profilesValue });
+    }
+
+
+     getProfileList()
+        {
+          let thisRef = this;
+          let listItem = [];
+         let i;
+       DBUtil.addChangeListener("Profiles", function(list)
+       {
+           
+         list.forEach(function(document) {
+           
+           console.log("document", document.id);  
+           console.log("document", document.data().profile); 
+        
+             for(var i=0;i<document.data().profile.length;i++)
+                {
+                  console.log(document.data().profile[i])
+                  listItem.push({label:document.data().profile[i] , value:document.data().profile[i]})
+                }
+          
+            // listItem.push({label:document.data().profile,value:document.data().profile})
+            // console.log(listItem, "listItem");
+           });
+     
+            console.log(listItem);
+
+         thisRef.setState(
+             {profileData : listItem});
+         console.log("profileData", thisRef.state.profileData)
+       })
+  
+        }
+
 
     changeFunction(event) {
        
@@ -47,11 +104,26 @@ class UserForm extends React.Component {
         this.setState({ submitted: true });
         const { user } = this.state;
          console.log("user", user)
-        
+          console.log(this.state.profilesValue, "profilesValue")
         if (user.firstName && user.lastName && user.emailId) {
           console.log("yess")
-            }
+          console.log(this,"this")
+          let compRef = this;
+         DBUtil.addObj("Attendee", user, function(response)
+        {
+            console.log(response);
+            console.log("this", compRef);
+            compRef.props.history.push('/user');
+        })
+
+   
+
     }
+    }
+
+   
+
+
 
       resetField()
       {
@@ -64,6 +136,7 @@ class UserForm extends React.Component {
                 profile :''
             },
            isChecked : false
+          
         });
         }
   
@@ -76,8 +149,11 @@ class UserForm extends React.Component {
 
     render() {
        
-        const { user, submitted } = this.state;
-       
+        const { user, submitted, profilesValue ,profileData} = this.state;
+         console.log(profileData, "profiledata")
+         let options =profileData;
+         console.log(options, "options")
+       // const { EventObj, submitted, profilesValue, volunteersValue } = this.state;
         return (
             <div>
             <div>
@@ -111,7 +187,7 @@ class UserForm extends React.Component {
                  </Col>
                 </Row>
 
-
+                 
                     
                   <Row>
                   <Col xs="12" className={(submitted && !user.lastName ? ' has-error' : '')}>        
@@ -150,24 +226,25 @@ class UserForm extends React.Component {
                    onChange={this.changeFunction}/>
                  </FormGroup>
                  </Col>
-                </Row>
+                </Row> 
                
+
+
+           <Row>
+           <Col xs="12" className={(submitted && !user.profiles ? ' has-error' : '')}>        
+           <FormGroup>
+           <Label> select profiles </Label>
+           <Select
+           onChange={this.multichangeprofiles}
+           placeholder="---Select---"
+            simpleValue
+            value={profilesValue}
+           options={options}
+          />
+          </FormGroup>
+          </Col>
+         </Row>
              
-                <Row>
-               <Col xs="12">  
-               <FormGroup>
-               <Label>Profile :</Label>
-              <Input type="select" name="profile" checked={this.state.user.profile}  onChange={this.changeFunction}>
-              <option>select profile</option>
-              <option>Volunteers</option>
-              <option>Delegates</option>
-              <option>Sponsors</option>
-              <option>Charter members</option>
-              </Input>
-              </FormGroup>
-              </Col>
-              </Row>
-           
                <Row>
                   <Col xs="12">        
                   <FormGroup>
