@@ -44,7 +44,18 @@ export class DBUtil {
                 errorFn(ex);
             });
     }
- 
+    static addDoc(tableName ,docName ,doc ,callbackFn ,errorFn){
+        this.getDocRef(tableName)
+        .doc(docName)
+        .set(doc)
+        .then((docRef) =>{
+            callbackFn(docRef);
+        })
+        .catch((ex) => {
+            errorFn(ex);
+        });
+    }
+    
     static addChangeListener(tableName, callbackFn, errorFn){
         this.getDocRef(tableName).onSnapshot((querySnapshot) =>{
             //Audit listener
