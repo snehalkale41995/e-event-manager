@@ -181,7 +181,7 @@ class UserList extends Component
         return (
             <div className="animated fadeIn">
             <div>     
-      <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
+      <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="primary"><i className="fa fa-plus"></i> Add User </Button></Link>
           </div>       
           <br/>
           <br/>
@@ -189,17 +189,16 @@ class UserList extends Component
                         <Col xs="12">
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i>
-                                   User Table
+                                    <label className="regHeading">Users</label>                                   
                                 </CardHeader>
                                 <CardBody>
                                     <Table responsive>
                                         <thead>
                                            
-                                            <th>firstName</th>
-                                            <th>contactNo</th>
-                                            <th>emailId</th>
-                                            <th>profile</th>
+                                            <th>First Name</th>
+                                            <th>Contact No</th>
+                                            <th>Email</th>
+                                            <th>Profile</th>
                                             <th>        </th>
                                             <th>        </th>
                                             <th>        </th>

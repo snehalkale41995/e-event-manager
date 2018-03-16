@@ -21,10 +21,9 @@ class SessionList extends Component {
       <div className="animated fadeIn">
 
      <div>     
-     <Link to={`${this.props.match.url}/sessionForm`}> <Button type="button" color="secondary"> Add new event </Button></Link>
+     <Link to={`${this.props.match.url}/sessionForm`}> <Button type="button" color="primary"> <i className="fa fa-plus"></i> Add event </Button></Link>
 
-     </div>
-     <br/>
+     </div>     
      <br/>
     <Table bordered hover size="xs">
         <thead>
@@ -46,8 +45,8 @@ class SessionList extends Component {
             <td>Nana Patekar</td>
             <td>Volunteer1</td>
             <td></td>
-           <td> <Button type="button" color="primary"> Edit </Button></td>
-            <td><Button color="danger">Delete</Button></td>     
+            <td><Button type="button" color="primary"><i className="fa fa-pencil"></i>  Edit </Button></td>
+            <td><Button color="danger"><i className="fa fa-trash"></i> Delete</Button></td>     
             {/* <td><input type="button" value="Open window" onclick={this.openWin} /> </td>    */}
            </tr>
          <tr>
@@ -56,8 +55,8 @@ class SessionList extends Component {
             <td>Satish Roy</td>
             <td>Volunteer2</td>
             <td></td>
-            <td>  <Button type="button" color="primary"> Edit </Button></td>
-            <td><Button color="danger">Delete</Button></td>
+            <td><Button type="button" color="primary"><i className="fa fa-pencil"></i>  Edit </Button></td>
+            <td><Button color="danger"><i className="fa fa-trash"></i> Delete</Button></td>
             
           </tr>
 
@@ -67,8 +66,8 @@ class SessionList extends Component {
             <td>Neha Mahajan</td>
             <td>Volunteer1</td>
             <td></td>
-            <td>  <Button type="button" color="primary"> Edit </Button></td>
-            <td><Button color="danger">Delete</Button></td>
+           <td><Button type="button" color="primary"><i className="fa fa-pencil"></i>  Edit </Button></td>
+            <td><Button color="danger"><i className="fa fa-trash"></i> Delete</Button></td>
           </tr>
 
 
