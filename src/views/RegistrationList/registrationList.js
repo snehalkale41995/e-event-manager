@@ -112,7 +112,7 @@ class RegistrationList extends Component{
                     <Col xs="12" lg="12">
                         <Card>
                         <CardHeader>
-                            <i className="fa fa-align-justify"></i> Registration List
+                            <label className="regHeading">Registration List</label>
                         </CardHeader>
                         <CardBody>
                             <Table responsive>
