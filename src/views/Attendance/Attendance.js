@@ -43,9 +43,9 @@ class Attendance extends React.Component {
             return <tr >
                 <td>{row.UserID}</td>
                 <td>{row.UserData.confRoom}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()}  /> </td>
-
-                </tr>
+                <td><FormattedDate value={row.UserData.timesteamp.toString()} />   <FormattedTime value={row.UserData.timesteamp.toString()} /> </td>
+                <td>{row.UserData.RegistrationType}</td>
+            </tr>
             });
 
         return (
@@ -61,6 +61,7 @@ class Attendance extends React.Component {
                                             <th>Name</th>
                                             <th>Registered for</th>
                                             <th>Date</th>
+                                            <th>Registration type </th>
                                         </thead>
                                         {this.rows}
                                     </Table>
