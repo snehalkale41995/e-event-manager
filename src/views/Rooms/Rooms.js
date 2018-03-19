@@ -93,7 +93,8 @@ class Rooms extends Component {
             }
             DBUtil.addDoc(tableName, docName, doc ,function(){          //add doc to firebase
                 console.log('added');
-                componentRef.props.history.push('/login');
+                alert("Room " + docName + " successfully added" );
+                componentRef.props.history.push('/dashboard');
             },
             function(err){
                 console.log('Error' , err);
@@ -139,12 +140,14 @@ class Rooms extends Component {
                                                     </InputGroupText>
                                                 </InputGroupAddon>
                                                 <Input type="text" placeholder="Room Name" name="RoomName" value={this.state.Room.RoomName} onChange={this.changeFunction} />
-
-                                                {submitted && !Room.RoomName &&
-                                                    <div className="help-block">Room Name is required</div>
-                                                }
-
                                             </InputGroup>
+                                            <Row>
+                                                <Col md="6">
+                                                    {submitted && !Room.RoomName &&
+                                                        <div style={{color: "red"}} className="help-block">*Required</div>
+                                                    }
+                                                </Col>
+                                            </Row>
                                         </Col>
                                         <Col md="6"  >
                                             <InputGroup className="mb-3">
@@ -153,10 +156,15 @@ class Rooms extends Component {
                                                 </InputGroupAddon>
                                                 <Input type="number" placeholder="Capacity" name="Capacity" value={this.state.Room.Capacity} onChange={this.changeFunction} />
                                             </InputGroup>
-                                            {submitted && !Room.Capacity &&
-                                                <div className="help-block">Capacity is required</div>
+                                            <Row>
+                                                <Col md="6">
+                                                {submitted && !Room.Capacity &&
+                                                <div style={{color: "red"}} className="help-block">*Required</div>
                                             }
+                                                </Col>
+                                            </Row>
                                         </Col>
+                                       
                                     </FormGroup>
                                     <FormGroup row>
                                     <Col xs="12"  md="6"  >

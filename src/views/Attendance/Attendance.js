@@ -37,7 +37,6 @@ class Attendance extends React.Component {
             });
             componentRef.setState({items: Users, itemsID: UsersID})
         });
-
     }
     render() {
         this.rows = this.state.items.map(function (row) {
