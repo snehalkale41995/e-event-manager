@@ -125,9 +125,9 @@ class Rooms extends Component {
 
         return (
             <div className="animated fadeIn">
-                <Container>
-                    <Row className="justify-content-center">
-                        <Col md="12">
+                
+                    <Row className="justify-content-left">
+                        <Col md="8">
                             <Card className="mx-6">
                                 <CardBody className="p-4">
                                     <h1>Room</h1>
@@ -155,7 +155,11 @@ class Rooms extends Component {
                                                     <InputGroupText><i className="icon-pie-chart"></i></InputGroupText>
                                                 </InputGroupAddon>
                                                 <Input type="number" placeholder="Capacity" name="Capacity" value={this.state.Room.Capacity} onChange={this.changeFunction} />
+                                                 {submitted && !Room.Capacity &&
+                                                        <div className="help-block">Capacity is required</div>
+                                                    }
                                             </InputGroup>
+
                                             <Row>
                                                 <Col md="6">
                                                 {submitted && !Room.Capacity &&
@@ -163,6 +167,7 @@ class Rooms extends Component {
                                             }
                                                 </Col>
                                             </Row>
+
                                         </Col>
                                        
                                     </FormGroup>
@@ -188,11 +193,10 @@ class Rooms extends Component {
                                             </FormGroup>
                                         </Col>                                      
                                         </FormGroup>
-                                    <FormGroup row>
-                                        <Col xs="6" md="3" >
-                                            <Button type="button" size="md" color="primary" onClick={this.submitFunction} >Create Room</Button>
-                                        </Col>
-                                        <Col md="3">
+                                    <FormGroup row className="noBottomMargin">
+                                        <Col xs="6" md="12" >
+                                            <Button type="button" size="md" color="success" onClick={this.submitFunction} >Create Room</Button>
+                                             &nbsp;&nbsp;
                                             <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                                         </Col>
                                     </FormGroup>
@@ -200,7 +204,7 @@ class Rooms extends Component {
                             </Card>
                         </Col>
                     </Row>
-                </Container>
+                
             </div>
         )
     }

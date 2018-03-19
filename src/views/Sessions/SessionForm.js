@@ -134,13 +134,13 @@ toggleChange()
            <div> 
           <div>
 
-          <td><Link to="/session"> <Button type="button" color="secondary"> Back to List </Button></Link></td>
+          <td><Link to="/session"> <Button type="button" color="primary"><i className="fa fa-chevron-left"></i> Back to List </Button><br/></Link></td>
            </div>     
-          <div className="app flex-row align-items-center">
-          <Container>
-          <Row className="justify-content-center">
+          <div className="flex-row align-items-center">
+            <br/>
+          <Row className="justify-content-left">
           <Col md="6">
-          <Card className="mx-4">
+          <Card className="">
          <CardHeader color="primary">
          <strong>Event Form</strong>
 
@@ -238,7 +238,7 @@ toggleChange()
            <Col xs="12">        
            <FormGroup>
           <input type="checkbox"  value = {this.state.isChecked}  onChange={this.toggleChange} />
-           <Label> Registration required </Label>
+           <Label className="regLabelForm"> Registration required </Label>
            </FormGroup>
           </Col>
          </Row>
@@ -250,21 +250,22 @@ toggleChange()
         </Col>
         </Row>    
 
-        <Row>
-        <Col sm={{ size: 'auto', offset: 2 }}>
-        <Button type="submit" color="primary">Create Event</Button>
-        </Col>
-       <Col sm={{ size: 'auto', offset: 3 }}>
-       <Button onClick={this.resetField} color="success"><i className="fa fa-dot-circle-o"></i>Reset</Button>
-       </Col>
-       </Row>
+        
+
+        <FormGroup row className="noBottomMargin">
+            <Col xs="6" md="12" >
+                <Button type="submit" color="success">Create Event</Button>
+                &nbsp;&nbsp;
+                <Button onClick={this.resetField} color="danger"><i className="fa fa-ban"></i>Reset</Button>
+            </Col>
+        </FormGroup>
 
           </form>
          </CardBody>
          </Card>
          </Col>
          </Row>
-         </Container>
+         
      </div>
 </div>
         )

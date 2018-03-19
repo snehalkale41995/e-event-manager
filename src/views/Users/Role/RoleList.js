@@ -61,8 +61,8 @@ class RoleList extends Component{
                 <tr key={item.roleItems.name}>
                     <td>{item.roleItems.name}</td>
                     <td><Link to={`${componentRef.props.match.url}/RoleForm/${item.roleItems.name}`} > 
-                    <Button type="button" color="primary">Edit</Button></Link></td>
-                    <td><Button color="danger" onClick={(e) => componentRef.deleteRole(item)}>Delete</Button></td>                   
+                    <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button></Link></td>
+                    <td><Button color="danger" onClick={(e) => componentRef.deleteRole(item)}> <i className="fa fa-trash"></i> Delete</Button></td>                   
                 </tr>
             )
         });
@@ -71,11 +71,10 @@ class RoleList extends Component{
             <div className="animated fadeIn">
                  <div>     
                       <Link to={`${this.props.match.url}/RoleForm`}> 
-                      <Button type="button" color="secondary"> Add New Role </Button></Link>
+                      <Button type="button" color="primary"><i className="fa fa-plus"></i> Add Role </Button></Link>
                       <ToastContainer autoClose={2000} />
                  </div>
                  
-                 <br/>
                  <br/>
                 <Table bordered hover size="xs">
                     <thead>

@@ -160,23 +160,24 @@ class RoleForm extends Component{
     render(){
         const { role, submitted } = this.state;   
         return (
-            <div className="app flex-row">                 
-                <Container>
-                <Link to="/role"> <Button type="button" color="secondary"> Back to List </Button></Link><br/><br/>
+            <div className="app">                 
+                 
+                    <Link to="/role"> <Button type="button" color="primary"><i className="fa fa-chevron-left"></i> Back to List </Button></Link><br/>
+               
                     <Row>
-                        <Col md="12">
-                            <Card className="mx-4">
+                        <Col md="10">
+                            <Card className="">
                                 <CardBody className="p-4">  
                                     <h1>Role Creation</h1>  <br/>                        
                                     <form name="form" onSubmit={this.submitFunction}> 
                                         <Row>
-                                            <Col xs="12" className={(submitted && !this.state.role.name ? ' has-error' : '')}>        
+                                            <Col xs="12" md="4" className={(submitted && !this.state.role.name ? ' has-error' : '')}>        
                                                 <FormGroup>
                                                     <Label> Name : </Label>
                                                     <Input type="text" placeholder="Enter Role Name" name="name" value={this.state.role.name} 
                                                         onChange={this.changeRoleNameState}/>
                                                         { submitted && !this.state.role.name &&
-                                                                <div className="help-block">Role name is required</div>
+                                                                <div className="help-block rollnameHelpBlock">Role name is required</div>
                                                         }
                                                 </FormGroup>
                                             </Col>
@@ -185,7 +186,7 @@ class RoleForm extends Component{
                                             <Col xs="12">        
                                                 <FormGroup>
                                                     <Label>Features : </Label> &nbsp;&nbsp;&nbsp;&nbsp; 
-                                                    <Label>
+                                                    <Label className="inputLabel">
                                                         <input type="checkbox" value={this.state.role.isSelectChk}
                                                         checked={this.state.role.isSelectChk}
                                                         onChange={this.handleChangeChk} />&nbsp;
@@ -206,10 +207,9 @@ class RoleForm extends Component{
                                         </Row>  
                                         <Row>
                                             <Col sm={{ size: 'auto'}}>
-                                                <Button type="submit" color="primary">Submit</Button>
-                                            </Col>
-                                            <Col sm={{ size: 'auto'}}>
-                                                <Button onClick={this.resetFields} color="primary">Reset</Button>
+                                                <Button type="submit" color="success">Submit</Button>
+                                                &nbsp;&nbsp;        
+                                                <Button onClick={this.resetFields} color="danger"><i className="fa fa-ban"></i> Reset</Button>
                                                 <ToastContainer autoClose={4000} />
                                             </Col>
                                         </Row>
@@ -218,7 +218,7 @@ class RoleForm extends Component{
                             </Card>
                         </Col>
                     </Row>
-                </Container>
+                
             </div>
         );
     }

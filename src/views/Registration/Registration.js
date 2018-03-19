@@ -214,9 +214,9 @@ onHandleValidations(user){
    
     return (
       <div className="animated fadeIn">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="12">
+        
+          <Row className="justify-content-left">
+            <Col md="8">
               <Card className="mx-6">
                 <CardBody className="p-4">
                   <h1>Register</h1>
@@ -332,7 +332,7 @@ onHandleValidations(user){
                   <FormGroup row>
                     <InputGroup className="mb-3">
                       <Col md="1">
-                        <Label>Role </Label>
+                        <Label className="roleLabel"><b>Role </b></Label>
                       </Col>
                       <Col md="5">
                         <FormGroup check inline>
@@ -351,6 +351,7 @@ onHandleValidations(user){
                     </InputGroup>
                   </FormGroup>
                   <FormGroup row>
+
                     <Col xs="6" md="2" >
                       <Button type="submit" size="md" color="primary" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
                     </Col>
@@ -358,14 +359,16 @@ onHandleValidations(user){
                       <Button size="md" color="success" onClick={this.onGenerateQRcode} >Print QR code</Button>
                     </Col>
                     <Col md="2">
+
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                     </Col>
+                   
                   </FormGroup>
                 </CardBody>
               </Card>
             </Col>
           </Row>
-        </Container>
+        
       </div>
     )
   }
