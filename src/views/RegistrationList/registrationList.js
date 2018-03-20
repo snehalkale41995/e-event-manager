@@ -144,7 +144,7 @@ class RegistrationList extends Component{
                                 )
                                 break;
                     }
-
+                    
                     let setApporveRejectButton = this.setApporveRejectButtonByStatus(row.users.isPending,row.users.isApproved,row.users.isRejected,row.id,value);
                     return <tr key ={row.users.name}>
                             <td key={row.users.name}>
