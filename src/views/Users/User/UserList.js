@@ -67,6 +67,7 @@ class UserList extends Component
           let roleName = user.userInfo.roleName
        
 	      let  cardDetails= {
+
 				version: '3.0',
 				lastName: lname,
 				firstName: fname,
@@ -112,7 +113,6 @@ class UserList extends Component
           let contactNo = user.userInfo.contactNo;
           let emailid = user.userInfo.emailId;
           let roleName = user.userInfo.roleName;
-
 
     var newWindow = window.open('','','width=200,height=100');
     newWindow.document.writeln("<html>");
