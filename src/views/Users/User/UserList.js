@@ -64,16 +64,10 @@ class UserList extends Component
           let lname = user.userInfo.lastName;
           let contactNo = user.userInfo.contactNo;
           let emailid = user.userInfo.emailId;
-<<<<<<< Updated upstream
           let roleName = user.userInfo.roleName
        
 	      let  cardDetails= {
-=======
-          let profile = user.userInfo.profiles;//[0];
-        //   console.log(contactNo, emailid, profile )
-         
-	 let  cardDetails= {
->>>>>>> Stashed changes
+
 				version: '3.0',
 				lastName: lname,
 				firstName: fname,
@@ -117,13 +111,7 @@ class UserList extends Component
           let lname = user.userInfo.lastName;
           let name = fname +" "+lname;
           let contactNo = user.userInfo.contactNo;
-          let emailid = user.userInfo.emailId;
-<<<<<<< Updated upstream
-          let roleName = user.userInfo.roleName;
-=======
-          let profile = user.userInfo.profiles;
->>>>>>> Stashed changes
-
+          let emailid = user.userInfo.emailId;          let roleName = user.userInfo.roleName;
 
     var newWindow = window.open('','','width=200,height=100');
     newWindow.document.writeln("<html>");
