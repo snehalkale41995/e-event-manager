@@ -11,7 +11,7 @@ const routes = {
   'session/sessionForm' : 'sessionForm',
   '/registration' : 'Registration',
   '/rooms' : 'Rooms',
-  '/registrationList' : 'Registration List',
-  '/eventQuestions': 'Event Questions'
+  '/registrationList' : 'Registration List'
+ //, '/eventQuestions': 'Event Questions'
 };
 export default routes;

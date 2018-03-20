@@ -18,7 +18,7 @@ import Session from '../../views/Sessions/Session';
 import Registration from '../../views/Registration/Registration';
 import Rooms from '../../views/Rooms/Rooms';
 import RegistrationList from '../../views/RegistrationList/RegistrationList';
-import EventQuestions from '../../views/EventQuestions/EventQuestions';
+//import EventQuestions from '../../views/EventQuestions/EventQuestions';
 
 class Full extends Component {
   render() {
@@ -42,7 +42,7 @@ class Full extends Component {
                 {/* <Route path='/renderForm' name='RenderForm' component={RenderForm} />
                 <Route path='/questions' name='Questions' component={Questions} />*/}
                 <Route path='/registrationList' name='Registration List' component={RegistrationList} />
-                <Route path='/eventQuestions' name='Event Questions' component={EventQuestions} />
+                {/* <Route path='/eventQuestions' name='Event Questions' component={EventQuestions} /> */}
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>
