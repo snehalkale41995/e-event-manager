@@ -84,5 +84,21 @@ export class DBUtil {
           });
     }
 
+    // Method for update delete flag & reamak
+    static deleteDocById(tableName,param){
+        this.getDocRef(tableName).doc(param[0].id).update({
+            "isDelete": param[0].deleteFlag,
+            "remark": param[0].remark
+          });
+    }
+    
+    // Method for update approve & reject registered user by Id
+    static approvedRejectDocById(tableName,param){
+        this.getDocRef(tableName).doc(param[0].id).update({
+            "isApproved": param[0].isApproved,
+            "isPending": param[0].isPending,
+            "isRejected": param[0].isRejected
+          });
+    }
 
 }
