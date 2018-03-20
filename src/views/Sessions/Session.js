@@ -21,7 +21,7 @@ class Session extends Component {
       //   //   });
       // });
       return <div>
-        <Route exact path={this.props.match.path} component={SessionList} />
+        <Route exact path={this.props.match.path} component={SessionForm} />
         <Route path={`${this.props.match.path}/sessionForm`} component={SessionForm} />
         <Route path={`${this.props.match.path}/sessionForm/:id`} component={SessionForm} />
       </div>

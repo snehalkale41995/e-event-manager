@@ -733,18 +733,12 @@ class SessionForm extends Component {
                           <div>
                             <Row>
 
-                            <Col sm={{ size: 'auto', offset: 0}}>
-                              <Button onClick={this.updateEvent} color="primary">update</Button>
-                            </Col>
-
-                            <Col sm={{ size: 'auto', offset: 1 }}>
-                              <Button  onClick={() => {if(confirm('Are you sure you want to permanently delete this session ?')) {this.deleteEvent()};}} color="danger">delete</Button>
-                            </Col>
-                           </Row>
-                         
-                           <Row>
-                           <Col sm={{ size: 'auto', offset: 3 }}>
-                              <Button onClick={this.resetField} color="secondary">Reset</Button>
+                            <Col sm="12">
+                              <Button onClick={this.updateEvent} color="success">Update</Button>
+                              &nbsp;&nbsp;
+                              <Button  onClick={() => {if(confirm('Are you sure you want to permanently delete this session ?')) {this.deleteEvent()};}} color="danger">Delete</Button>
+                               &nbsp;&nbsp;
+                              <Button onClick={this.resetField} color="primary"><i className="fa fa-ban"></i> Reset</Button>
                             </Col>
 
                             </Row>
