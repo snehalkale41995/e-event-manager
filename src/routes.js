@@ -5,6 +5,8 @@ const routes = {
   '/role' : 'Role',
   '/reports' : 'Reports',
   '/attendance' : 'Attendance',
+  // '/renderForm': 'RenderForm',
+  // '/questions' : 'Questions',
   '/session' : 'Session',
   'session/sessionForm' : 'sessionForm',
   '/registration' : 'Registration',

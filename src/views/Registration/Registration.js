@@ -3,7 +3,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import {
   Container, Input, InputGroup, InputGroupText, InputGroupAddon, Badge, Row, Col, Progress, Dropdown, DropdownToggle,
   DropdownMenu, DropdownItem, Card, CardHeader, CardBody, CardFooter, CardTitle, Button, ButtonToolbar,
-  ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,
+  ButtonGroup, ButtonDropdown, Label, Table, Form, FormGroup, FormText,Select
 } from 'reactstrap';
 import { createBrowserHistory } from 'history';
 import * as firebase from 'firebase';
@@ -214,14 +214,17 @@ onHandleValidations(user){
         lastName: '',
         Email: '',
         City: '',
-        Contact: "",
-        Conference: "",
+        Contact: '',
+        Conference: '',
         Role: ''
       },
       invalidContact: false,
       invalidEmail: false,
       submitted: false
     });
+    document.getElementById("Conference").value = " ";
+    document.getElementById("City").value = " ";
+
   }
   // toggleChange() {
   //   this.setState({ isChecked: !this.state.isChecked })
@@ -229,6 +232,13 @@ onHandleValidations(user){
   // }
   render() {
     const { user, submitted } = this.state;
+    let ConferenceValues = [
+      { label: "Conference 1", value: "Conference 1" },
+      { label: "Conference 2", value: "Conference 2" },
+      { label: "Conference 3", value: "Conference 3" }
+    ]
+      
+   
     return (
       <div className="animated fadeIn">
         
