@@ -37,7 +37,7 @@ class Registration extends Component {
     this.submitFunction = this.submitFunction.bind(this);
     this.resetField = this.resetField.bind(this);
     this.onGenerateQRcode = this.onGenerateQRcode.bind(this);
-    this.openQRcodeWindow = this.openQRcodeWindow.bind(this);
+    this.openWin = this.openWin.bind(this);
     this.onHandleValidations = this.onHandleValidations.bind(this);
   }
 
@@ -118,13 +118,13 @@ onHandleValidations(user){
       //console.log(generatedQR);
       this.setState({ Qrurl: generatedQR })
       setTimeout(() => {
-        this.openQRcodeWindow(user)
+        this.openWin(user)
       }, 250);
     }
   }
 
-  openQRcodeWindow(user) {
-    //console.log("hello form openQRcodeWindow")
+  openWin(user) {
+    //console.log("hello form openwin")
     let fname = user.firstName;
     let lname = user.lastName;
     let name = fname + " " + lname;
@@ -151,11 +151,35 @@ onHandleValidations(user){
     }, 1000);
   }
 
+
+
+
+
   submitFunction(event) {
     event.preventDefault();
     this.setState({ submitted: true });
     const { user } = this.state;
     this.onHandleValidations(user);
+    // if (user.Email != null || user.Email != undefined) {
+    //   let lastAtPos = user.Email.lastIndexOf('@');
+    //   let lastDotPos = user.Email.lastIndexOf('.');
+    //   if (!(lastAtPos < lastDotPos && lastAtPos > 0 && user.Email.indexOf('@@') == -1 && lastDotPos > 2 && (user.Email.length - lastDotPos) > 2)) {
+    //     this.state.invalidEmail = true;
+    //   }
+    //   else {
+    //     this.state.invalidEmail = false;
+    //   }
+    // }
+    // else if (user.Email == null) {
+    //   this.state.invalidEmail = true;
+    // }
+
+    // if (user.Contact == null || user.Contact.length < 10 || user.Contact.length > 10) {
+    //   this.state.invalidContact = true;
+    // }
+    // else {
+    //   this.state.invalidContact = false;
+    // }
 
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let componentRef = this;
@@ -202,7 +226,10 @@ onHandleValidations(user){
     document.getElementById("City").value = " ";
 
   }
-  
+  // toggleChange() {
+  //   this.setState({ isChecked: !this.state.isChecked })
+  //  // console.log("chekbox", this.state.isChecked)
+  // }
   render() {
     const { user, submitted } = this.state;
     let ConferenceValues = [
@@ -311,15 +338,6 @@ onHandleValidations(user){
                           <option value="Conference 3">Conference 3</option>
                         </Input>
                       </InputGroup>
-                      {/* <Select
-                        onChange={this.changeFunction}
-                        placeholder="---Select---"
-                        simpleValue
-                        value={user.Conference}
-                        options={ConferenceValues}
-                      /> */}
-
-
                       {/* <Row>
                       <Col md="6">
                       {submitted && user.Conference && 
@@ -351,7 +369,6 @@ onHandleValidations(user){
                     </InputGroup>
                   </FormGroup>
                   <FormGroup row>
-
                     <Col xs="6" md="2" >
                       <Button type="submit" size="md" color="primary" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
                     </Col>
@@ -359,7 +376,6 @@ onHandleValidations(user){
                       <Button size="md" color="success" onClick={this.onGenerateQRcode} >Print QR code</Button>
                     </Col>
                     <Col md="2">
-
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                     </Col>
                    
