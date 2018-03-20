@@ -26,7 +26,7 @@ export class DBUtil {
                 errorFn(ex);
             });
     }
-
+    
     static getDocRef(tableName) {
         return firestoredb.collection(tableName);
 
