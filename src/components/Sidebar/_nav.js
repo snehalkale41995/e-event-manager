@@ -29,6 +29,16 @@ export default {
       url: '/attendance',
       icon: 'icon-note'
     },
+    // {
+    //   name: 'RenderForm',
+    //   url: '/renderForm',
+    //   icon: 'icon-note'
+    // },
+    // {
+    //   name: 'Questions',
+    //   url: '/questions',
+    //   icon: 'icon-question'
+    // },
     {
       name: 'Registration',
       url: '/registration',     
