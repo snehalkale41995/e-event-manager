@@ -111,7 +111,8 @@ class UserList extends Component
           let lname = user.userInfo.lastName;
           let name = fname +" "+lname;
           let contactNo = user.userInfo.contactNo;
-          let emailid = user.userInfo.emailId;          let roleName = user.userInfo.roleName;
+          let emailid = user.userInfo.emailId;
+          let roleName = user.userInfo.roleName;
 
     var newWindow = window.open('','','width=200,height=100');
     newWindow.document.writeln("<html>");
