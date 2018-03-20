@@ -258,11 +258,11 @@ class RegistrationList extends Component{
                     <Col xs="12" lg="12">
                         <Card>
                         <CardHeader>
-                            <FormGroup row>
-                                    <Col xs="12" md="6">
-                                        <h1>Registration List</h1>
+                            <FormGroup row className="marginBottomZero">
+                                    <Col xs="12" md="9">
+                                        <h1 className="regHeading paddingTop8">Registration List</h1>
                                     </Col>
-                                    <Col xs="12" md="6">
+                                    <Col xs="12" md="3">
                                         <Select
                                             placeholder="Select Events"
                                             simpleValue
@@ -282,7 +282,7 @@ class RegistrationList extends Component{
 
                     <Modal isOpen={this.state.modelPopupFlag} toggle={this.togglePopup}
                         className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.togglePopup}>User Response</ModalHeader>
+                    <ModalHeader toggle={this.togglePopup} className="userResponseModalHead">User Response</ModalHeader>
                     <ModalBody>
                             <Table responsive>
                                 <thead>
