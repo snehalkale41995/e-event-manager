@@ -17,7 +17,7 @@ import Attendance from '../../views/Attendance/Attendance';
 import Session from '../../views/Sessions/Session';
 import Registration from '../../views/Registration/Registration';
 import Rooms from '../../views/Rooms/Rooms';
-import RegistrationList from '../../views/RegistrationList/RegistrationList';
+import RegistrationList from '../../views/RegistrationList/registrationList';
 //import EventQuestions from '../../views/EventQuestions/EventQuestions';
 
 class Full extends Component {
