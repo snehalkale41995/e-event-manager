@@ -369,13 +369,11 @@ onHandleValidations(user){
                     </InputGroup>
                   </FormGroup>
                   <FormGroup row>
-                    <Col xs="6" md="2" >
-                      <Button type="submit" size="md" color="primary" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
-                    </Col>
-                    <Col md="2">
-                      <Button size="md" color="success" onClick={this.onGenerateQRcode} >Print QR code</Button>
-                    </Col>
-                    <Col md="2">
+                    <Col xs="12" md="12" >
+                      <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
+                      &nbsp;&nbsp;  
+                      <Button size="md" color="primary" onClick={this.onGenerateQRcode} >Print QR code</Button>
+                        &nbsp;&nbsp; 
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                     </Col>
                    

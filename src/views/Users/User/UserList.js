@@ -152,21 +152,22 @@ class UserList extends Component
                     <td>{user.userInfo.contactNo}</td>
                     <td>{user.userInfo.emailId}</td>
                     <td>{user.userInfo.roleName}</td>
-                    <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger">Delete</Button></td>  
-                   <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
+                    
+                    <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button></Link></td>
+                    <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger"><i className="fa fa-trash"></i> Delete</Button></td>  
+
                 </tr>
             });
 
         return (
             <div className="animated fadeIn">
             <div>     
-           <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="secondary"> Add new User </Button></Link>
+           <Link to={`${this.props.match.url}/userForm`}> <Button type="button" color="primary"><i className="fa fa-plus"></i> Add User </Button></Link>
            </div>       
            <br/>
-           <br/>
-                   <Container>
-                    <Row className="justify-content-center">
-                        <Col xs="12">
+          
+                    <Row className="justify-content-left">
+                        <Col xs="12" md="12">
                             <Card>
                                 <CardHeader>
                                     <label className="regHeading">Users</label>                                   
@@ -189,7 +190,7 @@ class UserList extends Component
                             </Card>
                         </Col>
                     </Row>
-              </Container>
+             
             </div>
         )
     }

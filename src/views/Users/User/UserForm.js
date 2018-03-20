@@ -221,18 +221,17 @@ class UserForm extends React.Component {
         return (
             <div className="animated fadeIn">
              <div>
-            <Link to="/user"> <Button type="button" color="secondary"> Back to List </Button></Link>
+            <Link to="/user"> <Button type="button" color="primary"><i class="fa fa-chevron-left"></i> Back to List </Button></Link>
             </div>
+           
             <br/>
-            <br/>
-              <Container>
+             
             
-                 <Row className="justify-content-center">
-                 <Col md="12">
-                 <Card className="mx-4">
-                <CardHeader>
-                 <i className="fa fa-align-justify"></i>
-                  User Form
+                 <Row className="justify-content-left">
+                 <Col md="8">
+                 <Card className="">
+                <CardHeader>                 
+                 <label className="regHeading"> User Form</label>
                 </CardHeader>
 
            
@@ -251,8 +250,8 @@ class UserForm extends React.Component {
                     </InputGroupText>
                     </InputGroupAddon>
                   <Input type="text" placeholder="Enter First Name" name="firstName" value={this.state.user.firstName} 
-                   onChange={this.changeFunction}/>
-                  <br/> <span style={{color: "red"}}>{this.state.errors["firstName"]}</span>
+                   onChange={this.changeFunction} className="form-control"/>
+                  <div style={{color: "red"}}  className="help-block">{this.state.errors["firstName"]}</div>
                  </InputGroup>
                  </Col>
 
@@ -264,8 +263,8 @@ class UserForm extends React.Component {
                     </InputGroupText>
                     </InputGroupAddon>
                   <Input type="text" placeholder="Enter Last Name" name="lastName" value={this.state.user.lastName} 
-                   onChange={this.changeFunction}/>
-                   <br/> <span style={{color: "red"}}>{this.state.errors["lastName"]}</span>
+                   onChange={this.changeFunction} className="form-control"/>
+                   <div style={{color: "red"}}  className="help-block">{this.state.errors["lastName"]}</div>
                  </InputGroup>
                  </Col>
                 </FormGroup>
@@ -283,8 +282,8 @@ class UserForm extends React.Component {
                    
                     </InputGroupAddon>
                   <Input type="text" placeholder="Enter valid Email Id" name="emailId" value={this.state.user.emailId} 
-                   onChange={this.changeFunction}/>
-                   <br/> <span style={{color: "red"}}>{this.state.errors["emailId"]}</span>
+                   onChange={this.changeFunction} className="form-control"/>
+                   <div style={{color: "red"}}  className="help-block">{this.state.errors["emailId"]}</div>
                  </InputGroup>
                  </Col>
 
@@ -304,27 +303,22 @@ class UserForm extends React.Component {
 
                 <br/>
 
-                  
-                
                
-               
-
-
            <Row>
            <Col md="6" >        
            <FormGroup>
-           <Select
+           <Select className="form-control"
            onChange={this.changeprofile}
            placeholder="Select Profile"
             simpleValue
             value={profilesValue}
            options={options}
           />
-           <br/> <span style={{color: "red"}}>{this.state.errors["roleName"]}</span>
+          <div style={{color: "red"}} className="help-block" style="margin-top:0!important;">{this.state.errors["roleName"]}</div>
           </FormGroup>
           </Col>
          </Row>
-             <br/>
+           
                <Row>
                   <Col xs="12">        
                   <FormGroup>
@@ -334,19 +328,12 @@ class UserForm extends React.Component {
                  </Col>
                 </Row>
 
+               
                <Row>
-               <Col xs="12">  
-               <h1>   </h1>
-               <br/>
-               </Col>
-               </Row>    
-
-               <Row>
-               <Col sm={{ size: 'auto', offset: 2 }}>
-               <Button type="submit" color="primary">Create User</Button>
-               </Col>
-              <Col sm={{ size: 'auto', offset: 3 }}>
-              <Button onClick={this.resetField} color="success">Reset</Button>
+               <Col sm="6">
+               <Button type="submit" color="success">Create User</Button>  &nbsp;&nbsp;
+             
+              <Button onClick={this.resetField} color="danger"><i class="fa fa-ban"></i> Reset</Button>
               </Col>
               </Row>
   
@@ -356,7 +343,7 @@ class UserForm extends React.Component {
                 </Col>
                 </Row>
                  
-                </Container>
+                
           
             </div>
       
