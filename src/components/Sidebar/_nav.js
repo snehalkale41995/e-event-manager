@@ -50,6 +50,11 @@ export default {
       icon: 'icon-note'
     },
     {
+      name: 'Event Questions',
+      url: '/eventQuestions',
+      icon: 'icon-note'
+    },    
+    {
       title: true,
       name: 'Users',
       wrapper: {

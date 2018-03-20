@@ -12,5 +12,6 @@ const routes = {
   '/registration' : 'Registration',
   '/rooms' : 'Rooms',
   '/registrationList' : 'Registration List',
+  '/eventQuestions': 'Event Questions'
 };
 export default routes;

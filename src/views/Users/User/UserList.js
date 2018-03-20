@@ -67,6 +67,7 @@ class UserList extends Component
           let roleName = user.userInfo.roleName
        
 	      let  cardDetails= {
+
 				version: '3.0',
 				lastName: lname,
 				firstName: fname,
@@ -110,9 +111,7 @@ class UserList extends Component
           let lname = user.userInfo.lastName;
           let name = fname +" "+lname;
           let contactNo = user.userInfo.contactNo;
-          let emailid = user.userInfo.emailId;
-          let roleName = user.userInfo.roleName;
-
+          let emailid = user.userInfo.emailId;          let roleName = user.userInfo.roleName;
 
     var newWindow = window.open('','','width=200,height=100');
     newWindow.document.writeln("<html>");
@@ -151,9 +150,10 @@ class UserList extends Component
                     <td>{user.userInfo.firstName} {user.userInfo.lastName}</td>
                     <td>{user.userInfo.contactNo}</td>
                     <td>{user.userInfo.emailId}</td>
-                    <td>{user.userInfo.roleName}</td>
-                    <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger">Delete</Button></td>  
-                   <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
+                    <td>{user.userInfo.profiles}</td>
+                    <td><Button  onClick={() => componentRef.fetchDetails(user)} color="secondary">Print card</Button></td>     
+                    <td> <Button  onClick={() => componentRef.deleteUser(user)} color="danger">Delete</Button></td> 
+                    <td> <Link to={`${componentRef.props.match.url}/userForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
                 </tr>
             });
 
