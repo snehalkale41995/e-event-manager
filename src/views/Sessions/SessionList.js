@@ -71,26 +71,25 @@ class SessionList extends Component
                         {return(<li>{speaker}</li>)})} </td>
                     <td>{ event.eventInfo.volunteers.map((volunteer)=>
                         {return(<li>{volunteer}</li>)})} </td>
-                  
-                    <td> <Button color="danger">Delete</Button></td> 
-                    <td> <Link to={`${componentRef.props.match.url}/sessionForm`}> <Button type="button" color="primary">Edit</Button></Link></td>
+                                      
+                    <td> <Link to={`${componentRef.props.match.url}/sessionForm`}> <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button></Link></td>
+                    <td> <Button color="danger"><i className="fa fa-trash"></i> Delete</Button></td> 
                 </tr>
             });
 
         return (
             <div className="animated fadeIn">
             <div>     
-      <Link to={`${this.props.match.url}/sessionForm`}> <Button type="button" color="secondary"> Add new Event </Button></Link>
+      <Link to={`${this.props.match.url}/sessionForm`}> <Button type="button" color="primary"><i className="fa fa-plus"></i> Add Event </Button></Link>
           </div>       
           <br/>
-          <br/>
-                    <Container>
-                    <Row className="justify-content-center">
-                        <Col xs="12">
+       
+                    
+                    <Row className="justify-content-left">
+                        <Col xs="12" md="12">
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i>
-                                   Session Table
+                                   <label className="regHeading">Session Table</label>
                                 </CardHeader>
                                 <CardBody>
                                     <Table responsive>
@@ -110,7 +109,7 @@ class SessionList extends Component
                             </Card>
                         </Col>
                     </Row>
-                </Container>
+               
             </div>
         )
     }

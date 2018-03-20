@@ -571,7 +571,7 @@ class SessionForm extends Component {
           
 
           <FormGroup row>
-            <Col xs="12">
+            <Col xs="12" md="2">
               <FormGroup>
                 <Label> Select Room  :</Label>
           <Input type="select"    value={roomsValue}  onChange={this.changeRoom}>
@@ -603,27 +603,25 @@ class SessionForm extends Component {
 
           <Col md='4'>
             <div className="animated fadeIn">
-              <br />
-              <br />
+             
                <Row>
-                <Col className={(submitted && !EventObj.startTime ? ' has-error' : '')}>
-                 {submitted && !EventObj.startTime && !EventObj.endTime &&
-                  <div className="help-block" style={{ color: "red" }}>please select slot</div> }
-                 </Col>
+                
               </Row>
 
               <div> <span style={{color: "red"}}>{this.state.SlotalertMessage}</span></div>
-              <br/>
+            
               <Container>
                 <Row className="justify-content-center">
                   <Col md="12">
-                    <Card className="mx-4">
-                      <CardHeader>
-                        <i className="fa fa-align-justify"></i>
+                    <Card className="mx-4 sessionCard">
+                      <CardHeader>                        
                         Session Form
+                        <Col className={(submitted && !EventObj.startTime ? ' has-error' : '')}>
+                        {submitted && !EventObj.startTime && !EventObj.endTime &&
+                          <div className="help-block sessionErrorBlock" style={{ color: "red" }}>Please Select Slot</div> }
+                        </Col>
                      </CardHeader>
                       <CardBody className="p-4">
-
 
                         <form name="form" onSubmit={this.submitFunction}>
                           <FormGroup row>
@@ -646,9 +644,8 @@ class SessionForm extends Component {
                       </Row>
                             </Col>
                           </FormGroup>
-                          <br />
-
-
+                         
+                            <FormGroup>
                           <Row>
                             <Col xs="12" className={(submitted && !EventObj.speakers ? ' has-error' : '')}>
 
@@ -664,20 +661,22 @@ class SessionForm extends Component {
                             </Col>
                             
                           </Row>
-                         <Row>
+                           <Row>
                         <Col>
                           {submitted && !EventObj.speakers.length &&
                             <div className="help-block" style={{ color: "red" }}>*Required</div>
                           }
                         </Col>
                       </Row>
-                          <br />
-
+                          </FormGroup>
+                        
+                         
+                        <FormGroup>
 
                           <Row>
                             <Col xs="12" className={(submitted && !EventObj.volunteers ? ' has-error' : '')}>
-                              <FormGroup>
-                                <Label> select volunteers </Label>
+                             
+                                <Label>Select Volunteers </Label>
                                 <Select
                                   multi
                                   onChange={this.multichangeVolunteers}
@@ -686,33 +685,38 @@ class SessionForm extends Component {
                                   value={volunteersValue}
                                   options={volunteerOptions}
                                 />
-                              </FormGroup>
+                             
                             </Col>
                           </Row>
-                     <Row>
-                        <Col >
-                          {submitted && !EventObj.volunteers.length &&
-                            <div className="help-block" style={{ color: "red" }}>*Required</div>
-                          }
-                        </Col>
-                      </Row>
-                          <br />
+                          <Row>
+                              <Col >
+                                {submitted && !EventObj.volunteers.length &&
+                                  <div className="help-block" style={{ color: "red" }}>*Required</div>
+                                }
+                              </Col>
+                            </Row>
+                          </FormGroup>
+                      
+                          <FormGroup>
+                        
                           <Row>
                             <Col xs="12" className={(submitted && !EventObj.extraServices ? ' has-error' : '')}>
-                              <FormGroup>
+                              
                                 <Label> Extra Services : </Label>
                                 <Input type="textarea" placeholder="extra services" name="extraServices" value={this.state.EventObj.extraServices} onChange={this.changeFunction} />
-                              </FormGroup>
+                             
                             </Col>
                           </Row>
-                       <Row>
-                        <Col>
-                          {submitted && !EventObj.extraServices &&
-                            <div className="help-block" style={{ color: "red" }}>*Required</div>
-                          }
-                        </Col>
-                      </Row>
-                          <br />
+                            <Row>
+                              <Col>
+                                {submitted && !EventObj.extraServices &&
+                                  <div className="help-block" style={{ color: "red" }}>*Required</div>
+                                }
+                              </Col>
+                            </Row>
+                          </FormGroup>
+                      
+                       
                           <Row>
                             <Col xs="12">
                               <FormGroup>
@@ -722,30 +726,19 @@ class SessionForm extends Component {
                             </Col>
                           </Row>
 
-                          <Row>
-                            <Col xs="12">
-                              <h1>   </h1>
-                              <br />
-                            </Col>
-                          </Row>
+                      
                          
 
                           { editDeleteFlag &&
                           <div>
                             <Row>
 
-                            <Col sm={{ size: 'auto', offset: 0}}>
-                              <Button onClick={this.updateEvent} color="primary">update</Button>
-                            </Col>
-
-                            <Col sm={{ size: 'auto', offset: 1 }}>
-                              <Button  onClick={() => {if(confirm('Are you sure you want to permanently delete this session ?')) {this.deleteEvent()};}} color="danger">delete</Button>
-                            </Col>
-                           </Row>
-                          <br/>
-                           <Row>
-                           <Col sm={{ size: 'auto', offset: 3 }}>
-                              <Button onClick={this.resetField} color="secondary">Reset</Button>
+                            <Col sm="12">
+                              <Button onClick={this.updateEvent} color="success">Update</Button>
+                              &nbsp;&nbsp;
+                              <Button  onClick={() => {if(confirm('Are you sure you want to permanently delete this session ?')) {this.deleteEvent()};}} color="danger">Delete</Button>
+                               &nbsp;&nbsp;
+                              <Button onClick={this.resetField} color="primary"><i className="fa fa-ban"></i> Reset</Button>
                             </Col>
 
                             </Row>
@@ -757,12 +750,10 @@ class SessionForm extends Component {
                        {createFlag &&
                           <Row  sm={{ size: 'auto', offset: 2 }}>
                           
-                            <Col >
+                            <Col md="12">
                               <Button type="submit" color="primary">Create Session</Button>
-                            </Col>
-                           
-                            <Col sm={{ size: 'auto', offset: 0 }}>
-                              <Button onClick={this.resetField} color="secondary">Reset</Button>
+                              &nbsp;&nbsp;
+                              <Button onClick={this.resetField} color="danger"><i className="fa fa-ban"></i>Reset</Button>
                             </Col>
                             </Row>
                        }
@@ -776,6 +767,7 @@ class SessionForm extends Component {
             </div>
           </Col>
         </Row>
+        <br/>
       </div>
     )
   }

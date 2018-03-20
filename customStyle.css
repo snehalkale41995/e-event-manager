@@ -119,3 +119,31 @@ input[type="radio"], input[type="checkbox"] {
     width: 130px;
     margin-top: 10px;
 }
+
+/*** D.20 March 2018 ****/
+.sessionCard .help-block{
+    margin-top: 0;
+}
+.sessionErrorBlock{
+    float: right!important;
+    position: relative!important;
+    margin-top: -18px!important;
+}
+.rbc-toolbar button {
+    font-size: 13px!important;
+    font-weight: 500!important;
+}
+.rbc-time-slot {
+    font-size: 12px!important;
+    font-weight: 500!important;
+}
+.marginBottomZero{
+    margin-bottom: 0!important;
+}
+.paddingTop8{
+    padding-top: 8px;
+}
+.userResponseModalHead{
+    background: #f1f1f1;
+    border-bottom: none!important;
+}
