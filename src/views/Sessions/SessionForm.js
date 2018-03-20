@@ -285,8 +285,8 @@ class SessionForm extends Component {
      let SlotalertMessage = compRef.state.SlotalertMessage;
      SlotalertMessage ='';
      compRef.setState({SlotalertMessage:SlotalertMessage})
-     if(isRegrequired==true)
-      { compRef.openModal();}
+    //  if(isRegrequired==true)
+    //   { compRef.openModal();}
      
      
        
@@ -564,7 +564,7 @@ class SessionForm extends Component {
 
           <h6 ref={subtitle => this.subtitle = subtitle}></h6>
           <Button color="danger" onClick={this.closeModal}>X</Button>
-         <Registration/>
+         <Registration sessionId = {EventObj.eventName} />
         </Modal>
       </div>
     <div>
@@ -741,11 +741,14 @@ class SessionForm extends Component {
                             <Col sm={{ size: 'auto', offset: 1 }}>
                               <Button  onClick={() => {if(confirm('Are you sure you want to permanently delete this session ?')) {this.deleteEvent()};}} color="danger">delete</Button>
                             </Col>
-
-                             <Col sm={{ size: 'auto', offset: 1 }}>
+                           </Row>
+                          <br/>
+                           <Row>
+                           <Col sm={{ size: 'auto', offset: 3 }}>
                               <Button onClick={this.resetField} color="secondary">Reset</Button>
                             </Col>
-                         </Row>
+
+                            </Row>
                          </div>
                         }
 
