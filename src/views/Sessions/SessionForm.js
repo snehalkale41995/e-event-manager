@@ -42,20 +42,6 @@ BigCalendar.setLocalizer(
 
 const Sessions = "Sessions";
 
-const customStyles = {
-  content: {
-    height: '600px',
-    width: '700px',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
-
-
 class SessionForm extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +58,7 @@ class SessionForm extends Component {
         endTime: '',
         isRegrequired: false
       },
+      
       EventgetObj: [],
       submitted: false,
       speakersValue: '',
@@ -82,10 +69,13 @@ class SessionForm extends Component {
       roomData: [],
       clickBigFlag: true,
       myEventsList: [],
+      slotStartTime:'',
+      slotEndTime: '',
       modalIsOpen: false,
       editDeleteFlag: false,
       createFlag: true,
       SlotalertMessage: '',
+      SlotconfirmMessage:'',
       submitted: false,
       selectedRoom: '',
       deletePopupFlag: false,
@@ -111,6 +101,7 @@ class SessionForm extends Component {
     this.deleteConfirmPopup = this.deleteConfirmPopup.bind(this);
     this.slotConfirmPopup = this.slotConfirmPopup.bind(this);
     this.addQPopup = this.addQPopup.bind(this);
+    this.slotConfirmSuccess = this.slotConfirmSuccess.bind(this);
   }
 
 
@@ -177,6 +168,21 @@ class SessionForm extends Component {
      thisRef.setState(
         { speakerData: listSpeakers });
     })
+
+//   let speakerName;
+//    DBUtil.addChangeListener("Attendee", function (list) {
+//     list.forEach(function (document) {
+//       console.log(document.data(),"attendee list");
+//       if(document.data().prfile == "speaker")
+//         {
+//           speakerName = document.data().
+//         }
+//       });
+//     //  thisRef.setState(
+//     //     { speakerData: listSpeakers });
+//     })
+
+
 
     ///for volunteer multiselect
     DBUtil.addChangeListener("Volunteers", function (listResponse) {
@@ -297,17 +303,55 @@ class SessionForm extends Component {
     });
   }
 
-  slotConfirmPopup(slotInfo) {
-    console.log("slotInfo in confirm popup",slotInfo)
+  slotConfirmPopup() {
     this.setState({
       slotPopupFlag: !this.state.slotPopupFlag
     });
  }
 
+ slotConfirmSuccess()
+ {
+        var SlotconfirmMessage = this.state.SlotconfirmMessage;
+        SlotconfirmMessage = `Start Time : ${this.state.slotStartTime.toLocaleString()} ` +
+         `, End Time: ${this.state.slotEndTime.toLocaleString()}`;
+        // SlotalertMessage = "confirm slot :"+ "" + "" + "start Time :" + "" + slotInfo.start.toLocaleString() + ""+ "" + "end Time :" +"" + slotInfo.end.toLocaleString()
+         this.setState({ SlotconfirmMessage: SlotconfirmMessage })
+        console.log("in slot confirm success");
+        console.log("this.state.slotStartTime", this.state.slotStartTime);
+        console.log("this.state.slotEndTime", this.state.slotEndTime);
+       const startTime = 'startTime';
+        const endTime = 'endTime'
+        const EventObj = this.state.EventObj;
+        EventObj[startTime] = this.state.slotStartTime;
+        EventObj[endTime] = this.state.slotEndTime;
+        this.setState({ EventObj: EventObj });
+        console.log(this.state.EventObj, this.state.EventObj);
+        this.setState({
+          createFlag: true,
+          editDeleteFlag: false,
+          slotPopupFlag : false
+        });
+ }
 
   updateEvent() {
-    const { EventObj } = this.state;
-    let compRef = this;
+    // const { EventObj } = this.state;
+    // let compRef = this;
+    this.setState({ submitted: true });
+    const EventObj = this.state.EventObj;
+    if (EventObj.eventName && EventObj.speakers.length && EventObj.volunteers.length
+        && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+      let compRef = this;
+      let length = EventObj.speakers.length;
+      let lastElement = EventObj.speakers[length - 1]
+      let speakerArray = lastElement.split(',');
+       EventObj.speakers = speakerArray;
+
+
+      let len = EventObj.volunteers.length;
+      let lastEle = EventObj.volunteers[len - 1]
+      let volunteersArray = lastEle.split(',');
+       EventObj.volunteers = volunteersArray;
+   let isRegrequired = this.state.EventObj.isRegrequired;
    DBUtil.getDocRef(Sessions).doc(EventObj.eventID).update({
       "eventName": EventObj.eventName,
       "room": EventObj.room,
@@ -322,6 +366,10 @@ class SessionForm extends Component {
         toast.success("Session updated successfully.", {
           position: toast.POSITION.BOTTOM_RIGHT,
       });
+         if (isRegrequired == true)
+        { compRef.addQPopup(); 
+        //  compRef.setState({addQPopupFlag: false})
+        }
         compRef.resetField();
         compRef.setState({
           createFlag: true,
@@ -329,7 +377,7 @@ class SessionForm extends Component {
         })
       });
   }
-
+  }
 
   resetField() {
     this.setState({
@@ -345,7 +393,7 @@ class SessionForm extends Component {
       volunteersValue: '',
       clickBigFlag: true,
       submitted: false,
-      SlotalertMessage: ''
+      SlotconfirmMessage: ''
 
     });
   }
@@ -470,36 +518,41 @@ class SessionForm extends Component {
   }
 
   alertAction(slotInfo) {
-    let slotInformation = slotInfo;
-    if (this.state.clickBigFlag) {
 
-      if (confirm(`Are you sure, You want to book this slot ?: \n\nStart Time : ${slotInfo.start.toLocaleString()} ` +
-        `\nEnd Time: ${slotInfo.end.toLocaleString()}`)) {
+     let slotStartTime = this.state.slotStartTime;
+     let slotEndTime = this.state.slotEndTime;
+    
+    // if (this.state.clickBigFlag) {
+
+    //   if (confirm(`Are you sure, You want to book this slot ?: \n\nStart Time : ${slotInfo.start.toLocaleString()} ` +
+    //     `\nEnd Time: ${slotInfo.end.toLocaleString()}`)) {
+    //     var SlotalertMessage = this.state.SlotalertMessage;
+    //     SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
+    //       `, End Time: ${slotInfo.end.toLocaleString()}`;
+    //     // SlotalertMessage = "selected slots :"+ "" + "<br/>" + "start Time :" + "" + slotInfo.start.toLocaleString() + ""+ "<br/>" + "end Time :" +"" + slotInfo.end.toLocaleString()
+    //    this.setState({ SlotalertMessage: SlotalertMessage })
+    //     const startTime = 'startTime';
+    //     const endTime = 'endTime'
+    //     const EventObj = this.state.EventObj;
+    //     EventObj[startTime] = slotInfo.start;
+    //     EventObj[endTime] = slotInfo.end;
+    //     this.setState({ EventObj: EventObj });
+    //     this.setState({
+    //       createFlag: true,
+    //       editDeleteFlag: false
+    //     });
+    //   }
+    // }
+    if (this.state.clickBigFlag) {
         var SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
-          `, End Time: ${slotInfo.end.toLocaleString()}`;
-        // SlotalertMessage = "selected slots :"+ "" + "<br/>" + "start Time :" + "" + slotInfo.start.toLocaleString() + ""+ "<br/>" + "end Time :" +"" + slotInfo.end.toLocaleString()
-       this.setState({ SlotalertMessage: SlotalertMessage })
-        const startTime = 'startTime';
-        const endTime = 'endTime'
-        const EventObj = this.state.EventObj;
-        EventObj[startTime] = slotInfo.start;
-        EventObj[endTime] = slotInfo.end;
-        this.setState({ EventObj: EventObj });
-        this.setState({
-          createFlag: true,
-          editDeleteFlag: false
-        });
+         `, End Time: ${slotInfo.end.toLocaleString()}`;
+        SlotalertMessage = "confirm slot :"+ " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "end Time :" +"" + slotInfo.end.toLocaleString()
+         this.setState({ SlotalertMessage: SlotalertMessage })
+         this.setState({slotStartTime : slotInfo.start});
+         this.setState({slotEndTime : slotInfo.end})
+         this.slotConfirmPopup();
       }
-    }
-    // if (this.state.clickBigFlag) {
-    //     var SlotalertMessage = this.state.SlotalertMessage;
-    //     SlotalertMessage = `Start Time : ${slotInformation.start.toLocaleString()} ` +
-    //      `, End Time: ${slotInformation.end.toLocaleString()}`;
-    //     SlotalertMessage = "selected slots :"+ "" + "<br/>" + "start Time :" + "" + slotInformation.start.toLocaleString() + ""+ "<br/>" + "end Time :" +"" + slotInformation.end.toLocaleString()
-    //      this.setState({ SlotalertMessage: SlotalertMessage })
-    //     this.slotConfirmPopup(slotInformation);
-    //   }
   }
 
   formAction(event) {
@@ -573,7 +626,7 @@ class SessionForm extends Component {
 
         <Col md='4'>
             <div className="animated fadeIn">
-                <div> <span style={{color: "red"}}>{this.state.SlotalertMessage}</span></div>
+                <div> <span style={{color: "red"}}>{this.state.SlotconfirmMessage}</span></div>
                 <Container>
                     <Row className="justify-content-center">
                         <Col md="12">
@@ -671,7 +724,7 @@ class SessionForm extends Component {
                                         <div>
                                             <Row>
                                                 <Col sm="12">
-                                                    <Button onClick={this.updateEvent} color="success">Update</Button>
+                                                    <Button name="update" onClick={this.updateEvent} color="success">Update</Button>
                                                     &nbsp;&nbsp;
                                                     <Button onClick={this.deleteConfirmPopup} color="danger">Delete</Button>
                                                     &nbsp;&nbsp;
@@ -706,7 +759,7 @@ class SessionForm extends Component {
                                 </ModalFooter>
                             </Modal>
 
-                            {/* <Modal isOpen={this.state.slotPopupFlag} toggle={this.slotConfirmPopup} className={ 'modal-lg ' + this.props.className}>
+                             <Modal isOpen={this.state.slotPopupFlag} toggle={this.slotConfirmPopup} className={ 'modal-lg ' + this.props.className}>
                                 <ModalHeader toggle={this.slotConfirmPopup}>Confirm</ModalHeader>
                                 <ModalBody>
                                     <div>
@@ -714,10 +767,10 @@ class SessionForm extends Component {
                                     </div>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="success" onClick={this.slotConfirmPopup}>Confirm</Button>&nbsp;
+                                    <Button color="success" onClick={this.slotConfirmSuccess}>Confirm</Button>&nbsp;
                                     <Button color="danger" onClick={this.slotConfirmPopup}>Cancel</Button>
                                 </ModalFooter>
-                            </Modal> */}
+                            </Modal> 
 
                         </Col>
                     </Row>
