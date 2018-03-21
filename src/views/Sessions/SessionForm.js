@@ -5,7 +5,7 @@ import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import Questions from '../Questions/Questions'
+import QuestionsForm from '../Questions/QuestionsForm';
 import {
  InputGroup,
   Row,
@@ -547,7 +547,7 @@ class SessionForm extends Component {
         var SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
          `, End Time: ${slotInfo.end.toLocaleString()}`;
-        SlotalertMessage = "confirm slot :"+ " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "end Time :" +"" + slotInfo.end.toLocaleString()
+        SlotalertMessage = "confirm slot :"+ " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "end Time :" +"" + slotInfo.end.toLocaleString()  
          this.setState({ SlotalertMessage: SlotalertMessage })
          this.setState({slotStartTime : slotInfo.start});
          this.setState({slotEndTime : slotInfo.end})
@@ -600,7 +600,7 @@ class SessionForm extends Component {
          <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={ 'modal-lg ' + this.props.className}>
          <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
          <ModalBody>
-         <Questions sessionId={ EventObj.eventName} />
+         <QuestionsForm sessionId = { EventObj.eventName} addQPopup={this.addQPopup}  />
         </ModalBody>
         
         </Modal>
