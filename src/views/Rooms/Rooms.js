@@ -155,11 +155,7 @@ class Rooms extends Component {
                                                     <InputGroupText><i className="icon-pie-chart"></i></InputGroupText>
                                                 </InputGroupAddon>
                                                 <Input type="number" placeholder="Capacity" name="Capacity" value={this.state.Room.Capacity} onChange={this.changeFunction} />
-                                                 {submitted && !Room.Capacity &&
-                                                        <div className="help-block">Capacity is required</div>
-                                                    }
                                             </InputGroup>
-
                                             <Row>
                                                 <Col md="6">
                                                 {submitted && !Room.Capacity &&
