@@ -6,7 +6,6 @@ import { DBUtil } from '../../services';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import QuestionsForm from '../Questions/QuestionsForm';
-
 import {
  InputGroup,
   Row,
@@ -42,20 +41,6 @@ BigCalendar.setLocalizer(
 );
 
 const Sessions = "Sessions";
-
-const customStyles = {
-  content: {
-    height: '600px',
-    width: '700px',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
-
 
 class SessionForm extends Component {
   constructor(props) {
@@ -562,7 +547,7 @@ class SessionForm extends Component {
         var SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
          `, End Time: ${slotInfo.end.toLocaleString()}`;
-        SlotalertMessage = "confirm slot :"+ "" + "" + "start Time :" + "" + slotInfo.start.toLocaleString() + ""+ "" + "end Time :" +"" + slotInfo.end.toLocaleString()
+        SlotalertMessage = "confirm slot :"+ " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "end Time :" +"" + slotInfo.end.toLocaleString()  
          this.setState({ SlotalertMessage: SlotalertMessage })
          this.setState({slotStartTime : slotInfo.start});
          this.setState({slotEndTime : slotInfo.end})
