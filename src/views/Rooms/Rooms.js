@@ -140,14 +140,11 @@ class Rooms extends Component {
                                                     </InputGroupText>
                                                 </InputGroupAddon>
                                                 <Input type="text" placeholder="Room Name" name="RoomName" value={this.state.Room.RoomName} onChange={this.changeFunction} />
-                                            </InputGroup>
-                                            <Row>
-                                                <Col md="6">
-                                                    {submitted && !Room.RoomName &&
+                                                {submitted && !Room.RoomName &&
                                                         <div style={{color: "red"}} className="help-block">*Required</div>
                                                     }
-                                                </Col>
-                                            </Row>
+                                            </InputGroup>
+                                            
                                         </Col>
                                         <Col md="6"  >
                                             <InputGroup className="mb-3">
@@ -156,17 +153,9 @@ class Rooms extends Component {
                                                 </InputGroupAddon>
                                                 <Input type="number" placeholder="Capacity" name="Capacity" value={this.state.Room.Capacity} onChange={this.changeFunction} />
                                                  {submitted && !Room.Capacity &&
-                                                        <div className="help-block">Capacity is required</div>
-                                                    }
-                                            </InputGroup>
-
-                                            <Row>
-                                                <Col md="6">
-                                                {submitted && !Room.Capacity &&
                                                 <div style={{color: "red"}} className="help-block">*Required</div>
                                             }
-                                                </Col>
-                                            </Row>
+                                            </InputGroup>
 
                                         </Col>
                                        
