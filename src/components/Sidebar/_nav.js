@@ -29,6 +29,11 @@ export default {
       url: '/attendance',
       icon: 'icon-note'
     },
+    {
+      name: 'Attendee',
+      url: '/attendee',
+      icon: 'icon-note'
+    },
     // {
     //   name: 'RenderForm',
     //   url: '/renderForm',
