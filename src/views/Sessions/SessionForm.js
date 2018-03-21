@@ -475,7 +475,6 @@ class SessionForm extends Component {
     }
 
     dateSelected(slotInfo) {
-<<<<<<< Updated upstream
     this.ToggleSelectclick(slotInfo.start, slotInfo.end)
     setTimeout(() => {
       this.alertAction(slotInfo)
@@ -487,27 +486,6 @@ class SessionForm extends Component {
      let slotStartTime = this.state.slotStartTime;
      let slotEndTime = this.state.slotEndTime;
     
-    // if (this.state.clickBigFlag) {
-
-    //   if (confirm(`Are you sure, You want to book this slot ?: \n\nStart Time : ${slotInfo.start.toLocaleString()} ` +
-    //     `\nEnd Time: ${slotInfo.end.toLocaleString()}`)) {
-    //     var SlotalertMessage = this.state.SlotalertMessage;
-    //     SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
-    //       `, End Time: ${slotInfo.end.toLocaleString()}`;
-    //     // SlotalertMessage = "selected slots :"+ "" + "<br/>" + "start Time :" + "" + slotInfo.start.toLocaleString() + ""+ "<br/>" + "end Time :" +"" + slotInfo.end.toLocaleString()
-    //    this.setState({ SlotalertMessage: SlotalertMessage })
-    //     const startTime = 'startTime';
-    //     const endTime = 'endTime'
-    //     const EventObj = this.state.EventObj;
-    //     EventObj[startTime] = slotInfo.start;
-    //     EventObj[endTime] = slotInfo.end;
-    //     this.setState({ EventObj: EventObj });
-    //     this.setState({
-    //       createFlag: true,
-    //       editDeleteFlag: false
-    //     });
-    //   }
-    // }
     if (this.state.clickBigFlag) {
         var SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
@@ -550,90 +528,6 @@ class SessionForm extends Component {
   }
 
    render() {
-    const { EventObj, speakersValue, volunteersValue, speakerData, volunteerData, roomsValue, roomData, editDeleteFlag, createFlag, submitted } = this.state;
-    let options = speakerData;
-    let volunteerOptions = volunteerData;
-    let roomOptions = roomData;
-    let optionItems = roomOptions.map((roomOption) =>
-      <option key={roomOption.value}>{roomOption.value}</option>
-    );
-    // <Questions sessionId={ EventObj.eventName} />
-   return (
-     <div>
-    <ToastContainer autoClose={1000} /> 
-    <div>
-         <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={ 'modal-lg ' + this.props.className}>
-         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
-         <ModalBody>
-         <QuestionsForm sessionId = { EventObj.eventName} addQPopup={this.addQPopup}  />
-        </ModalBody>
-        
-        </Modal>
-    </div> 
-    <div>
-        <FormGroup row>
-            <Col xs="12" md="2">
-                <FormGroup>
-                    <Label> Room :</Label>
-                    <Input type="select" value={roomsValue} onChange={this.changeRoom}> {optionItems}
-                    </Input>
-                </FormGroup>
-            </Col>
-        </FormGroup>
-    </div>
-
-    <Row>
-        <Col md='8'>
-=======
-        this.ToggleSelectclick(slotInfo.start, slotInfo.end)
-        setTimeout(() => {
-            this.alertAction(slotInfo)
-        }, 1000);
-    }
-
-    alertAction(slotInfo) {
-
-        let slotStartTime = this.state.slotStartTime;
-        let slotEndTime = this.state.slotEndTime;
-        if (this.state.clickBigFlag) {
-            var SlotalertMessage = this.state.SlotalertMessage;
-            SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
-                `, End Time: ${slotInfo.end.toLocaleString()}`;
-            SlotalertMessage = "confirm slot :" + " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " " + "and " + "" + "end Time :" + "" + slotInfo.end.toLocaleString()
-            this.setState({ SlotalertMessage: SlotalertMessage })
-            this.setState({ slotStartTime: slotInfo.start });
-            this.setState({ slotEndTime: slotInfo.end })
-            this.slotConfirmPopup();
-        }
-    }
-
-    formAction(event) {
-        let editobj = {};
-        const EventObj = this.state.EventObj;
-        EventObj.eventID = event.id;
-        EventObj.eventName = event.title;
-        EventObj.startTime = event.start;
-        EventObj.endTime = event.end;
-        EventObj.extraServices = event.extraServices;
-        EventObj.speakers = event.speakers;
-        EventObj.volunteers = event.volunteers;
-        EventObj.room = event.room;
-        EventObj.isRegrequired = event.isRegrequired;
-
-        let SlotalertMessage = this.state.SlotalertMessage;
-        SlotalertMessage = '';
-        this.setState({ SlotalertMessage: SlotalertMessage })
-        this.setState({ EventObj: EventObj });
-        this.setState({ roomsValue: EventObj.room })
-        this.setState({ volunteersValue: EventObj.volunteers })
-        this.setState({ speakersValue: EventObj.speakers })
-        this.setState({
-            createFlag: false,
-            editDeleteFlag: true
-        })
-    }
-
-    render() {
         const { EventObj, speakersValue, volunteersValue, speakerData, volunteerData, roomsValue, roomData, editDeleteFlag, createFlag, submitted } = this.state;
         let options = speakerData;
         let volunteerOptions = volunteerData;
@@ -642,14 +536,13 @@ class SessionForm extends Component {
             <option key={roomOption.value}>{roomOption.value}</option>
         );
         return (
->>>>>>> Stashed changes
             <div>
                 <ToastContainer autoClose={1000} />
                 <div>
                     <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'questionModal ' + this.props.className}>
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
-                            <Questions sessionId={EventObj.eventName} addQPopup={this.addQPopup} />
+                            <QuestionsForm sessionId={EventObj.eventName} addQPopup={this.addQPopup} />
                         </ModalBody>
 
                     </Modal>
