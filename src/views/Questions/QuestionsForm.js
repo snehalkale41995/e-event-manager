@@ -15,11 +15,13 @@ let ShareInput = [];
 class QuestionsForm extends Component {
     constructor(props) {
         super(props);
+        console.log(props, "popssssss");
         this.InvalidMessage = "";
         this.state = {
             Forms: [],  //stores all available forms
             FormID: [],   //form name( doc name in firestore)
-            formValue: props.sessionId,     //name of the current form 
+            formValueId: props.sessionId,     //Id of the current form 
+            formValue : props.sessionName, // name of the current form 
             CurrentForm: [],    //Current form questions data
             QueAns: [],///Question and Answer data after  filling form
             OptionalCurrentArray: []
@@ -53,7 +55,7 @@ class QuestionsForm extends Component {
             });
             componentRef.setState({ Forms: form, FormID: FormID })
             componentRef.state.Forms.forEach(fItem => {
-                if (fItem.FormID == componentRef.state.formValue) {
+                if (fItem.FormID == componentRef.state.formValueId) {
                     CurrentForm = fItem.FormData.Questions;
                 }
             });
@@ -345,8 +347,10 @@ class QuestionsForm extends Component {
         if (this.state.formValue && invalid == false) {
             let componentRef = this;
             let tableName = "QuestionsForm";
-            let docName = this.state.formValue;
+            let docName = this.state.formValueId;
+            let sessionname = this.state.formValue;
             let doc = {
+                SessionName :sessionname,
                 Questions: this.state.OptionalCurrentArray
             }
             DBUtil.addDoc(tableName, docName, doc, function () {          //add doc to firebase
