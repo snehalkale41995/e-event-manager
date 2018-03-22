@@ -1,46 +1,44 @@
-import React, {Component} from 'react';
-import { Row, Col, Card, CardBody, Table } from 'reactstrap';
+import { Row, Col, Card, CardBody,Table } from 'reactstrap';
+import React, { Component } from 'react';
+import { IntlProvider, FormattedDate ,FormattedTime } from 'react-intl';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { DBUtil } from '../../services';
-import { IntlProvider, FormattedDate ,FormattedTime } from 'react-intl';
+import {DBUtil} from '../../services';
 
-class Attendance extends React.Component {
-    constructor() {
-        super();
+class Attendee extends Component{
+    constructor(props){
+        super(props);
         this.state = {
-            items: []
+            attendee: []
         }
     }
 
-    // Method for get attendance data
+    // Method for get all Attendees data 
     componentWillMount() {
         let componentRef = this;
-        DBUtil.addChangeListener("Attendance", function (objectList) {
-            let Users = [];
-            let UsersID = [];
-            objectList.forEach(function (doc) {
-                UsersID.push(doc.id);
-                Users.push({
-                    UserID: doc.id,
-                    UserData: doc.data()
+        DBUtil.addChangeListener("Attendee", function (objectList) {
+        let attendeeItems = [];        
+        objectList.forEach(function (doc) {
+            if (doc.data().isDelete != true ){
+                attendeeItems.push({
+                    attendeeItems: doc.data()
                 });
-            });
-            componentRef.setState({items: Users, itemsID: UsersID})
+            }
+        });
+        componentRef.setState({attendee: attendeeItems})
         });
     }
 
     render() {
-        this.rows = this.state.items.map(function (row) {
-            return <tr key={row.UserID} >
-                <td>{row.UserData.firstName + " " + row.UserData.lastName}</td>
-                <td>{row.UserData.email}</td>
-                <td>{row.UserData.contactNo}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} /></td>{/*<FormattedTime value={row.UserData.timesteamp.toString()} />  */}
-                <td>{row.UserData.registrationType}</td>
+        this.rows = this.state.attendee.map(function (row) {
+            return <tr key={row.attendeeItems.firstName}>
+                <td>{row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName }</td>
+                <td>{row.attendeeItems.email}</td>
+                <td>{row.attendeeItems.contactNo}</td>
+                <td><FormattedDate value={row.attendeeItems.timesteamp.toString()}/> </td>
+                <td>{row.attendeeItems.registrationType}</td>
             </tr>
             });
-
         return (
             <div className="animated fadeIn">
                 <IntlProvider locale="en">
@@ -48,7 +46,7 @@ class Attendance extends React.Component {
                         <Col md="12" >
                             <Card>
                                 <CardBody className="p-4">
-                                <h1>Attendance List</h1>
+                                <h1>Attendee List</h1>
                                     <Table responsive>
                                         <thead>
                                             <tr>
@@ -72,4 +70,5 @@ class Attendance extends React.Component {
         )
     }
 }
-export default Attendance;
+
+export default Attendee;

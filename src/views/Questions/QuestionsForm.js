@@ -9,6 +9,7 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import SessionForm from '../Sessions/SessionForm';
+import { ToastContainer, toast } from 'react-toastify';
 //let InvalidMessage = [];
 let ShareInput = [];
 class QuestionsForm extends Component {
@@ -348,10 +349,10 @@ class QuestionsForm extends Component {
                 Questions: this.state.OptionalCurrentArray
             }
             DBUtil.addDoc(tableName, docName, doc, function () {          //add doc to firebase
-                
-                alert("Form " + docName + " successfully added");
-                componentRef.props.addQPopup();
-                
+                toast.success("Form for " + docName + "added successfully.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                  });
+                componentRef.props.addQPopup();     
             },
                 function (err) {
                     console.log('Error', err);
