@@ -162,3 +162,11 @@ input[type="radio"], input[type="checkbox"] {
     height: 350px!important;
     overflow-y: auto!important;
 }
+
+/************* D. 22 March 2018 ************/
+.rbc-time-header > .rbc-row:nth-child(2){   
+    display: none;
+}
+.rbc-time-content {
+    border-top: 1px solid #DDD!important;
+}
