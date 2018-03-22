@@ -176,3 +176,9 @@ input[type="radio"], input[type="checkbox"] {
 .sessionCardHeader {
     padding: 8px!important;
 }
+.rbc-toolbar .rbc-toolbar-label {   
+    font-size: 20px!important;
+    font-weight: 700!important;
+    letter-spacing: 0px!important;
+    color: #0e83ad!important;
+}
