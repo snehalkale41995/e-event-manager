@@ -153,13 +153,14 @@ class SessionForm extends Component {
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
                 for (var i = 0; i < doc.data().profileServices.length; i++) {
+                  
                     if (doc.data().profileServices[i] == speakerId) {
                         speakerName = doc.data().firstName + " " + doc.data().lastName;
-                        listSpeakers.push({ label: speakerName, value: speakerName })
+                        listSpeakers.push({ label: speakerName, value: doc.id })
                     }
                     if (doc.data().profileServices[i] == volunteerId) {
                         volunteerName = doc.data().firstName + " " + doc.data().lastName;
-                        listVolunteers.push({ label: volunteerName, value: volunteerName })
+                        listVolunteers.push({ label: volunteerName, value: doc.id })
                     }
                 }
             });
