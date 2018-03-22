@@ -60,8 +60,6 @@ class SessionForm extends Component {
             slotPopupFlag: false,
             addQPopupFlag: false
         };
-
-
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
         this.resetField = this.resetField.bind(this);
@@ -122,7 +120,6 @@ class SessionForm extends Component {
             thisRef.setState(
                 { EventObj: EventObj });
         })
-        console.log(this.state.selectedRoom, "selected room in getMainroom");
         return firstRoom;
     }
 
@@ -153,13 +150,14 @@ class SessionForm extends Component {
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
                 for (var i = 0; i < doc.data().profileServices.length; i++) {
+                  
                     if (doc.data().profileServices[i] == speakerId) {
                         speakerName = doc.data().firstName + " " + doc.data().lastName;
-                        listSpeakers.push({ label: speakerName, value: speakerName })
+                        listSpeakers.push({ label: speakerName, value: doc.id })
                     }
                     if (doc.data().profileServices[i] == volunteerId) {
                         volunteerName = doc.data().firstName + " " + doc.data().lastName;
-                        listVolunteers.push({ label: volunteerName, value: volunteerName })
+                        listVolunteers.push({ label: volunteerName, value: doc.id })
                     }
                 }
             });
@@ -169,7 +167,6 @@ class SessionForm extends Component {
                     volunteerData: listVolunteers
                 });
         })
-
 
         DBUtil.addChangeListener("Rooms", function (response) {
             response.forEach(function (Roomdoc) {
@@ -186,7 +183,6 @@ class SessionForm extends Component {
                     EventObj: EventObj
                 });
         })
-
     }
 
     changeFunction(event) {
@@ -232,19 +228,24 @@ class SessionForm extends Component {
                 isRegrequired: EventObj.isRegrequired
             }
             let isRegrequired = this.state.EventObj.isRegrequired;
-            DBUtil.addDoc(tableName, docName, doc, function (response) {
-                toast.success("Session added successfully.", {
+            DBUtil.addObj(tableName, doc, function (response) {
+                 toast.success("Session added successfully.", {
                     position: toast.POSITION.BOTTOM_RIGHT,
                 });
+                let EventObj = compRef.state.EventObj;
+                 const eventID = 'eventID';
+                EventObj[eventID] = response.id;
+                compRef.setState({EventObj : EventObj});
                 let SlotalertMessage = compRef.state.SlotalertMessage;
                 SlotalertMessage = '';
                 compRef.setState({ SlotalertMessage: SlotalertMessage })
                 if (isRegrequired == true)
-                { compRef.addQPopup(); }
-                compRef.resetField();
-            },
-                function (err) { });
-        }
+                {
+                 compRef.addQPopup();
+                }
+             compRef.resetField();
+            }, function (err) { });
+          }
     }
 
     deleteEvent() {
@@ -282,22 +283,16 @@ class SessionForm extends Component {
     }
 
     slotConfirmSuccess() {
-        console.log(`string text line 1
-     string text line 2`);
         var SlotconfirmMessage = this.state.SlotconfirmMessage;
         SlotconfirmMessage = `Start Time : ${this.state.slotStartTime.toLocaleString()} ` +
             `,\r\n End Time: ${this.state.slotEndTime.toLocaleString()}`;
         this.setState({ SlotconfirmMessage: SlotconfirmMessage })
-        console.log("in slot confirm success");
-        console.log("this.state.slotStartTime", this.state.slotStartTime);
-        console.log("this.state.slotEndTime", this.state.slotEndTime);
         const startTime = 'startTime';
         const endTime = 'endTime'
         const EventObj = this.state.EventObj;
         EventObj[startTime] = this.state.slotStartTime;
         EventObj[endTime] = this.state.slotEndTime;
         this.setState({ EventObj: EventObj });
-        console.log(this.state.EventObj, this.state.EventObj);
         this.setState({
             createFlag: true,
             editDeleteFlag: false,
@@ -499,7 +494,7 @@ class SessionForm extends Component {
   }
 
   formAction(event) {
-
+  
     let editobj = {};
     const EventObj = this.state.EventObj;
 
@@ -529,6 +524,7 @@ class SessionForm extends Component {
 
    render() {
         const { EventObj, speakersValue, volunteersValue, speakerData, volunteerData, roomsValue, roomData, editDeleteFlag, createFlag, submitted } = this.state;
+      
         let options = speakerData;
         let volunteerOptions = volunteerData;
         let roomOptions = roomData;
@@ -539,10 +535,10 @@ class SessionForm extends Component {
             <div>
                 <ToastContainer autoClose={1000} />
                 <div>
-                    <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'questionModal ' + this.props.className}>
+                    <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'modal-lg ' + this.props.className}>
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
-                            <QuestionsForm sessionId={EventObj.eventName} addQPopup={this.addQPopup} />
+                            <QuestionsForm   sessionName={EventObj.eventName}    sessionId={EventObj.eventID} addQPopup={this.addQPopup} />
                         </ModalBody>
 
                     </Modal>

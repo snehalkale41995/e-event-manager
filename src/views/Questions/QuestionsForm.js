@@ -15,6 +15,7 @@ let ShareInput = [];
 class QuestionsForm extends Component {
     constructor(props) {
         super(props);
+        console.log(props, "popssssss");
         this.InvalidMessage = "";
         this.state = {
             Forms: [],  //stores all available forms
