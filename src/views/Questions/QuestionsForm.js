@@ -30,11 +30,11 @@ class QuestionsForm extends Component {
         this.onCheckBox = this.onCheckBox.bind(this);  //If input field is Check Box (rendering  Check Box)
         this.onChangeQuestionTitle = this.onChangeQuestionTitle.bind(this);    //on change of the input fields
         this.onSubmit = this.onSubmit.bind(this);     //On submit of form
-        this.onChangeInputField = this.onChangeInputField.bind(this);
-        this.onAdditionofFeilds = this.onAdditionofFeilds.bind(this);
-        this.onAddQuestion = this.onAddQuestion.bind(this);
-        this.onDeleteQuestion = this.onDeleteQuestion.bind(this);
-        this.onReset = this.onReset.bind(this);
+        this.onChangeInputField = this.onChangeInputField.bind(this);    //On changing the input field type for particular que 
+        this.onAdditionofFeilds = this.onAdditionofFeilds.bind(this);   //On addition of input field
+        this.onAddQuestion = this.onAddQuestion.bind(this);  //on adding new question to the form
+        this.onDeleteQuestion = this.onDeleteQuestion.bind(this);    //on deleting the question from form
+        this.onReset = this.onReset.bind(this);       //On reset whole form gets reset clearing all questions
     }
 
     componentWillMount() {
