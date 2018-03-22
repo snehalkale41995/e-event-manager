@@ -464,16 +464,20 @@ class SessionForm extends Component {
             }
         }
 
+
+
+
+        
         setTimeout(() => {
             this.validateSlot(Currentroom, startSlot, endSlot)
-        }, 500);
+        }, 250);
     }
 
     dateSelected(slotInfo) {
     this.ToggleSelectclick(slotInfo.start, slotInfo.end)
     setTimeout(() => {
       this.alertAction(slotInfo)
-    }, 1000);
+    }, 500);
   }
 
   alertAction(slotInfo) {
@@ -535,7 +539,11 @@ class SessionForm extends Component {
             <div>
                 <ToastContainer autoClose={1000} />
                 <div>
+<<<<<<< HEAD
+                    <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className="modal-lg">
+=======
                     <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'modal-lg ' + this.props.className}>
+>>>>>>> a014fdfaf7052ad481f8d3222ebb80004114457f
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
                             <QuestionsForm   sessionName={EventObj.eventName}    sessionId={EventObj.eventID} addQPopup={this.addQPopup} />

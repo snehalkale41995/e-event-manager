@@ -20,7 +20,8 @@ class QuestionsForm extends Component {
         this.state = {
             Forms: [],  //stores all available forms
             FormID: [],   //form name( doc name in firestore)
-            formValue: props.sessionId,     //name of the current form 
+            formValueId: props.sessionId,     //Id of the current form 
+            formValue : props.sessionName, // name of the current form 
             CurrentForm: [],    //Current form questions data
             QueAns: [],///Question and Answer data after  filling form
             OptionalCurrentArray: []
@@ -31,13 +32,14 @@ class QuestionsForm extends Component {
         this.onCheckBox = this.onCheckBox.bind(this);  //If input field is Check Box (rendering  Check Box)
         this.onChangeQuestionTitle = this.onChangeQuestionTitle.bind(this);    //on change of the input fields
         this.onSubmit = this.onSubmit.bind(this);     //On submit of form
-        this.onChangeInputField = this.onChangeInputField.bind(this);
-        this.onAdditionofFeilds = this.onAdditionofFeilds.bind(this);
-        this.onAddQuestion = this.onAddQuestion.bind(this);
-        this.onDeleteQuestion = this.onDeleteQuestion.bind(this);
-        this.onReset = this.onReset.bind(this);
+        this.onChangeInputField = this.onChangeInputField.bind(this);    //On changing the input field type for particular que 
+        this.onAdditionofFeilds = this.onAdditionofFeilds.bind(this);   //On addition of input field
+        this.onAddQuestion = this.onAddQuestion.bind(this);  //on adding new question to the form
+        this.onDeleteQuestion = this.onDeleteQuestion.bind(this);    //on deleting the question from form
+        this.onReset = this.onReset.bind(this);       //On reset whole form gets reset clearing all questions
     }
 
+    
     componentWillMount() {
         let componentRef = this;
         DBUtil.addChangeListener("QuestionsForm", function (objectList) {
@@ -53,7 +55,7 @@ class QuestionsForm extends Component {
             });
             componentRef.setState({ Forms: form, FormID: FormID })
             componentRef.state.Forms.forEach(fItem => {
-                if (fItem.FormID == componentRef.state.formValue) {
+                if (fItem.FormID == componentRef.state.formValueId) {
                     CurrentForm = fItem.FormData.Questions;
                 }
             });
@@ -345,8 +347,10 @@ class QuestionsForm extends Component {
         if (this.state.formValue && invalid == false) {
             let componentRef = this;
             let tableName = "QuestionsForm";
-            let docName = this.state.formValue;
+            let docName = this.state.formValueId;
+            let sessionname = this.state.formValue;
             let doc = {
+                SessionName :sessionname,
                 Questions: this.state.OptionalCurrentArray
             }
             DBUtil.addDoc(tableName, docName, doc, function () {          //add doc to firebase
