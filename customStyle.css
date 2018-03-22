@@ -170,3 +170,9 @@ input[type="radio"], input[type="checkbox"] {
 .rbc-time-content {
     border-top: 1px solid #DDD!important;
 }
+.sessionCardBody{
+    padding: 10px!important; 
+}
+.sessionCardHeader {
+    padding: 8px!important;
+}

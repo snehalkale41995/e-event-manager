@@ -572,15 +572,15 @@ class SessionForm extends Component {
                             <Container>
                                 <Row className="justify-content-center">
                                     <Col md="12">
-                                        <Card className="mx-4 sessionCard">
-                                            <CardHeader>
+                                        <Card className="sessionCard">
+                                            <CardHeader className="sessionCardHeader">
                                                 Session Form
                                     <Col className={(submitted && !EventObj.startTime ? ' has-error' : '')}>
                                                     {submitted && !EventObj.startTime && !EventObj.endTime &&
                                                         <div className="help-block sessionErrorBlock" style={{ color: "red" }}>*Please select slot</div>}
                                                 </Col>
                                             </CardHeader>
-                                            <CardBody className="p-4">
+                                            <CardBody className="sessionCardBody">
 
                                                 <form name="form" onSubmit={this.submitFunction}>
                                                     <FormGroup row>
