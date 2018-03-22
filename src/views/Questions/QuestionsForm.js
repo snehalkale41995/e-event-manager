@@ -37,6 +37,7 @@ class QuestionsForm extends Component {
         this.onReset = this.onReset.bind(this);       //On reset whole form gets reset clearing all questions
     }
 
+    
     componentWillMount() {
         let componentRef = this;
         DBUtil.addChangeListener("QuestionsForm", function (objectList) {

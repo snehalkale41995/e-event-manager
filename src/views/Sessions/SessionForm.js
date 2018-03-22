@@ -469,6 +469,10 @@ class SessionForm extends Component {
             }
         }
 
+
+
+
+        
         setTimeout(() => {
             this.validateSlot(Currentroom, startSlot, endSlot)
         }, 250);
