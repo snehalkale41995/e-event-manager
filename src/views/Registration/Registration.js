@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import { ToastContainer, toast } from 'react-toastify';
 
+
 class Registration extends Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,10 @@ class Registration extends Component {
         profileServices: [],
         isAttendee: false,
         registrationType: '',
+        briefInfo: '',
+        info: '',
+        profileImageULR: '',
+        sessionId: ''
       },
       submitted: false,
       invalidEmail: false,
@@ -126,7 +131,7 @@ class Registration extends Component {
         let contactNo = user.contactNo;
         let emailid = user.email;
         let profileData = this.state.profileDropDown; 
-        let pp = profileData.map(function(item){
+        profileData.map(function(item){
           if(user.profileServices.length > 0){
             let serviceString = user.profileServices[user.profileServices.length - 1]
             let serviceArray = serviceString.split(',');
@@ -209,18 +214,45 @@ class Registration extends Component {
         profileServices: user.profileServices,
         isAttendee: user.isAttendee,
         timesteamp: new Date(),
-        registrationType: 'On Spot Registration'
+        registrationType: 'On Spot Registration',
+        briefInfo: user.briefInfo,
+        info: user.info,
+        profileImageULR: user.profileImageULR
       }
-
-      if(user.isAttendee == true){
-          DBUtil.addObj(tblAttendee,doc,function (){
-          });
-      }
-      DBUtil.addObj(tblAttendance,doc,function (){
-          toast.success("User registered successfully.", {
-              position: toast.POSITION.BOTTOM_RIGHT,
-          });
+     
+      DBUtil.addObj(tblAttendee,doc,function (id,error){
+          let attendanceDoc = {
+            sessionId: '',
+            timesteamp: new Date(),
+            attendance: id
+            //attendance: "Attendee/"+ id
+           }
+          if(user.isAttendee == true){
+              DBUtil.addObj(tblAttendance,attendanceDoc,function (id,error){
+                  toast.success("User registered successfully.", {
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  });
+              },
+              function(error){
+                console.log('Error' , error);
+                toast.error("User not registered.", {
+                      position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            });
+          }
+          else {
+            toast.success("User registered successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+          }
+      },
+      function(error){
+          console.log('Error' , error);
+          toast.error("User not registered.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
       });
+
      this.resetField(true);
     }
   }
@@ -236,6 +268,9 @@ class Registration extends Component {
         profileServices: [],
         isAttendee: false,
         address: '',
+        briefInfo: '',
+        info: '',
+        profileImageULR: ''
       },
       invalidContact: false,
       invalidEmail: false,
@@ -350,8 +385,41 @@ class Registration extends Component {
                       </FormGroup>
                     </Col>
                   </FormGroup>
+
+                  <FormGroup row>
+                  <Col xs="12" md="6"  >
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText><i className="fa fa-image"></i></InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Profile Image ULR" name="profileImageULR" value={this.state.user.profileImageULR} onChange={this.changeFunction} required />
+                      </InputGroup>
+                    </Col>
+
+                    <Col xs="12" md="6"  >
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Info" name="info" value={this.state.user.info} onChange={this.changeFunction} required />
+                      </InputGroup>
+                    </Col>
+                  </FormGroup>
+
+                  <FormGroup row>
+                    <Col xs="12" md="12">
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                          </InputGroupAddon>
+                            {/* <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} required /> */}
+                             <textarea value={this.state.user.briefInfo} placeholder="Brief Info" name="briefInfo" onChange={this.changeFunction} />
+                        </InputGroup>
+                    </Col>
+                  </FormGroup>
+
                   <FormGroup>
-                    {/* <Col xs="12" md="12"> */}
+                    {/* <Col xs="12" md="12">*/}
                     <div>
                       <Label> Mark as an Attendee &nbsp;
                         <input type="checkbox" checked={this.state.user.isAttendee} onChange={this.toggleChange} />

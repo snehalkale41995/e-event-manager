@@ -38,7 +38,7 @@ export class DBUtil {
             .add(obj)
             .then((docRef) => {
                 //Audit object add
-                callbackFn(docRef);
+                callbackFn(docRef.id);
             })
             .catch((ex) => {
                 errorFn(ex);
