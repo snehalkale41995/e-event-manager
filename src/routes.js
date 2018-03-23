@@ -8,6 +8,7 @@ const routes = {
   // '/renderForm': 'RenderForm',
   // '/questions' : 'Questions',
   '/session' : 'Session',
+  '/register' : 'Register',
   'session/sessionForm' : 'sessionForm',
   '/registration' : 'Registration',
   '/rooms' : 'Rooms',
