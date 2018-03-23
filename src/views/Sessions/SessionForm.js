@@ -567,8 +567,9 @@ class SessionForm extends Component {
                 <Row>
                     <Col md='8'>
                         <div>
-                            <BigCalendar events={this.state.myEventsList} defaultView="week" selectable={true} defaultDate={new Date()} onSelectEvent={event => this.formAction(event)} onSelectSlot={(slotInfo) => this.dateSelected(slotInfo)} />
-                        </div>
+                            <BigCalendar events={this.state.myEventsList} defaultView="week" selectable={true} defaultDate={new Date()} onSelectEvent={event => this.formAction(event)} onSelectSlot={(slotInfo) => this.dateSelected(slotInfo)}
+                              min={new Date('2018, 1, 1, 08:00')} max={new Date('2018, 1, 1, 20:00')} step={15}  />
+                         </div>
                     </Col>
 
                     <Col md='4'>

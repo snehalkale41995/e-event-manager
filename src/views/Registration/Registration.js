@@ -9,18 +9,18 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import { ToastContainer, toast } from 'react-toastify';
-
+import Avatar from 'react-avatar';
 class Registration extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       user: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        contactNo: '',
-        address: '',
+        firstName: 'Mahesh',
+        lastName: 'Kedari',
+        email: 'kedari.mahesh@gmail.com',
+        contactNo: '9766492001',
+        address: 'test',
         profileServices: [],
         isAttendee: false,
         registrationType: '',
@@ -164,12 +164,10 @@ class Registration extends Component {
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div> QR code : <br/> <br/></div>")
-    newWindow.document.writeln("" + this.state.Qrurl + "");
-    newWindow.document.writeln("<div> Name : " + "" + user.firstName + " " + user.lastName + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Email Id: " + "" + user.email + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Contact No : " + "" + user.contactNo + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Profile : " + "" + profiles + "</div>" + "<br/>")
+    newWindow.document.writeln("<div height=80> </div>");
+    newWindow.document.writeln("<table cellspacing=30> <tr><td>"+" "+ this.state.Qrurl +"</td><td><h1>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
+    newWindow.document.writeln("<hr/ width=500>")
+    newWindow.document.writeln("<table cellspacing=30> <tr><td> <span class='badge' style='border-width:5px;border-style:solid;border-radius:50%;font-size:25px'>M</span>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
 
