@@ -1,8 +1,17 @@
 import React, {Component} from 'react';
-import {Container, Row, Col, CardGroup, Card, CardBody, Button, Input, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap';
+import {Container, Row, Col, CardGroup, Card, CardBody,Link, Button, Input, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap';
 
 
 class Login extends Component {
+  constructor(props)
+  {
+      super(props);
+    
+  }
+
+
+
+
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -44,9 +53,10 @@ class Login extends Component {
                   <CardBody className="text-center">
                     <div>
                       <h2>Sign up</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
-                      <Button color="primary" className="mt-3" active>Register Now!</Button>
+                      <p>New Member ? Please sign up ...</p>
+                      {/* <Link to={`${this.props.match.url}/userForm`}> */}
+                        <Button color="primary" href="#/register" className="mt-3" active>Register Now!</Button>
+                      {/* </Link> */}
                     </div>
                   </CardBody>
                 </Card>
