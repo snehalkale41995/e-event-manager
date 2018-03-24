@@ -544,7 +544,11 @@ class SessionForm extends Component {
             <div>
                 <ToastContainer autoClose={1000} />
                 <div>
+<<<<<<< HEAD
+                    <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'modal-lg ' + this.props.className}>
+=======
                     <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className="modal-lg">
+>>>>>>> 314d1d565bb329986aa55513f5dbb492d2519f3d
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
                             <QuestionsForm   sessionName={EventObj.eventName}    sessionId={EventObj.eventID} addQPopup={this.addQPopup} />

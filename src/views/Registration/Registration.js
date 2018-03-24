@@ -29,12 +29,14 @@ class Registration extends Component {
         profileImageULR: '',
         sessionId: ''
       },
+      intent: '',
       submitted: false,
       invalidEmail: false,
       invalidContact: false,
       emailError : '',
       contactError : '',
       profileDropDown: []
+      
     };
 
     this.changeFunction = this.changeFunction.bind(this);
@@ -45,6 +47,7 @@ class Registration extends Component {
     this.onHandleValidations = this.onHandleValidations.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.toggleChange = this.toggleChange.bind(this);
+    this.onChangeIntentField= this.onChangeIntentField.bind(this);
   }
 
   // Method For render/set default profile data
@@ -187,9 +190,9 @@ class Registration extends Component {
     this.setState({ submitted: true });
     const { user } = this.state;
     this.onHandleValidations(user);
-
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
+      let otpVal = Math.floor(1000 + Math.random() * 9000);
       if(user.profileServices.length > 0){
         let length = user.profileServices.length;
         let serviceString = user.profileServices[length - 1]
@@ -201,7 +204,13 @@ class Registration extends Component {
             this.state.user.profileServices = serviceArray;
         }
       } 
-
+      let intentVal = '';
+      if (this.state.intent == 'Select Intent' || this.state.intent == ""){
+          intentVal = '';
+      }
+      else{
+          intentVal=this.state.intent
+      }
       let doc = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -214,7 +223,9 @@ class Registration extends Component {
         registrationType: 'On Spot Registration',
         briefInfo: user.briefInfo,
         info: user.info,
-        profileImageULR: user.profileImageULR
+        profileImageULR: user.profileImageULR,
+        intent: intentVal,
+        otp: otpVal
       }
      
       DBUtil.addObj(tblAttendee,doc,function (id,error){
@@ -267,8 +278,9 @@ class Registration extends Component {
         address: '',
         briefInfo: '',
         info: '',
-        profileImageULR: ''
+        profileImageULR: ''        
       },
+      intent: 'Select Intent',
       invalidContact: false,
       invalidEmail: false,
       submitted: false
@@ -288,6 +300,13 @@ class Registration extends Component {
     this.setState({ value });
   }
 
+  // Method for select intant value
+  onChangeIntentField(e) {
+   this.setState({
+       intent: e.target.value 
+    });
+  }
+
   // Method for set attendee flag
   toggleChange() {
     const isAttendee = 'isAttendee';
@@ -297,11 +316,12 @@ class Registration extends Component {
   }
   
   render() {
-    const { user, submitted, value } = this.state;    
+    const { user, submitted, value, intentVal } = this.state;    
     const options = this.state.profileDropDown;
    
     return (
       <div className="animated fadeIn">
+        
           <Row className="justify-content-left">
             <Col md="8">
               <Card className="mx-6">
@@ -382,9 +402,8 @@ class Registration extends Component {
                       </FormGroup>
                     </Col>
                   </FormGroup>
-
                   <FormGroup row>
-                  <Col xs="12" md="6"  >
+                    <Col xs="12" md="6"  >
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="fa fa-image"></i></InputGroupText>
@@ -392,8 +411,20 @@ class Registration extends Component {
                         <Input type="text" placeholder="Profile Image ULR" name="profileImageULR" value={this.state.user.profileImageULR} onChange={this.changeFunction} required />
                       </InputGroup>
                     </Col>
-
-                    <Col xs="12" md="6"  >
+                    <Col xs="12" md="6">
+                      <InputGroup className="mb-3">
+                        <Input type="select" style={{ width: 200 }} name="intent" value={this.state.intent}  id='intent' placeholder="Intent" onChange={(e) => this.onChangeIntentField(e)} >
+                            <option value='Select Intent'>Select Intent</option>
+                            <option value="Mentor">Mentor</option>
+                            <option value="Mentee">Mentee</option>
+                            <option value="Investor">Investor</option>
+                            <option value="Looking For Investment">Looking For Investment</option>
+                        </Input>
+                      </InputGroup>
+                    </Col>
+                  </FormGroup>  
+                  <FormGroup row>
+                    <Col xs="12" md="6">
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="fa fa-info"></i></InputGroupText>
@@ -401,19 +432,27 @@ class Registration extends Component {
                         <Input type="text" placeholder="Info" name="info" value={this.state.user.info} onChange={this.changeFunction} required />
                       </InputGroup>
                     </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Col xs="12" md="12">
+                    <Col xs="12" md="6">
                         <InputGroup className="mb-3">
                           <InputGroupAddon addonType="prepend">
                             <InputGroupText><i className="fa fa-info"></i></InputGroupText>
                           </InputGroupAddon>
                             {/* <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} required /> */}
-                             <textarea value={this.state.user.briefInfo} placeholder="Brief Info" name="briefInfo" onChange={this.changeFunction} />
+                             {/* <textarea value={this.state.user.briefInfo} placeholder="Brief Info" name="briefInfo" onChange={this.changeFunction} /> */}
+                             <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
                         </InputGroup>
                     </Col>
                   </FormGroup>
+                  {/* <FormGroup row>
+                    <Col xs="12" md="12">
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                          </InputGroupAddon>
+                             <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
+                        </InputGroup>
+                    </Col>
+                  </FormGroup> */}
 
                   <FormGroup>
                     {/* <Col xs="12" md="12">*/}
@@ -436,6 +475,7 @@ class Registration extends Component {
               </Card>
             </Col>
           </Row>
+         
       </div>
     )
   }
