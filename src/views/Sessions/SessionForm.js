@@ -29,6 +29,7 @@ class SessionForm extends Component {
                 eventID: '',
                 eventName: '',
                 room: '',
+                description: '',
                 extraServices: '',
                 speakers: [],
                 volunteers: [],
@@ -97,7 +98,7 @@ class SessionForm extends Component {
             listItem.forEach(function (data) {
                 eventArray.push({
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
+                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
                 });
                 thisRef.setState({ myEventsList: eventArray });
             })
@@ -202,7 +203,7 @@ class SessionForm extends Component {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
         if (EventObj.eventName && EventObj.speakers.length && EventObj.volunteers.length
-            && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
 
             let compRef = this;
             let length = EventObj.speakers.length;
@@ -220,6 +221,7 @@ class SessionForm extends Component {
             let doc = {
                 eventName: EventObj.eventName,
                 room: EventObj.room,
+                description:EventObj.description,
                 extraServices: EventObj.extraServices,
                 speakers: EventObj.speakers,
                 volunteers: EventObj.volunteers,
@@ -304,7 +306,7 @@ class SessionForm extends Component {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
         if (EventObj.eventName && EventObj.speakers.length && EventObj.volunteers.length
-            && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
             let compRef = this;
             let length = EventObj.speakers.length;
             let lastElement = EventObj.speakers[length - 1]
@@ -318,6 +320,7 @@ class SessionForm extends Component {
             DBUtil.getDocRef(Sessions).doc(EventObj.eventID).update({
                 "eventName": EventObj.eventName,
                 "room": EventObj.room,
+                "description":EventObj.description,
                 "extraServices": EventObj.extraServices,
                 "speakers": EventObj.speakers,
                 "volunteers": EventObj.volunteers,
@@ -347,7 +350,8 @@ class SessionForm extends Component {
                 extraServices: '',
                 speakers: [],
                 volunteers: [],
-                isRegrequired: false
+                isRegrequired: false,
+                description:''
             },
             removeSelected: true,
             speakersValue: '',
@@ -388,7 +392,7 @@ class SessionForm extends Component {
             listItem.forEach(function (data) {
                 eventArray.push({
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
+                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
                 });
                 thisRef.setState({ myEventsList: eventArray });
             })
@@ -506,6 +510,7 @@ class SessionForm extends Component {
     EventObj.eventName = event.title;
     EventObj.startTime = event.start;
     EventObj.endTime = event.end;
+    EventObj.description= event.description;
     EventObj.extraServices = event.extraServices;
     EventObj.speakers = event.speakers;
     EventObj.volunteers = event.volunteers;
@@ -539,7 +544,11 @@ class SessionForm extends Component {
             <div>
                 <ToastContainer autoClose={1000} />
                 <div>
+<<<<<<< HEAD
                     <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className={'modal-lg ' + this.props.className}>
+=======
+                    <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className="modal-lg">
+>>>>>>> 314d1d565bb329986aa55513f5dbb492d2519f3d
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
                             <QuestionsForm   sessionName={EventObj.eventName}    sessionId={EventObj.eventID} addQPopup={this.addQPopup} />
@@ -562,8 +571,9 @@ class SessionForm extends Component {
                 <Row>
                     <Col md='8'>
                         <div>
-                            <BigCalendar events={this.state.myEventsList} defaultView="week" selectable={true} defaultDate={new Date()} onSelectEvent={event => this.formAction(event)} onSelectSlot={(slotInfo) => this.dateSelected(slotInfo)} />
-                        </div>
+                            <BigCalendar events={this.state.myEventsList} defaultView="week" selectable={true} defaultDate={new Date()} onSelectEvent={event => this.formAction(event)} onSelectSlot={(slotInfo) => this.dateSelected(slotInfo)}
+                              min={new Date('2018, 1, 1, 08:00')} max={new Date('2018, 1, 1, 20:00')} step={15}  />
+                         </div>
                     </Col>
 
                     <Col md='4'>
@@ -603,14 +613,12 @@ class SessionForm extends Component {
                                                             </Row>
                                                         </Col>
                                                     </FormGroup>
-
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="12" className={(submitted && !EventObj.speakers ? ' has-error' : '')}>
                                                                 <Label> Speakers : </Label>
                                                                 <Select multi onChange={this.multichangeSpeakers} placeholder="--Select--" simpleValue value={speakersValue} options={options} />
                                                             </Col>
-
                                                         </Row>
                                                         <Row>
                                                             <Col>
@@ -636,7 +644,21 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
-
+                                                     <FormGroup>
+                                                        <Row>
+                                                            <Col xs="12" className={(submitted && !EventObj.description ? ' has-error' : '')}>
+                                                                <Label> Description : </Label>
+                                                                 <Input type="textarea" placeholder="Description" name="description" value={this.state.EventObj.description} onChange={this.changeFunction} />
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col>
+                                                                {submitted && !EventObj.description &&
+                                                                    <div className="help-block" style={{ color: "red" }}>*Description is required</div>
+                                                                }
+                                                            </Col>
+                                                        </Row>
+                                                    </FormGroup>
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="12" className={(submitted && !EventObj.extraServices ? ' has-error' : '')}>
@@ -725,5 +747,4 @@ class SessionForm extends Component {
         )
     }
 }
-
 export default SessionForm;

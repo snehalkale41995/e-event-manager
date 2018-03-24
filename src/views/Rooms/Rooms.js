@@ -128,7 +128,7 @@ class Rooms extends Component {
                 
                     <Row className="justify-content-left">
                         <Col md="8">
-                            <Card className="mx-6">
+                            <Card className="mx-6"> 
                                 <CardBody className="p-4">
                                     <h1>Room</h1>
                                     <FormGroup row>
