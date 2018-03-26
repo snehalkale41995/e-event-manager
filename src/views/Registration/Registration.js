@@ -16,11 +16,11 @@ class Registration extends Component {
 
     this.state = {
       user: {
-        firstName: 'Mahesh',
-        lastName: 'Kedari',
-        email: 'kedari.mahesh@gmail.com',
-        contactNo: '9766492001',
-        address: 'test',
+        firstName: '',
+        lastName: '',
+        email: '',
+        contactNo: '',
+        address: '',
         profileServices: [],
         isAttendee: false,
         registrationType: '',
@@ -124,6 +124,8 @@ class Registration extends Component {
   // Method for generate QR code
   onGenerateQRcode() {
     const { user } = this.state;
+   
+   
     let profiles = '';
     this.onHandleValidations(user , this.state.submitted = true);
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact)
@@ -168,13 +170,25 @@ class Registration extends Component {
 
   // Method for open new window of generated QR code
   openWin(user,profiles) {
+    console.log(this.state.intent,"intent");
+    let intent = this.state.intent;
+    let Firstletter;
+    if(intent=="Mentor")
+      {Firstletter ="M"}
+    if(intent=="Mentee")
+      {Firstletter ="M+"}
+    if(intent=="Investor")
+      {Firstletter ="I" }
+    if(intent=="Looking For Investment")
+      {Firstletter ="I+"}
+    console.log(Firstletter,"Firstletter");
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
     newWindow.document.writeln("<div height=80> </div>");
     newWindow.document.writeln("<table cellspacing=30> <tr><td>"+" "+ this.state.Qrurl +"</td><td><h1>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
-    newWindow.document.writeln("<hr/ width=500>")
-    newWindow.document.writeln("<table cellspacing=30> <tr><td> <span class='badge' style='border-width:5px;border-style:solid;border-radius:50%;font-size:25px'>M</span>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
+    newWindow.document.writeln("<hr align=left/>")
+    newWindow.document.writeln("<table cellspacing=40> <tr><td> <span class='badge' style='border-width:2px;padding:20px;border-style:solid;border-radius:100%;font-size:50px'>" +Firstletter +" </span>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
 
@@ -305,6 +319,7 @@ class Registration extends Component {
    this.setState({
        intent: e.target.value 
     });
+
   }
 
   // Method for set attendee flag
