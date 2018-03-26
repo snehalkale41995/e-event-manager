@@ -26,7 +26,7 @@ class Registration extends Component {
         registrationType: '',
         briefInfo: '',
         info: '',
-        profileImageULR: '',
+        profileImageURL: '',
         sessionId: ''
       },
       intent: '',
@@ -219,24 +219,30 @@ class Registration extends Component {
         address: user.address,
         profileServices: user.profileServices,
         isAttendee: user.isAttendee,
-        timesteamp: new Date(),
+        timestamp: new Date(),
         registrationType: 'On Spot Registration',
         briefInfo: user.briefInfo,
         info: user.info,
-        profileImageULR: user.profileImageULR,
+        profileImageURL: user.profileImageURL,
         intent: intentVal,
-        otp: otpVal
+        otp: otpVal,
+        attendanceId : '',
+        sessionId: '',
       }
      
       DBUtil.addObj(tblAttendee,doc,function (id,error){
-          let attendanceDoc = {
-            sessionId: '',
-            timesteamp: new Date(),
-            attendance: id
-            //attendance: "Attendee/"+ id
-           }
+          // let attendanceDoc = {
+          //   sessionId: '',
+          //   timestamp: new Date(),
+          //   attendance: id
+          //   //attendance: "Attendee/"+ id
+          //  }
+          if(id != undefined && id != "" && id != null)
+          {
+            doc.attendanceId = id;
+          }
           if(user.isAttendee == true){
-              DBUtil.addObj(tblAttendance,attendanceDoc,function (id,error){
+              DBUtil.addObj(tblAttendance,doc,function (id,error){
                   toast.success("User registered successfully.", {
                   position: toast.POSITION.BOTTOM_RIGHT,
                   });
@@ -278,7 +284,7 @@ class Registration extends Component {
         address: '',
         briefInfo: '',
         info: '',
-        profileImageULR: ''        
+        profileImageURL: ''        
       },
       intent: 'Select Intent',
       invalidContact: false,
@@ -408,7 +414,7 @@ class Registration extends Component {
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="fa fa-image"></i></InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Profile Image ULR" name="profileImageULR" value={this.state.user.profileImageULR} onChange={this.changeFunction} required />
+                        <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
                       </InputGroup>
                     </Col>
                     <Col xs="12" md="6">
