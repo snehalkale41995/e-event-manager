@@ -36,7 +36,7 @@ class Registration extends Component {
       emailError : '',
       contactError : '',
       profileDropDown: []
-      
+       
     };
 
     this.changeFunction = this.changeFunction.bind(this);
