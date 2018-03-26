@@ -35,7 +35,7 @@ class Attendee extends Component{
                 <td>{row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName }</td>
                 <td>{row.attendeeItems.email}</td>
                 <td>{row.attendeeItems.contactNo}</td>
-                <td><FormattedDate value={row.attendeeItems.timesteamp.toString()}/> </td>
+                <td><FormattedDate value={row.attendeeItems.timestamp.toString()}/> </td>
                 <td>{row.attendeeItems.registrationType}</td>
             </tr>
             });
