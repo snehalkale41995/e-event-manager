@@ -16,11 +16,11 @@ class Registration extends Component {
 
     this.state = {
       user: {
-        firstName: 'Mahesh',
-        lastName: 'Kedari',
-        email: 'kedari.mahesh@gmail.com',
-        contactNo: '9766492001',
-        address: 'test',
+        firstName: '',
+        lastName: '',
+        email: '',
+        contactNo: '',
+        address: '',
         profileServices: [],
         isAttendee: false,
         registrationType: '',
