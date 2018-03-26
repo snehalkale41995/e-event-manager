@@ -35,8 +35,9 @@ class Registration extends Component {
       invalidContact: false,
       emailError : '',
       contactError : '',
-      profileDropDown: []
-       
+      profileDropDown: [],
+      AttendeeId:''
+      
     };
 
     this.changeFunction = this.changeFunction.bind(this);
@@ -124,6 +125,7 @@ class Registration extends Component {
   // Method for generate QR code
   onGenerateQRcode() {
     const { user } = this.state;
+    console.log(this.state.AttendeeId,"id in Ongenerate")
     let profiles = '';
     this.onHandleValidations(user , this.state.submitted = true);
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact)
@@ -133,6 +135,8 @@ class Registration extends Component {
         let contactNo = user.contactNo;
         let emailid = user.email;
         let profileData = this.state.profileDropDown; 
+        let userId = "id:"+this.state.AttendeeId; 
+        console.log(userId,"userId");
         profileData.map(function(item){
           if(user.profileServices.length > 0){
             let serviceString = user.profileServices[user.profileServices.length - 1]
@@ -149,13 +153,13 @@ class Registration extends Component {
      
         profiles = profiles.substring(0, profiles.lastIndexOf(" "));
         let cardDetails = {
-          version: '3.0',
-          lastName: lname,
-          firstName: fname,
-          organization: 'Eternus Solutions',
-          cellPhone: contactNo,
-          profiles: profiles,
-          email: emailid
+          version:'3.0',
+          lastName:lname,
+          firstName:fname,
+          title:userId,
+          cellPhone:contactNo,
+          email:emailid
+         
           };
 
         let generatedQR = qrCode.createVCardQr(cardDetails, { typeNumber: 12, cellSize: 2 });
@@ -199,6 +203,7 @@ class Registration extends Component {
   // Method for submit registration data
   submitFunction(event) {
     event.preventDefault();
+    let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
     this.onHandleValidations(user);
@@ -244,12 +249,11 @@ class Registration extends Component {
       }
      
       DBUtil.addObj(tblAttendee,doc,function (id,error){
-          // let attendanceDoc = {
-          //   sessionId: '',
-          //   timestamp: new Date(),
-          //   attendance: id
-          //   //attendance: "Attendee/"+ id
-          //  }
+          let attendanceDoc = {
+            sessionId: '',
+            timestamp: new Date(),
+            attendance: id
+           }
           if(id != undefined && id != "" && id != null)
           {
             doc.attendanceId = id;
@@ -271,6 +275,10 @@ class Registration extends Component {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
           }
+            console.log(id,"id");
+            compRef.setState({AttendeeId:id})
+            console.log(compRef.state.AttendeeId);
+            compRef.onGenerateQRcode();
       },
       function(error){
           toast.error("User not registered.", {
@@ -278,7 +286,7 @@ class Registration extends Component {
         });
       });
 
-     this.resetField(true);
+    // this.resetField(true);
     }
   }
 
@@ -484,7 +492,7 @@ class Registration extends Component {
                   <FormGroup row>
                     <Col xs="12" md="12">
                       <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button> &nbsp;&nbsp;                        
-                      <Button size="md" color="primary" onClick={this.onGenerateQRcode} >Print QR Code</Button>&nbsp;&nbsp;                         
+                      {/* <Button size="md" color="primary" onClick={this.onGenerateQRcode} >Print QR Code</Button>&nbsp;&nbsp;                          */}
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                       <ToastContainer autoClose={4000} />
                     </Col>
