@@ -124,8 +124,6 @@ class Registration extends Component {
   // Method for generate QR code
   onGenerateQRcode() {
     const { user } = this.state;
-   
-   
     let profiles = '';
     this.onHandleValidations(user , this.state.submitted = true);
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact)
@@ -148,6 +146,7 @@ class Registration extends Component {
             }
           } 
         })
+     
         profiles = profiles.substring(0, profiles.lastIndexOf(" "));
         let cardDetails = {
           version: '3.0',
@@ -157,7 +156,7 @@ class Registration extends Component {
           cellPhone: contactNo,
           profiles: profiles,
           email: emailid
-        };
+          };
 
         let generatedQR = qrCode.createVCardQr(cardDetails, { typeNumber: 12, cellSize: 2 });
         this.setState({ Qrurl: generatedQR })
@@ -170,7 +169,6 @@ class Registration extends Component {
 
   // Method for open new window of generated QR code
   openWin(user,profiles) {
-    console.log(this.state.intent,"intent");
     let intent = this.state.intent;
     let Firstletter;
     if(intent=="Mentor")
@@ -181,14 +179,14 @@ class Registration extends Component {
       {Firstletter ="I" }
     if(intent=="Looking For Investment")
       {Firstletter ="I+"}
-    console.log(Firstletter,"Firstletter");
+  
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
     newWindow.document.writeln("<div height=80> </div>");
-    newWindow.document.writeln("<table cellspacing=30> <tr><td>"+" "+ this.state.Qrurl +"</td><td><h1>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
-    newWindow.document.writeln("<hr align=left/>")
-    newWindow.document.writeln("<table cellspacing=40> <tr><td> <span class='badge' style='border-width:2px;padding:20px;border-style:solid;border-radius:100%;font-size:50px'>" +Firstletter +" </span>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
+    newWindow.document.writeln("<table cellspacing=30> <tr><td>"+" "+ this.state.Qrurl +"</td><td><h1 style='font-size:50px'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
+    newWindow.document.writeln("<hr align=left style='border: solid 1px black'/>")
+    newWindow.document.writeln("<table cellspacing=40> <tr><td style='width:40%'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px'>" +Firstletter +" </div>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
 
@@ -263,7 +261,6 @@ class Registration extends Component {
                   });
               },
               function(error){
-                console.log('Error' , error);
                 toast.error("User not registered.", {
                       position: toast.POSITION.BOTTOM_RIGHT,
                 });
@@ -276,7 +273,6 @@ class Registration extends Component {
           }
       },
       function(error){
-          console.log('Error' , error);
           toast.error("User not registered.", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
