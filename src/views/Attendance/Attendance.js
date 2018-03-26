@@ -52,7 +52,7 @@ class Attendance extends React.Component {
             //             <td><FormattedDate value={row.timestamp.toString()} /></td>
             //         </tr>
             return <tr key={row.UserID} >
-                <td>{row.UserData.firstName + " " + row.UserData.lastName}</td>
+                <td>{row.UserData.fullName}</td>
                 <td>{row.UserData.sessionId}</td>
                 {/* <td>{row.UserData.contactNo}</td> */}
                 <td><FormattedDate value={row.UserData.timestamp.toString()} /></td>

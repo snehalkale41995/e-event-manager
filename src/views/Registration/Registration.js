@@ -240,6 +240,7 @@ class Registration extends Component {
         otp: otpVal,
         attendanceId : '',
         sessionId: '',
+        fullName: user.firstName + ' ' + user.lastName
       }
      
       DBUtil.addObj(tblAttendee,doc,function (id,error){
