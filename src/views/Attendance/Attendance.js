@@ -28,16 +28,36 @@ class Attendance extends React.Component {
             });
             componentRef.setState({items: Users, itemsID: UsersID})
         });
+
+    //     const comments = []
+    //     firebase.firestore().collection('Attendance').get().then(
+    //         snapshot => {
+    //             snapshot.docs.forEach(doc => {
+    //             const comment = doc.data()
+    //             comment.id = doc.id;
+    //             comment.attendance.get().then(snap => {
+    //                 comment.attendance = snap.data()
+    //                 comments.push(comment) ;
+    //                 componentRef.setState({items : comments})      
+    //             })
+    //       })
+    //   })
     }
 
     render() {
         this.rows = this.state.items.map(function (row) {
+            // return <tr key={row.id} >
+            //             <td>{row.attendance.firstName + " "+ row.attendance.lastName}</td>
+            //             <td>{row.sessionId}</td>
+            //             <td><FormattedDate value={row.timestamp.toString()} /></td>
+            //         </tr>
             return <tr key={row.UserID} >
                 <td>{row.UserData.firstName + " " + row.UserData.lastName}</td>
-                <td>{row.UserData.email}</td>
-                <td>{row.UserData.contactNo}</td>
-                <td><FormattedDate value={row.UserData.timesteamp.toString()} /></td>{/*<FormattedTime value={row.UserData.timesteamp.toString()} />  */}
-                <td>{row.UserData.registrationType}</td>
+                <td>{row.UserData.sessionId}</td>
+                {/* <td>{row.UserData.contactNo}</td> */}
+                <td><FormattedDate value={row.UserData.timestamp.toString()} /></td>
+                {/* <td><FormattedDate value={row.UserData.timesteamp.toString()} /></td><FormattedTime value={row.UserData.timesteamp.toString()} />   */}
+                {/* <td>{row.UserData.registrationType}</td> */}
             </tr>
             });
 
@@ -53,10 +73,13 @@ class Attendance extends React.Component {
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
+                                                <th>Session</th>
+                                                <th>Date</th>
+                                                {/* <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Contact No</th>
                                                 <th>Date</th>
-                                                <th>Registration type </th>
+                                                <th>Registration type </th> */}
                                             </tr>
                                         </thead>
                                         <tbody>

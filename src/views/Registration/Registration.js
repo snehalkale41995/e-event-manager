@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import { ToastContainer, toast } from 'react-toastify';
-
+import Avatar from 'react-avatar';
 class Registration extends Component {
   constructor(props) {
     super(props);
@@ -24,13 +24,19 @@ class Registration extends Component {
         profileServices: [],
         isAttendee: false,
         registrationType: '',
+        briefInfo: '',
+        info: '',
+        profileImageURL: '',
+        sessionId: ''
       },
+      intent: '',
       submitted: false,
       invalidEmail: false,
       invalidContact: false,
       emailError : '',
       contactError : '',
       profileDropDown: []
+       
     };
 
     this.changeFunction = this.changeFunction.bind(this);
@@ -41,6 +47,7 @@ class Registration extends Component {
     this.onHandleValidations = this.onHandleValidations.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.toggleChange = this.toggleChange.bind(this);
+    this.onChangeIntentField= this.onChangeIntentField.bind(this);
   }
 
   // Method For render/set default profile data
@@ -126,7 +133,7 @@ class Registration extends Component {
         let contactNo = user.contactNo;
         let emailid = user.email;
         let profileData = this.state.profileDropDown; 
-        let pp = profileData.map(function(item){
+        profileData.map(function(item){
           if(user.profileServices.length > 0){
             let serviceString = user.profileServices[user.profileServices.length - 1]
             let serviceArray = serviceString.split(',');
@@ -139,6 +146,7 @@ class Registration extends Component {
             }
           } 
         })
+     
         profiles = profiles.substring(0, profiles.lastIndexOf(" "));
         let cardDetails = {
           version: '3.0',
@@ -148,7 +156,7 @@ class Registration extends Component {
           cellPhone: contactNo,
           profiles: profiles,
           email: emailid
-        };
+          };
 
         let generatedQR = qrCode.createVCardQr(cardDetails, { typeNumber: 12, cellSize: 2 });
         this.setState({ Qrurl: generatedQR })
@@ -161,15 +169,24 @@ class Registration extends Component {
 
   // Method for open new window of generated QR code
   openWin(user,profiles) {
+    let intent = this.state.intent;
+    let Firstletter;
+    if(intent=="Mentor")
+      {Firstletter ="M"}
+    if(intent=="Mentee")
+      {Firstletter ="M+"}
+    if(intent=="Investor")
+      {Firstletter ="I" }
+    if(intent=="Looking For Investment")
+      {Firstletter ="I+"}
+  
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div> QR code : <br/> <br/></div>")
-    newWindow.document.writeln("" + this.state.Qrurl + "");
-    newWindow.document.writeln("<div> Name : " + "" + user.firstName + " " + user.lastName + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Email Id: " + "" + user.email + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Contact No : " + "" + user.contactNo + "</div>" + "<br/>")
-    newWindow.document.writeln("<div> Profile : " + "" + profiles + "</div>" + "<br/>")
+    newWindow.document.writeln("<div height=80> </div>");
+    newWindow.document.writeln("<table cellspacing=30> <tr><td>"+" "+ this.state.Qrurl +"</td><td><h1 style='font-size:50px'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
+    newWindow.document.writeln("<hr align=left style='border: solid 1px black'/>")
+    newWindow.document.writeln("<table cellspacing=40> <tr><td style='width:40%'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px'>" +Firstletter +" </div>"+"</td><td><h2>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
 
@@ -185,9 +202,9 @@ class Registration extends Component {
     this.setState({ submitted: true });
     const { user } = this.state;
     this.onHandleValidations(user);
-
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
+      let otpVal = Math.floor(1000 + Math.random() * 9000);
       if(user.profileServices.length > 0){
         let length = user.profileServices.length;
         let serviceString = user.profileServices[length - 1]
@@ -199,7 +216,13 @@ class Registration extends Component {
             this.state.user.profileServices = serviceArray;
         }
       } 
-
+      let intentVal = '';
+      if (this.state.intent == 'Select Intent' || this.state.intent == ""){
+          intentVal = '';
+      }
+      else{
+          intentVal=this.state.intent
+      }
       let doc = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -208,19 +231,52 @@ class Registration extends Component {
         address: user.address,
         profileServices: user.profileServices,
         isAttendee: user.isAttendee,
-        timesteamp: new Date(),
-        registrationType: 'On Spot Registration'
+        timestamp: new Date(),
+        registrationType: 'On Spot Registration',
+        briefInfo: user.briefInfo,
+        info: user.info,
+        profileImageURL: user.profileImageURL,
+        intent: intentVal,
+        otp: otpVal,
+        attendanceId : '',
+        sessionId: '',
       }
-
-      if(user.isAttendee == true){
-          DBUtil.addObj(tblAttendee,doc,function (){
-          });
-      }
-      DBUtil.addObj(tblAttendance,doc,function (){
-          toast.success("User registered successfully.", {
-              position: toast.POSITION.BOTTOM_RIGHT,
-          });
+     
+      DBUtil.addObj(tblAttendee,doc,function (id,error){
+          // let attendanceDoc = {
+          //   sessionId: '',
+          //   timestamp: new Date(),
+          //   attendance: id
+          //   //attendance: "Attendee/"+ id
+          //  }
+          if(id != undefined && id != "" && id != null)
+          {
+            doc.attendanceId = id;
+          }
+          if(user.isAttendee == true){
+              DBUtil.addObj(tblAttendance,doc,function (id,error){
+                  toast.success("User registered successfully.", {
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  });
+              },
+              function(error){
+                toast.error("User not registered.", {
+                      position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            });
+          }
+          else {
+            toast.success("User registered successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+          }
+      },
+      function(error){
+          toast.error("User not registered.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
       });
+
      this.resetField(true);
     }
   }
@@ -236,7 +292,11 @@ class Registration extends Component {
         profileServices: [],
         isAttendee: false,
         address: '',
+        briefInfo: '',
+        info: '',
+        profileImageURL: ''        
       },
+      intent: 'Select Intent',
       invalidContact: false,
       invalidEmail: false,
       submitted: false
@@ -256,6 +316,14 @@ class Registration extends Component {
     this.setState({ value });
   }
 
+  // Method for select intant value
+  onChangeIntentField(e) {
+   this.setState({
+       intent: e.target.value 
+    });
+
+  }
+
   // Method for set attendee flag
   toggleChange() {
     const isAttendee = 'isAttendee';
@@ -265,11 +333,12 @@ class Registration extends Component {
   }
   
   render() {
-    const { user, submitted, value } = this.state;    
+    const { user, submitted, value, intentVal } = this.state;    
     const options = this.state.profileDropDown;
    
     return (
       <div className="animated fadeIn">
+        
           <Row className="justify-content-left">
             <Col md="8">
               <Card className="mx-6">
@@ -350,8 +419,60 @@ class Registration extends Component {
                       </FormGroup>
                     </Col>
                   </FormGroup>
+                  <FormGroup row>
+                    <Col xs="12" md="6"  >
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText><i className="fa fa-image"></i></InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
+                      </InputGroup>
+                    </Col>
+                    <Col xs="12" md="6">
+                      <InputGroup className="mb-3">
+                        <Input type="select" style={{ width: 200 }} name="intent" value={this.state.intent}  id='intent' placeholder="Intent" onChange={(e) => this.onChangeIntentField(e)} >
+                            <option value='Select Intent'>Select Intent</option>
+                            <option value="Mentor">Mentor</option>
+                            <option value="Mentee">Mentee</option>
+                            <option value="Investor">Investor</option>
+                            <option value="Looking For Investment">Looking For Investment</option>
+                        </Input>
+                      </InputGroup>
+                    </Col>
+                  </FormGroup>  
+                  <FormGroup row>
+                    <Col xs="12" md="6">
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Info" name="info" value={this.state.user.info} onChange={this.changeFunction} required />
+                      </InputGroup>
+                    </Col>
+                    <Col xs="12" md="6">
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                          </InputGroupAddon>
+                            {/* <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} required /> */}
+                             {/* <textarea value={this.state.user.briefInfo} placeholder="Brief Info" name="briefInfo" onChange={this.changeFunction} /> */}
+                             <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
+                        </InputGroup>
+                    </Col>
+                  </FormGroup>
+                  {/* <FormGroup row>
+                    <Col xs="12" md="12">
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText><i className="fa fa-info"></i></InputGroupText>
+                          </InputGroupAddon>
+                             <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
+                        </InputGroup>
+                    </Col>
+                  </FormGroup> */}
+
                   <FormGroup>
-                    {/* <Col xs="12" md="12"> */}
+                    {/* <Col xs="12" md="12">*/}
                     <div>
                       <Label> Mark as an Attendee &nbsp;
                         <input type="checkbox" checked={this.state.user.isAttendee} onChange={this.toggleChange} />
@@ -371,6 +492,7 @@ class Registration extends Component {
               </Card>
             </Col>
           </Row>
+         
       </div>
     )
   }
