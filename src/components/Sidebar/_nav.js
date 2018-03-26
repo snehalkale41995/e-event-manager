@@ -67,11 +67,11 @@ export default {
         attributes: {}
       },
     },
-    {
-      name: 'User',
-      url: '/user',
-      icon: 'icon-user',
-    },
+    // {
+    //   name: 'User',
+    //   url: '/user',
+    //   icon: 'icon-user',
+    // },
     {
       name: 'Role',
       url: '/role',
