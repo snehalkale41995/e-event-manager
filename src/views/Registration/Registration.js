@@ -185,9 +185,8 @@ class Registration extends Component {
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div height=80> </div>");
     newWindow.document.writeln("<table > <tr><td>"+" "+ this.state.Qrurl +"</td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
-    newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px;'/>")
+    newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px; width:420px'/>")
     newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" +Firstletter +" </div>"+"</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
