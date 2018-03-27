@@ -166,7 +166,6 @@ class Registration extends Component {
         this.setState({ Qrurl: generatedQR })
         setTimeout(() => {
           this.openWin(user,profiles);
-          //this.resetField(true);
         }, 250);
     }
   }
@@ -279,13 +278,15 @@ class Registration extends Component {
             compRef.setState({AttendeeId:id})
             console.log(compRef.state.AttendeeId);
             compRef.onGenerateQRcode();
+             setTimeout(() => {
+            compRef.resetField(true);
+        }, 250);
       },
       function(error){
           toast.error("User not registered.", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
       });
-
     // this.resetField(true);
     }
   }
