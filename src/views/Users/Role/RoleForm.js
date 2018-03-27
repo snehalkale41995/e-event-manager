@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Container, Input, Row, Col, Card, CardHeader, CardBody,
-         Button, Label, Table, Form, FormGroup, 
+import { Container,  Input, InputGroup, InputGroupText, InputGroupAddon, Row, 
+         Col, Card, CardHeader, CardBody, Button, Label, Table, Form, FormGroup, 
        } from 'reactstrap';
 import RoleData from './RoleData.json'
 import Feature from './Feature.js';
@@ -172,14 +172,18 @@ class RoleForm extends Component{
                                     <form name="form" onSubmit={this.submitFunction}> 
                                         <Row>
                                             <Col xs="12" md="4" className={(submitted && !this.state.role.name ? ' has-error' : '')}>        
-                                                <FormGroup>
-                                                    <Label> Name : </Label>
-                                                    <Input type="text" placeholder="Enter Role Name" name="name" value={this.state.role.name} 
+                                                <InputGroup className="mb-3">
+                                                    <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>
+                                                        <i className="icon-user"></i>
+                                                    </InputGroupText>
+                                                    </InputGroupAddon>
+                                                    <Input type="text" placeholder="Role" name="name" value={this.state.role.name} 
                                                         onChange={this.changeRoleNameState}/>
                                                         { submitted && !this.state.role.name &&
-                                                                <div className="help-block rollnameHelpBlock">Role name is required</div>
+                                                            <div className="help-block rollnameHelpBlock rollNameError">Role name is required</div>
                                                         }
-                                                </FormGroup>
+                                                </InputGroup>
                                             </Col>
                                         </Row>
                                         <Row>
