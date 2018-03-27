@@ -154,13 +154,10 @@ class Registration extends Component {
         profiles = profiles.substring(0, profiles.lastIndexOf(" "));
         let cardDetails = {
           version:'3.0',
-          lastName:lname,
-          firstName:fname,
           title:userId,
-          cellPhone:contactNo,
-          email:emailid
-         
-          };
+          lastName: lname,
+          firstName:fname,
+         };
 
         let generatedQR = qrCode.createVCardQr(cardDetails, { typeNumber: 12, cellSize: 2 });
         this.setState({ Qrurl: generatedQR })
