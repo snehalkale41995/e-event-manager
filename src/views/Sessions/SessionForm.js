@@ -35,9 +35,8 @@ class SessionForm extends Component {
                 volunteers: [],
                 startTime: '',
                 endTime: '',
-                isRegrequired: false
+               // isRegrequired: false
             },
-
             EventgetObj: [],
             submitted: false,
             speakersValue: '',
@@ -59,7 +58,9 @@ class SessionForm extends Component {
             selectedRoom: '',
             deletePopupFlag: false,
             slotPopupFlag: false,
-            addQPopupFlag: false
+            addQPopupFlag: false,
+            invalidSpeaker:false,
+            invalidVolunteer:false
         };
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
@@ -79,8 +80,8 @@ class SessionForm extends Component {
         this.slotConfirmPopup = this.slotConfirmPopup.bind(this);
         this.addQPopup = this.addQPopup.bind(this);
         this.slotConfirmSuccess = this.slotConfirmSuccess.bind(this);
+        this.handleValidations = this.handleValidations.bind(this);
     }
-
 
     componentDidMount() {
         this.getAllList();
@@ -92,19 +93,18 @@ class SessionForm extends Component {
                 if (document.data().room == thisRef.state.EventObj.room)
                 { listItem.push({ eventId: document.id, eventInfo: document.data() }) }
             });
-
             thisRef.setState({ EventgetObj: listItem });
             let eventArray = []
             listItem.forEach(function (data) {
                 eventArray.push({
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
+                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers,
                 });
+                //  isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
             })
         })
     }
-
 
     getMainroom() {
         let thisRef = this;
@@ -145,9 +145,7 @@ class SessionForm extends Component {
                 if (document.data().profileName == "Volunteer")
                 { volunteerId = document.id; }
             });
-
         })
-
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
                 for (var i = 0; i < doc.data().profileServices.length; i++) {
@@ -168,7 +166,6 @@ class SessionForm extends Component {
                     volunteerData: listVolunteers
                 });
         })
-
         DBUtil.addChangeListener("Rooms", function (response) {
             response.forEach(function (Roomdoc) {
                 mainRoom.push(Roomdoc.id)
@@ -195,27 +192,43 @@ class SessionForm extends Component {
                 [name]: value
             }
         });
-
     }
 
-    submitFunction(event) {
-        event.preventDefault();
-        this.setState({ submitted: true });
-        const EventObj = this.state.EventObj;
-        if (EventObj.eventName && EventObj.speakers.length && EventObj.volunteers.length
-            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
-
-            let compRef = this;
+        handleValidations() {
+          const EventObj = this.state.EventObj;
             let length = EventObj.speakers.length;
+            if(length){
             let lastElement = EventObj.speakers[length - 1]
             let speakerArray = lastElement.split(',');
             this.state.EventObj.speakers = speakerArray;
-
+           }
             let len = EventObj.volunteers.length;
+            if(len){
             let lastEle = EventObj.volunteers[len - 1]
             let volunteersArray = lastEle.split(',');
-            this.state.EventObj.volunteers = volunteersArray;
+            this.state.EventObj.volunteers = volunteersArray;}
+             
+            if(!EventObj.speakers.length) {
+            this.state.invalidSpeaker = true;
+            }
+            else if(EventObj.speakers=="" ){
+            this.state.invalidSpeaker = true;}
+            if(!EventObj.volunteers.length){
+              this.state.invalidVolunteer = true;
+            }
+            else if(EventObj.volunteers==""){
+             this.state.invalidVolunteer = true;
+             }
+        }
 
+       submitFunction(event) {
+        event.preventDefault();
+        this.setState({ submitted: true });
+        const EventObj = this.state.EventObj;
+        this.handleValidations();
+        if (EventObj.eventName && !this.state.invalidSpeaker && !this.state.invalidVolunteer
+            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+            let compRef = this;
             let tableName = Sessions;
             let docName = EventObj.eventName;
             let doc = {
@@ -227,9 +240,9 @@ class SessionForm extends Component {
                 volunteers: EventObj.volunteers,
                 startTime: EventObj.startTime,
                 endTime: EventObj.endTime,
-                isRegrequired: EventObj.isRegrequired
             }
-            let isRegrequired = this.state.EventObj.isRegrequired;
+            //  isRegrequired: EventObj.isRegrequired
+            // let isRegrequired = this.state.EventObj.isRegrequired;
             DBUtil.addObj(tableName, doc, function (response) {
                  toast.success("Session added successfully.", {
                     position: toast.POSITION.BOTTOM_RIGHT,
@@ -241,10 +254,8 @@ class SessionForm extends Component {
                 let SlotalertMessage = compRef.state.SlotalertMessage;
                 SlotalertMessage = '';
                 compRef.setState({ SlotalertMessage: SlotalertMessage })
-                if (isRegrequired == true)
-                {
-                 compRef.addQPopup();
-                }
+                // if (isRegrequired == true)
+                // {compRef.addQPopup();}
              compRef.resetField();
             }, function (err) { });
           }
@@ -263,7 +274,6 @@ class SessionForm extends Component {
                 deletePopupFlag: false
             });
         });
-
     }
 
     deleteConfirmPopup() {
@@ -305,18 +315,11 @@ class SessionForm extends Component {
     updateEvent() {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
-        if (EventObj.eventName && EventObj.speakers.length && EventObj.volunteers.length
+        this.handleValidations();
+        if (EventObj.eventName && !this.state.invalidSpeaker && !this.state.invalidVolunteer
             && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
             let compRef = this;
-            let length = EventObj.speakers.length;
-            let lastElement = EventObj.speakers[length - 1]
-            let speakerArray = lastElement.split(',');
-            EventObj.speakers = speakerArray;
-            let len = EventObj.volunteers.length;
-            let lastEle = EventObj.volunteers[len - 1]
-            let volunteersArray = lastEle.split(',');
-            EventObj.volunteers = volunteersArray;
-            let isRegrequired = this.state.EventObj.isRegrequired;
+            //let isRegrequired = this.state.EventObj.isRegrequired;
             DBUtil.getDocRef(Sessions).doc(EventObj.eventID).update({
                 "eventName": EventObj.eventName,
                 "room": EventObj.room,
@@ -326,14 +329,14 @@ class SessionForm extends Component {
                 "volunteers": EventObj.volunteers,
                 "startTime": EventObj.startTime,
                 "endTime": EventObj.endTime,
-                "isRegrequired": EventObj.isRegrequired
             })
+            //    "isRegrequired": EventObj.isRegrequired
                 .then(function () {
                     toast.success("Session updated successfully.", {
                         position: toast.POSITION.BOTTOM_RIGHT,
                     });
-                    if (isRegrequired == true)
-                    { compRef.addQPopup(); }
+                    // if (isRegrequired == true)
+                    // { compRef.addQPopup(); }
                     compRef.resetField();
                     compRef.setState({
                         createFlag: true,
@@ -350,7 +353,7 @@ class SessionForm extends Component {
                 extraServices: '',
                 speakers: [],
                 volunteers: [],
-                isRegrequired: false,
+               // isRegrequired: false,
                 description:''
             },
             removeSelected: true,
@@ -392,29 +395,31 @@ class SessionForm extends Component {
             listItem.forEach(function (data) {
                 eventArray.push({
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isRegrequired: data.eventInfo.isRegrequired
+                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers
                 });
+                // , isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
             })
         })
     }
 
-
     multichangeSpeakers(speakersValue) {
         this.state.EventObj.speakers.push(speakersValue);
         this.setState({ speakersValue });
+        this.state.invalidSpeaker = false;
     }
 
     multichangeVolunteers(volunteersValue) {
         this.state.EventObj.volunteers.push(volunteersValue);
         this.setState({ volunteersValue });
+         this.state.invalidVolunteer = false;
     }
 
     toggleChange() {
-        const isRegrequired = 'isRegrequired';
-        const EventObj = this.state.EventObj;
-        EventObj[isRegrequired] = !this.state.EventObj.isRegrequired;
-        this.setState({ EventObj: EventObj });
+        // const isRegrequired = 'isRegrequired';
+        // const EventObj = this.state.EventObj;
+        // EventObj[isRegrequired] = !this.state.EventObj.isRegrequired;
+        // this.setState({ EventObj: EventObj });
     }
 
 
@@ -450,7 +455,6 @@ class SessionForm extends Component {
     }
 
     ToggleSelectclick(slotStart, slotEnd) {
-
         let Currentroom = this.state.EventObj.room;
         let startSlot = slotStart;
         let endSlot = slotEnd;
@@ -467,11 +471,6 @@ class SessionForm extends Component {
                 Currentroom = this.getMainroom();
             }
         }
-
-
-
-
-        
         setTimeout(() => {
             this.validateSlot(Currentroom, startSlot, endSlot)
         }, 250);
@@ -493,7 +492,7 @@ class SessionForm extends Component {
         var SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
          `, End Time: ${slotInfo.end.toLocaleString()}`;
-        SlotalertMessage = "confirm slot :"+ " " + " " + "start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "end Time :" +"" + slotInfo.end.toLocaleString()  
+        SlotalertMessage = "Confirm slot :"+ " " + " " + "Start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "End Time :" +"" + slotInfo.end.toLocaleString()  
          this.setState({ SlotalertMessage: SlotalertMessage })
          this.setState({slotStartTime : slotInfo.start});
          this.setState({slotEndTime : slotInfo.end})
@@ -505,7 +504,6 @@ class SessionForm extends Component {
   
     let editobj = {};
     const EventObj = this.state.EventObj;
-
     EventObj.eventID = event.id;
     EventObj.eventName = event.title;
     EventObj.startTime = event.start;
@@ -515,8 +513,7 @@ class SessionForm extends Component {
     EventObj.speakers = event.speakers;
     EventObj.volunteers = event.volunteers;
     EventObj.room = event.room;
-    EventObj.isRegrequired = event.isRegrequired;
-
+  //  EventObj.isRegrequired = event.isRegrequired;
     let SlotalertMessage = this.state.SlotalertMessage;
     SlotalertMessage = '';
     this.setState({ SlotalertMessage: SlotalertMessage })
@@ -533,7 +530,6 @@ class SessionForm extends Component {
 
    render() {
         const { EventObj, speakersValue, volunteersValue, speakerData, volunteerData, roomsValue, roomData, editDeleteFlag, createFlag, submitted } = this.state;
-      
         let options = speakerData;
         let volunteerOptions = volunteerData;
         let roomOptions = roomData;
@@ -611,14 +607,14 @@ class SessionForm extends Component {
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && !EventObj.speakers ? ' has-error' : '')}>
+                                                            <Col xs="12" className={(submitted && this.state.invalidSpeaker ? ' has-error' : '')}>
                                                                 <Label> Speakers : </Label>
                                                                 <Select multi onChange={this.multichangeSpeakers} placeholder="--Select--" simpleValue value={speakersValue} options={options} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
                                                             <Col>
-                                                                {submitted && !EventObj.speakers.length &&
+                                                                {submitted && this.state.invalidSpeaker &&
                                                                     <div className="help-block" style={{ color: "red" }}>*Please select Speakers</div>
                                                                 }
                                                             </Col>
@@ -627,14 +623,14 @@ class SessionForm extends Component {
 
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && !EventObj.volunteers ? ' has-error' : '')}>
+                                                            <Col xs="12" className={(submitted && this.state.invalidVolunteer ? ' has-error' : '')}>
                                                                 <Label>Volunteers : </Label>
                                                                 <Select multi onChange={this.multichangeVolunteers} placeholder="--Select--" simpleValue value={volunteersValue} options={volunteerOptions} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
                                                             <Col>
-                                                                {submitted && !EventObj.volunteers.length &&
+                                                                {submitted && this.state.invalidVolunteer &&
                                                                     <div className="help-block" style={{ color: "red" }}>*Please select Volunteers</div>
                                                                 }
                                                             </Col>
@@ -671,14 +667,14 @@ class SessionForm extends Component {
                                                         </Row>
                                                     </FormGroup>
 
-                                                    <Row>
+                                                    {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>
                                                                 <input type="checkbox" checked={this.state.EventObj.isRegrequired} onChange={this.toggleChange} />
                                                                 <Label> Registration Required </Label>
                                                             </FormGroup>
                                                         </Col>
-                                                    </Row>
+                                                    </Row> */}
 
                                                     {editDeleteFlag &&
                                                         <div>
