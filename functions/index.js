@@ -27,25 +27,52 @@ exports.registerUser = functions.https.onRequest((request, response) => {
         return response.status(400).send('Invalid user email');
     }
     if (!request.body.password) {
-        return response.send('Invalid password');
-    }
-    if (!request.body.phoneNumber) {
-        return response.status(400).send('Invalid phone number');
+        return response.status(400).send('Invalid password');
     }
     if (!request.body.displayName) {
-        return response.send('Invalid display name');
+        return response.status(400).send('Invalid display name');
     }
-
+    if (!request.body.contactNo) {
+        return response.status(400).send('Invalid contactNo');
+    }
+    if (!request.body.firstName) {
+        return response.status(400).send('Invalid firstName');
+    }
+    if (!request.body.lastName) {
+        return response.status(400).send('Invalid lastName');
+    }
+    if (!request.body.fullName) {
+        return response.status(400).send('Invalid fullName');
+    }
+    if (!request.body.isAttendee) {
+        return response.status(400).send('Invalid isAttendee');
+    }
+    if (!request.body.roleName) {
+        return response.status(400).send('Invalid roleName');
+    }
+    if (!request.body.address) {
+        return response.status(400).send('Invalid address');
+    }
     return admin.auth().createUser({
         email: request.body.userEmail,
         emailVerified: false,
         password: request.body.password,
-        displayName: request.body.displayNamed,
+        displayName: request.body.displayName,
         disabled: false
     })
         .then((userRecord) => {
             console.log("Successfully created new user:", userRecord.uid);
-            return sendWelcomeEmail(request.body.userEmail, request.body.displayNamed, response, request.body.password);
+            let attendeeDetails = { 
+                address: request.body.address, 
+                contactNo: request.body.contactNo, 
+                email:request.body.userEmail,
+                firstName:request.body.firstName,
+                lastName:request.body.lastName,
+                fullName:request.body.fullName,
+                roleName:request.body.roleName,
+                isAttendee:request.body.isAttendee,
+            };
+            return sendWelcomeEmail(request.body.userEmail, request.body.displayName, response, request.body.password, attendeeDetails, userRecord.uid);
         })
         .catch((error) => {
             console.log("Error creating new user:", error);
@@ -53,20 +80,29 @@ exports.registerUser = functions.https.onRequest((request, response) => {
         });
 });
 
-function sendWelcomeEmail(email, displayName, response, password) {
+function sendWelcomeEmail(email, displayName, response, password, attendeeDetails, uid) {
     const mailOptions = {
-      from: `${APP_NAME} <noreply@firebase.com>`,
-      to: email,
+        from: `${APP_NAME} <noreply@firebase.com>`,
+        to: email,
     };
-  
+
     // The user subscribed to the newsletter.
     mailOptions.subject = `Welcome to ${APP_NAME}!`;
     mailOptions.text = `Hey ${displayName || ''}! Thank you for your registration at ${APP_NAME}. Your password for login is '${password}'.`;
     return mailTransport.sendMail(mailOptions).then(() => {
-      console.log('New welcome email sent to:', email);
-      return response.status(200).send("Successfully created new user");
+        console.log('New welcome email sent to:', email);
+        return admin.firestore().collection("Attendee1").doc(uid)
+            .set(attendeeDetails)
+            .then((docRef) => {
+                console.log('Attendde added', attendeeDetails);
+                return response.status(200).send("Successfully created new user.");
+            })
+            .catch((ex) => {
+                console.log('Error Adding Attendee', ex);
+                return response.status(500).send("Error updating attendance table for user:" + email);
+            });
     }).catch((error) => {
         console.log("Error sending mail to user:", error);
         return response.status(500).send("Error sending mail to user:" + email);
     });
-  }
+}
