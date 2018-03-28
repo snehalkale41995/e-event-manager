@@ -60,10 +60,8 @@ class RegistrationList extends Component{
             for (var i = 0; i < users.length; i++) {
                 userList.push({id : userIDs[i] , users : users[i] });
             }
-            console.log("User List: " + userList);
             componentRef.setState({users : userList}) 
         });
-
     }
 
     // Method For approve registration
@@ -72,9 +70,7 @@ class RegistrationList extends Component{
             if(row.id == id){
                 let param = [{
                     id : id,
-                    isApproved: true,
-                    isPending: false,
-                    isRejected: false,
+                    status: 'Going'
                 }];
                  DBUtil.approvedRejectDocById("RegistrationResponse",param)
                  toast.success("User approved successfully.", {
@@ -101,9 +97,7 @@ class RegistrationList extends Component{
             if(row.id == id){
                 let param = [{
                     id : id,
-                    isApproved: false,
-                    isRejected: true,
-                    isPending: false
+                    status: 'Denied'
                 }];
                  DBUtil.approvedRejectDocById("RegistrationResponse",param)
                  toast.success("User rejected successfully.", {
@@ -144,8 +138,8 @@ class RegistrationList extends Component{
                                 )
                                 break;
                     }
-                    
-                    let setApporveRejectButton = this.setApporveRejectButtonByStatus(row.users.isPending,row.users.isApproved,row.users.isRejected,row.id,value);
+                    row.users.status
+                    let setApporveRejectButton = this.setApporveRejectButtonByStatus(row.users.status,row.id,value);
                     return <tr key ={row.users.name}>
                             <td key={row.users.name}>
                                 <Avatar name={row.users.name} size={40} round={true} />&nbsp; 
@@ -177,7 +171,7 @@ class RegistrationList extends Component{
         });
         this.modelPopup = this.state.users.map(function(row){
             if(row.id == value){            
-                this.popupButtons = this.setApporveRejectButtonByStatus(row.users.isPending,row.users.isApproved,row.users.isRejected,row.id,ddlValue);
+                this.popupButtons = this.setApporveRejectButtonByStatus(row.users.status,row.id,ddlValue);
                 let tdResponse = row.users.response.map(function(item){
                     return (<span key={item.questionId}>{item.questionId} &nbsp; {item.question} 
                              <br/>Answer :&nbsp; {item.answer}<br/><br/>
@@ -191,18 +185,18 @@ class RegistrationList extends Component{
             }
         },this);
       }
-
+ 
     // Method For render apporve & reject buttons
-    setApporveRejectButtonByStatus(isPending,isApproved,isRejected,id,ddlValue){
+    setApporveRejectButtonByStatus(status,id,ddlValue){
         let userStatus ='';
-        if(isPending == true){
+        if(status == "Pending"){
            return userStatus = 
            (<div>
                 <Button color="success" onClick={(e) =>this.onApproved(e,id,ddlValue)}>Apporve</Button>&nbsp;
                 <Button color="danger" onClick={(e) =>this.onRejected(e,id,ddlValue)}>Reject</Button>
             </div>)
         }
-        else if(isApproved == true){
+        else if(status == "Going"){
             return userStatus = (
                 <div>
                     <span>Approved</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -210,7 +204,7 @@ class RegistrationList extends Component{
                 </div>
             )
         }
-        else if(isRejected == true){
+        else if(status == "Denied"){
             return userStatus = (
                 <div>
                     <Button color="success" onClick={(e) => this.onApproved(e,id,ddlValue)}>Apporve</Button>&nbsp;

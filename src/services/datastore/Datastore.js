@@ -95,10 +95,8 @@ export class DBUtil {
     // Method for update approve & reject registered user by Id
     static approvedRejectDocById(tableName,param){
         this.getDocRef(tableName).doc(param[0].id).update({
-            "isApproved": param[0].isApproved,
-            "isPending": param[0].isPending,
-            "isRejected": param[0].isRejected
-          });
+            "status": param[0].status
+        });
     }
 
 }

@@ -49,6 +49,8 @@ class Registration extends Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.toggleChange = this.toggleChange.bind(this);
     this.onChangeIntentField= this.onChangeIntentField.bind(this);
+    this.setInputToAlphabets = this.setInputToAlphabets.bind(this);
+    this.SetInputToNumeric = this.SetInputToNumeric.bind(this);
   }
 
   // Method For render/set default profile data
@@ -183,9 +185,8 @@ class Registration extends Component {
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div height=80> </div>");
     newWindow.document.writeln("<table > <tr><td>"+" "+ this.state.Qrurl +"</td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
-    newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px;'/>")
+    newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px; width:420px'/>")
     newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" +Firstletter +" </div>"+"</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
@@ -338,6 +339,22 @@ class Registration extends Component {
     user[isAttendee] = !this.state.user.isAttendee;
     this.setState({ user: user });
   }
+
+  // Method for set only alphabets
+  setInputToAlphabets(e) {
+    const re = /[a-zA-Z]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
+
+  // Method for set only Numeric
+  SetInputToNumeric(e) {
+    const re = /[0-9]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   
   render() {
     const { user, submitted, value, intentVal } = this.state;    
@@ -359,7 +376,7 @@ class Registration extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="First Name" name="firstName" value={this.state.user.firstName} onChange={this.changeFunction} required />
+                        <Input type="text" placeholder="First Name" name="firstName" onKeyPress={(e) => this.setInputToAlphabets(e)} value={this.state.user.firstName} onChange={this.changeFunction} required />
                         {submitted && !user.firstName &&
                             <div className="help-block" style={{ color: "red" }}>*Required</div>
                           }
@@ -372,7 +389,7 @@ class Registration extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Last Name" name="lastName" value={this.state.user.lastName} onChange={this.changeFunction} required />
+                        <Input type="text" placeholder="Last Name" name="lastName" onKeyPress={(e) => this.setInputToAlphabets(e)} value={this.state.user.lastName} onChange={this.changeFunction} required />
                         {submitted && !user.lastName &&
                             <div style={{ color: "red" }} className="help-block" >*Required</div>
                           }
@@ -396,7 +413,7 @@ class Registration extends Component {
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="icon-phone"></i></InputGroupText>
                         </InputGroupAddon>
-                        <Input type="number" placeholder="Contact" name="contactNo" value={this.state.user.contactNo} onChange={this.changeFunction} required />
+                        <Input type="text" placeholder="Contact" maxLength={10} name="contactNo" onKeyPress={(e) => this.SetInputToNumeric(e)} value={this.state.user.contactNo}  onChange={this.changeFunction} required />
                         {submitted && this.state.invalidContact &&
                             <div style={{ color: "red" }} className="help-block">{this.state.contactError} </div>
                           }
