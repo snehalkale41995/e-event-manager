@@ -22,12 +22,13 @@ class Registration extends Component {
         contactNo: '',
         address: '',
         profileServices: [],
-        isAttendee: false,
+        isAttendance: false,
         registrationType: '',
         briefInfo: '',
         info: '',
         profileImageURL: '',
-        sessionId: ''
+        sessionId: '',
+        linkedInURL: ''
       },
       intent: '',
       submitted: false,
@@ -36,8 +37,7 @@ class Registration extends Component {
       emailError : '',
       contactError : '',
       profileDropDown: [],
-      AttendeeId:''
-      
+      attendeeId:''      
     };
 
     this.changeFunction = this.changeFunction.bind(this);
@@ -50,7 +50,7 @@ class Registration extends Component {
     this.toggleChange = this.toggleChange.bind(this);
     this.onChangeIntentField= this.onChangeIntentField.bind(this);
     this.setInputToAlphabets = this.setInputToAlphabets.bind(this);
-    this.SetInputToNumeric = this.SetInputToNumeric.bind(this);
+    this.setInputToNumeric = this.setInputToNumeric.bind(this);
   }
 
   // Method For render/set default profile data
@@ -127,7 +127,6 @@ class Registration extends Component {
   // Method for generate QR code
   onGenerateQRcode() {
     const { user } = this.state;
-    console.log(this.state.AttendeeId,"id in Ongenerate")
     let profiles = '';
     this.onHandleValidations(user , this.state.submitted = true);
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact)
@@ -137,7 +136,7 @@ class Registration extends Component {
         let contactNo = user.contactNo;
         let emailid = user.email;
         let profileData = this.state.profileDropDown; 
-        let userId = "id:"+this.state.AttendeeId; 
+        let userId = "id:"+this.state.attendeeId; 
         console.log(userId,"userId");
         profileData.map(function(item){
           if(user.profileServices.length > 0){
@@ -232,7 +231,7 @@ class Registration extends Component {
         contactNo: user.contactNo,
         address: user.address,
         profileServices: user.profileServices,
-        isAttendee: user.isAttendee,
+        isAttendance: user.isAttendance,
         timestamp: new Date(),
         registrationType: 'On Spot Registration',
         briefInfo: user.briefInfo,
@@ -240,31 +239,26 @@ class Registration extends Component {
         profileImageURL: user.profileImageURL,
         intent: intentVal,
         otp: otpVal,
-        attendanceId : '',
-        sessionId: '',
-        fullName: user.firstName + ' ' + user.lastName
+        linkedInURL: user.linkedInURL
       }
-     
       DBUtil.addObj(tblAttendee,doc,function (id,error){
-          let attendanceDoc = {
-            sessionId: '',
-            timestamp: new Date(),
-            attendance: id
-           }
-          if(id != undefined && id != "" && id != null)
-          {
-            doc.attendanceId = id;
-          }
-          if(user.isAttendee == true){
-              DBUtil.addObj(tblAttendance,doc,function (id,error){
-                  toast.success("User registered successfully.", {
-                  position: toast.POSITION.BOTTOM_RIGHT,
-                  });
-              },
-              function(error){
-                toast.error("User not registered.", {
-                      position: toast.POSITION.BOTTOM_RIGHT,
+          if(user.isAttendance == true){
+             let attendanceDoc = {
+               fullName: user.firstName + ' ' + user.lastName,
+               session: {},
+               sessionId: '',
+               timestamp: new Date(),
+               userId: id
+            }
+            DBUtil.addObj(tblAttendance,attendanceDoc,function (id,error){
+                toast.success("User registered successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
                 });
+            },
+            function(error){
+              toast.error("User not registered.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+              });
             });
           }
           else {
@@ -272,20 +266,17 @@ class Registration extends Component {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
           }
-            console.log(id,"id");
-            compRef.setState({AttendeeId:id})
-            console.log(compRef.state.AttendeeId);
-            compRef.onGenerateQRcode();
-             setTimeout(() => {
+          compRef.setState({attendeeId:id})           
+          compRef.onGenerateQRcode();
+            setTimeout(() => {
             compRef.resetField(true);
-        }, 250);
+          }, 250);
       },
       function(error){
           toast.error("User not registered.", {
             position: toast.POSITION.BOTTOM_RIGHT,
         });
       });
-    // this.resetField(true);
     }
   }
 
@@ -298,11 +289,12 @@ class Registration extends Component {
         email: '',
         contactNo: '',
         profileServices: [],
-        isAttendee: false,
+        isAttendance: false,
         address: '',
         briefInfo: '',
         info: '',
-        profileImageURL: ''        
+        profileImageURL: '',
+        linkedInURL: ''        
       },
       intent: 'Select Intent',
       invalidContact: false,
@@ -334,9 +326,9 @@ class Registration extends Component {
 
   // Method for set attendee flag
   toggleChange() {
-    const isAttendee = 'isAttendee';
+    const isAttendance = 'isAttendance';
     const user = this.state.user;
-    user[isAttendee] = !this.state.user.isAttendee;
+    user[isAttendance] = !this.state.user.isAttendance;
     this.setState({ user: user });
   }
 
@@ -349,7 +341,7 @@ class Registration extends Component {
   }
 
   // Method for set only Numeric
-  SetInputToNumeric(e) {
+  setInputToNumeric(e) {
     const re = /[0-9]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
@@ -413,7 +405,7 @@ class Registration extends Component {
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="icon-phone"></i></InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Contact" maxLength={10} name="contactNo" onKeyPress={(e) => this.SetInputToNumeric(e)} value={this.state.user.contactNo}  onChange={this.changeFunction} required />
+                        <Input type="text" placeholder="Contact" maxLength={10} name="contactNo" onKeyPress={(e) => this.setInputToNumeric(e)} value={this.state.user.contactNo}  onChange={this.changeFunction} required />
                         {submitted && this.state.invalidContact &&
                             <div style={{ color: "red" }} className="help-block">{this.state.contactError} </div>
                           }
@@ -421,7 +413,7 @@ class Registration extends Component {
                     </Col>
                   </FormGroup>
                   <FormGroup row>
-                    <Col xs="12" md="6"  >
+                    <Col xs="12" md="6">
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText><i className="fas fa-address-book"></i></InputGroupText>
@@ -444,15 +436,7 @@ class Registration extends Component {
                     </Col>
                   </FormGroup>
                   <FormGroup row>
-                    <Col xs="12" md="6"  >
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText><i className="fa fa-image"></i></InputGroupText>
-                        </InputGroupAddon>
-                        <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
-                      </InputGroup>
-                    </Col>
-                    <Col xs="12" md="6">
+                  <Col xs="12" md="6">
                       <InputGroup className="mb-3">
                         <Input type="select" style={{ width: 200 }} name="intent" value={this.state.intent}  id='intent' placeholder="Intent" onChange={(e) => this.onChangeIntentField(e)} >
                             <option value='Select Intent'>Select Intent</option>
@@ -463,8 +447,24 @@ class Registration extends Component {
                         </Input>
                       </InputGroup>
                     </Col>
+                    <Col xs="12" md="6"  >
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText><i className="fa fa-image"></i></InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
+                      </InputGroup>
+                    </Col>
                   </FormGroup>  
                   <FormGroup row>
+                    <Col xs="12" md="6">
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText><i className="fa fa-linkedin"></i></InputGroupText>
+                          </InputGroupAddon>
+                             <Input type="text" placeholder="LinkedIn URL" name="linkedInURL" value={this.state.user.linkedInURL} onChange={this.changeFunction} />
+                        </InputGroup>
+                    </Col>
                     <Col xs="12" md="6">
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -473,18 +473,8 @@ class Registration extends Component {
                         <Input type="text" placeholder="Info" name="info" value={this.state.user.info} onChange={this.changeFunction} required />
                       </InputGroup>
                     </Col>
-                    <Col xs="12" md="6">
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText><i className="fa fa-info"></i></InputGroupText>
-                          </InputGroupAddon>
-                            {/* <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} required /> */}
-                             {/* <textarea value={this.state.user.briefInfo} placeholder="Brief Info" name="briefInfo" onChange={this.changeFunction} /> */}
-                             <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
-                        </InputGroup>
-                    </Col>
                   </FormGroup>
-                  {/* <FormGroup row>
+                  <FormGroup row>
                     <Col xs="12" md="12">
                         <InputGroup className="mb-3">
                           <InputGroupAddon addonType="prepend">
@@ -493,21 +483,17 @@ class Registration extends Component {
                              <Input type="textarea" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
                         </InputGroup>
                     </Col>
-                  </FormGroup> */}
-
+                  </FormGroup>
                   <FormGroup>
-                    {/* <Col xs="12" md="12">*/}
                     <div>
-                      <Label> Mark as an Attendee &nbsp;
-                        <input type="checkbox" checked={this.state.user.isAttendee} onChange={this.toggleChange} />
+                      <Label> Mark as Attendance &nbsp;
+                        <input type="checkbox" checked={this.state.user.isAttendance} onChange={this.toggleChange} />
                       </Label>
                     </div>  
-                    {/* </Col> */}
                   </FormGroup>
                   <FormGroup row>
                     <Col xs="12" md="12">
                       <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button> &nbsp;&nbsp;                        
-                      {/* <Button size="md" color="primary" onClick={this.onGenerateQRcode} >Print QR Code</Button>&nbsp;&nbsp;                          */}
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                       <ToastContainer autoClose={4000} />
                     </Col>
