@@ -91,7 +91,7 @@ function sendWelcomeEmail(email, displayName, response, password, attendeeDetail
     mailOptions.text = `Hey ${displayName || ''}! Thank you for your registration at ${APP_NAME}. Your password for login is '${password}'.`;
     return mailTransport.sendMail(mailOptions).then(() => {
         console.log('New welcome email sent to:', email);
-        return admin.firestore().collection("Attendee1").doc(uid)
+        return admin.firestore().collection("Attendee").doc(uid)
             .set(attendeeDetails)
             .then((docRef) => {
                 console.log('Attendde added', attendeeDetails);
