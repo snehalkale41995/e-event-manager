@@ -19,8 +19,7 @@ class RegistrationList extends Component{
         this.state = {  
             users: [],        
             eventDropDown: [],
-            selectFlag: true,
-            modelPopupFlag: false
+            selectFlag: true
         };
 
         this.getRegistrationResponse = this.getRegistrationResponse.bind(this);
@@ -28,18 +27,19 @@ class RegistrationList extends Component{
         this.setApporveRejectButtonByStatus = this.setApporveRejectButtonByStatus.bind(this);
         this.onApproved = this.onApproved.bind(this);
         this.onRejected = this.onRejected.bind(this);      
-        this.togglePopup = this.togglePopup.bind(this);
     }
 
     // Method For render/set default data
     componentWillMount() {
         let componentRef = this;
-        DBUtil.addChangeListener("SampleEvents", function (objectList) {
-            let events  = [], eventList = [], eventsID = [];
-            objectList.forEach(function (doc) {
+        DBUtil.getDocRef("Sessions")
+        .where("isRegrequired", "==", true)
+        .get().then((snapshot) => {
+           let events  = [], eventList = [], eventsID = [];
+           snapshot.forEach(function (doc) {
                 events.push(doc.data());
                 eventsID.push(doc.id);
-            });            
+            });   
             for (var i = 0; i < events.length; i++) {
                 eventList.push({label : events[i].eventName , value : eventsID[i] });
             }
@@ -77,11 +77,6 @@ class RegistrationList extends Component{
                     position: toast.POSITION.BOTTOM_RIGHT,
                   });
                 setTimeout(() => {
-                    if (this.state.modelPopupFlag == true){
-                        this.setState({
-                            modelPopupFlag: !this.state.modelPopupFlag
-                        });
-                    }
                     this.getRegistrationResponse()
                     this.handleSelectChange(ddlValue);
                 }, 2000);
@@ -91,7 +86,6 @@ class RegistrationList extends Component{
 
     // Method For reject registration
     onRejected (e,id,ddlValue) {
-        console.log('Reject Click...!!')
         var tempThis = this.state;
         this.state.users.map(function(row){
             if(row.id == id){
@@ -104,11 +98,6 @@ class RegistrationList extends Component{
                     position: toast.POSITION.BOTTOM_RIGHT,
                   });
                 setTimeout(() => {
-                    if (this.state.modelPopupFlag == true){
-                        this.setState({
-                            modelPopupFlag: !this.state.modelPopupFlag
-                        });
-                    }
                     this.getRegistrationResponse()
                     this.handleSelectChange(ddlValue);
                 }, 2000);
@@ -124,37 +113,42 @@ class RegistrationList extends Component{
                 selectFlag : false
             });
         
-        var tempThis = this.state;    
-        this.rowComponents  = this.state.users.map(function(row){
-            if(row.users.event != undefined && row.users.event.id == value){
-                    let tdResponse = '';
-                    var responseData = row.users.response; //row.response;
-                    for (var i = 0; i < responseData.length; i++) {
-                        tdResponse = (
-                                        <div>
-                                        <span key={responseData[i].questionId}>{responseData[i].questionId} &nbsp; {responseData[i].question} <br/>Answer :&nbsp; {responseData[i].answer}<br/>
-                                        </span> <Button color="link" onClick={(e) =>this.togglePopup(e,row.id,value)  }><i className="fa fa-link"></i>&nbsp; View More</Button>
-                                        </div>
-                                )
-                                break;
+            var tempThis = this.state; 
+            var hasSessionId = false;
+            this.state.users.forEach(function (doc){
+                if (value == doc.users.sessionId){
+                    hasSessionId = true
+                }
+            })
+            if (hasSessionId == true){
+                this.rowComponents  = this.state.users.map(function(row){
+                    if(row.users.sessionId != undefined && row.users.sessionId == value){
+                        let setApporveRejectButton = this.setApporveRejectButtonByStatus(row.users.status,row.id,value);
+                        return <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr key ={row.users.attendee.firstName + ' '+ row.users.attendee.lastName}>
+                                            <td key={row.users.attendee.firstName + ' '+ row.users.attendee.lastName}>
+                                                <Avatar name={row.users.attendee.firstName + ' '+ row.users.attendee.lastName} size={40} round={true} />&nbsp; 
+                                                {row.users.attendee.firstName + ' '+ row.users.attendee.lastName}
+                                            </td>
+                                            <td>
+                                                {setApporveRejectButton} 
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
                     }
-                    row.users.status
-                    let setApporveRejectButton = this.setApporveRejectButtonByStatus(row.users.status,row.id,value);
-                    return <tr key ={row.users.name}>
-                            <td key={row.users.name}>
-                                <Avatar name={row.users.name} size={40} round={true} />&nbsp; 
-                                {row.users.name}
-                            </td>
-                            <td>
-                                {tdResponse}
-                            </td>
-                            <td>
-                                {setApporveRejectButton} 
-                            </td>
-                        </tr>
+                },this);  
             }
-        },this);
-
+            else{
+                this.rowComponents  = <span> No records found..!! </span>
+            }
         }
         else{
             this.setState({
@@ -163,28 +157,6 @@ class RegistrationList extends Component{
             });
         }
     }
-
-    // Method For for open model popup
-    togglePopup(e,value,ddlValue) {
-        this.setState({
-            modelPopupFlag: !this.state.modelPopupFlag
-        });
-        this.modelPopup = this.state.users.map(function(row){
-            if(row.id == value){            
-                this.popupButtons = this.setApporveRejectButtonByStatus(row.users.status,row.id,ddlValue);
-                let tdResponse = row.users.response.map(function(item){
-                    return (<span key={item.questionId}>{item.questionId} &nbsp; {item.question} 
-                             <br/>Answer :&nbsp; {item.answer}<br/><br/>
-                            </span>)
-                });
-                return <tr key ={row.users.name}>
-                        <td>
-                            {tdResponse}
-                        </td>
-                    </tr>
-            }
-        },this);
-      }
  
     // Method For render apporve & reject buttons
     setApporveRejectButtonByStatus(status,id,ddlValue){
@@ -220,31 +192,13 @@ class RegistrationList extends Component{
         let loadData  = '';
 
         if(this.state.selectFlag == true){
-            loadData = 
-            (<Table responsive>
-                <tbody>
-                    <tr>
-                        <td>
-                            <span>Please select event..!!</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>)
+            loadData = (<span>Please select session..!!</span>)
         }
         else{
             loadData = 
-            (<Table responsive>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Response</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.rowComponents }
-                </tbody>
-            </Table>)
+            (<div>
+                {this.rowComponents}
+             </div>)
         }
         return (
             <div className="animated fadeIn">
@@ -258,7 +212,7 @@ class RegistrationList extends Component{
                                     </Col>
                                     <Col xs="12" md="3">
                                         <Select
-                                            placeholder="Select Events"
+                                            placeholder="Select Session"
                                             simpleValue
                                             value={value}
                                             options={options}
@@ -273,27 +227,6 @@ class RegistrationList extends Component{
                         </CardBody>
                         </Card>
                     </Col>   
-
-                    <Modal isOpen={this.state.modelPopupFlag} toggle={this.togglePopup}
-                        className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.togglePopup} className="userResponseModalHead">User Response</ModalHeader>
-                    <ModalBody>
-                            <Table responsive>
-                                <thead>
-                                    <tr>
-                                        <th>Question and Answer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.modelPopup}
-                                </tbody>
-                            </Table>
-                    </ModalBody>
-                    <ModalFooter>
-                        {this.popupButtons}
-                    </ModalFooter>
-                    </Modal>  
-
                 </Row>
             </div>
         );
