@@ -35,11 +35,11 @@ class AttendeeList extends Component{
         let componentRef = this;
         this.rows = this.state.attendee.map(function (row) {
             return <tr key={row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName}>
-                <td>{row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName }</td>
-                <td>{row.attendeeItems.email}</td>
-                <td>{row.attendeeItems.contactNo}</td>
+                <td>{row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName}</td>
+                <td>{row.attendeeItems.email == undefined ? '' : row.attendeeItems.email}</td>
+                <td>{row.attendeeItems.contactNo == undefined ? '' : row.attendeeItems.contactNo}</td>
                 <td>{row.attendeeItems.timestamp == undefined ? '' : <FormattedDate value={row.attendeeItems.timestamp.toString()}/>}</td>
-                <td>{row.attendeeItems.registrationType}</td>
+                <td>{row.attendeeItems.registrationType== undefined ? '' : row.attendeeItems.registrationType}</td>
                 <td><Link to={`${componentRef.props.match.url}/registration/${row.attendeeIDs}`} > 
                     <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button></Link></td>
             </tr>

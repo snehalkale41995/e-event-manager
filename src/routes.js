@@ -3,7 +3,7 @@ const routes = {
   '/dashboard': 'Dashboard',
   '/user' : 'User',
   '/role' : 'Role',
-  '/reports' : 'Reports',
+  //'/reports' : 'Reports',
   '/attendance' : 'Attendance',
   // '/renderForm': 'RenderForm',
   // '/questions' : 'Questions',
@@ -14,6 +14,7 @@ const routes = {
   '/rooms' : 'Rooms',
   '/registrationList' : 'Registration List',
  //, '/eventQuestions': 'Event Questions'
-  '/attendee' : 'Attendee'
+  '/attendee' : 'Attendee',
+  '/attendeeReport' : 'Attendee Report'
 };
 export default routes;
