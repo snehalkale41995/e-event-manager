@@ -222,14 +222,20 @@ class Registration extends Component {
     }, 500);
   }
 
-  
+
   submitFunction(event) {
     event.preventDefault();
     let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
+    let profileArray = [];
 
-    let attendeeLabel = user.profileServices[0].substring(0, 3).toUpperCase();
+    let length = user.profileServices.length;
+    if (length) {
+      let lastElement = user.profileServices[length - 1]
+      profileArray = lastElement.split(',');
+    }
+    let attendeeLabel = profileArray[0].substring(0, 3).toUpperCase();
     this.setState({ attendeeLabel: attendeeLabel });
 
     this.onHandleValidations(user);
@@ -249,7 +255,7 @@ class Registration extends Component {
     const { user } = this.state;
     let compRef = this;
     let attendeeLabel = this.state.attendeeLabel;
-    
+
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let otpVal = Math.floor(1000 + Math.random() * 9000);
@@ -337,7 +343,7 @@ class Registration extends Component {
     let compRef = this;
     let attendeeLabel = this.state.attendeeLabel;
     let nextCount;
-   
+
     DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", attendeeLabel)
       .onSnapshot(function (querySnapshot) {
         var countArray = [];
