@@ -10,17 +10,19 @@ import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import { ToastContainer, toast } from 'react-toastify';
 import Avatar from 'react-avatar';
+import QRCode from 'qrcode'
+const data = require('../../../public/attendeeData/attendeeData.json');
+
 class Registration extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       user: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        contactNo: '',
-        address: '',
+        firstName: 'sk',
+        lastName: 'sk',
+        email: 'sk@gmail.com',
+        contactNo: '9898989898',
+        address: 'pune',
         profileServices: [],
         isAttendance: false,
         registrationType: '',
@@ -37,9 +39,10 @@ class Registration extends Component {
       emailError : '',
       contactError : '',
       profileDropDown: [],
-      attendeeId:''      
+      attendeeId:'',
+      attendeeLabel:'',
+      counter:''
     };
-
     this.changeFunction = this.changeFunction.bind(this);
     this.submitFunction = this.submitFunction.bind(this);
     this.resetField = this.resetField.bind(this);
@@ -51,6 +54,8 @@ class Registration extends Component {
     this.onChangeIntentField= this.onChangeIntentField.bind(this);
     this.setInputToAlphabets = this.setInputToAlphabets.bind(this);
     this.setInputToNumeric = this.setInputToNumeric.bind(this);
+    this.bulkUpload = this.bulkUpload.bind(this);
+     this.checkPreviuosCount = this.checkPreviuosCount.bind(this);
   }
 
   // Method For render/set default profile data
@@ -63,11 +68,31 @@ class Registration extends Component {
               profileIDs.push(doc.id);
           });            
           for (var i = 0; i < profiles.length; i++) {
-            profileList.push({label : profiles[i].profileName , value : profileIDs[i] });
+            profileList.push({label : profiles[i].profileName , value : profiles[i].profileName });
           }
           componentRef.setState({profileDropDown : profileList}) 
       });
   }
+
+  bulkUpload()
+  {
+   var dataArray = data;
+  for(var index in dataArray){
+   let collectionName = index;
+    for(var doc in dataArray[index]){
+      if(dataArray[index].hasOwnProperty(doc)){
+       DBUtil.getDocRef(collectionName).doc(doc)
+        .set(dataArray[index][doc])
+        .then(() => {
+         // console.log('Document is successed adding to firestore!');
+        })
+        .catch(error => {
+         // console.log(error);
+        });
+      }
+    }
+  }
+ }
 
   // Method for set textbox values
   changeFunction(event) {
@@ -92,7 +117,6 @@ class Registration extends Component {
     if(user.contactNo == ""){
       user.contactNo = null;
     }
-
     if (user.email != null ) {
       let lastAtPos = user.email.lastIndexOf('@');
       let lastDotPos = user.email.lastIndexOf('.');
@@ -137,7 +161,7 @@ class Registration extends Component {
         let emailid = user.email;
         let profileData = this.state.profileDropDown; 
         let userId = "id:"+this.state.attendeeId; 
-        console.log(userId,"userId");
+       
         profileData.map(function(item){
           if(user.profileServices.length > 0){
             let serviceString = user.profileServices[user.profileServices.length - 1]
@@ -152,19 +176,17 @@ class Registration extends Component {
           } 
         })
      
-        profiles = profiles.substring(0, profiles.lastIndexOf(" "));
-        let cardDetails = {
-          version:'3.0',
-          title:userId,
-          lastName: lname,
-          firstName:fname,
-         };
-
-        let generatedQR = qrCode.createVCardQr(cardDetails, { typeNumber: 12, cellSize: 2 });
-        this.setState({ Qrurl: generatedQR })
+      let generatedQR;
+      let compRef =this;
+      let id = this.state.attendeeId;
+      QRCode.toDataURL("TIECON:"+id)
+      .then(url => {
+      generatedQR = url;
+      compRef.setState({ Qrurl: url })
         setTimeout(() => {
-          this.openWin(user,profiles);
+      compRef.openWin(user,profiles);
         }, 250);
+      })
     }
   }
 
@@ -172,6 +194,7 @@ class Registration extends Component {
   openWin(user,profiles) {
     let intent = this.state.intent;
     let Firstletter;
+    let attendeeLabel;
     if(intent=="Mentor")
       {Firstletter ="M"}
     if(intent=="Mentee")
@@ -180,29 +203,34 @@ class Registration extends Component {
       {Firstletter ="I" }
     if(intent=="Looking For Investment")
       {Firstletter ="I+"}
-  
+
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<table > <tr><td>"+" "+ this.state.Qrurl +"</td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
+    newWindow.document.writeln("<div style='height:113px'> </div>");
+    newWindow.document.writeln("<table > <tr><td><img src='" + this.state.Qrurl + "' alt='Click to close' id='bigImage'/></td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>"+user.firstName+"<br/>"+user.lastName+"</h1></td></tr></table>")
+//  newWindow.document.writeln("<div>"+this.state.attendeeLabel+"</div>");
     newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px; width:420px'/>")
     newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" +Firstletter +" </div>"+"</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
-
     setTimeout(function () {
       newWindow.print();
       newWindow.close();
     }, 1000);
   }
 
-  // Method for submit registration data
-  submitFunction(event) {
+
+submitFunction(event) {
     event.preventDefault();
     let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
+
+    let attendeeLabel = user.profileServices[0].substring(0, 3);
+    this.setState({attendeeLabel:attendeeLabel});
     this.onHandleValidations(user);
+   // this.checkPreviuosCount();
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let otpVal = Math.floor(1000 + Math.random() * 9000);
@@ -224,6 +252,7 @@ class Registration extends Component {
       else{
           intentVal=this.state.intent
       }
+      
       let doc = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -239,7 +268,11 @@ class Registration extends Component {
         profileImageURL: user.profileImageURL,
         intent: intentVal,
         otp: otpVal,
-        linkedInURL: user.linkedInURL
+        linkedInURL: user.linkedInURL,
+        attendanceId : '',
+        sessionId: '',
+        fullName: user.firstName + ' ' + user.lastName,
+        attendeeLabel : attendeeLabel
       }
       DBUtil.addObj(tblAttendee,doc,function (id,error){
           if(user.isAttendance == true){
@@ -266,11 +299,11 @@ class Registration extends Component {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
           }
-          compRef.setState({attendeeId:id})           
-          compRef.onGenerateQRcode();
-            setTimeout(() => {
+            compRef.setState({attendeeId:id})
+            compRef.onGenerateQRcode();
+             setTimeout(() => {
             compRef.resetField(true);
-          }, 250);
+        }, 1000);
       },
       function(error){
           toast.error("User not registered.", {
@@ -278,6 +311,20 @@ class Registration extends Component {
         });
       });
     }
+  
+}
+
+  checkPreviuosCount()
+  {
+   DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", "Del")
+                .onSnapshot(function(querySnapshot) {
+                    var countArray = [];
+                    querySnapshot.forEach(function(doc) {
+                       if(doc.data().attendeeCount!=undefined){
+                        countArray.push(doc.data().attendeeCount);
+                       }
+                    });
+       });
   }
 
   // Method for reset all fields
@@ -351,10 +398,8 @@ class Registration extends Component {
   render() {
     const { user, submitted, value, intentVal } = this.state;    
     const options = this.state.profileDropDown;
-   
     return (
       <div className="animated fadeIn">
-        
           <Row className="justify-content-left">
             <Col md="8">
               <Card className="mx-6">
@@ -502,12 +547,13 @@ class Registration extends Component {
               </Card>
             </Col>
           </Row>
-         
+         <div>
+      
+        </div>
       </div>
     )
   }
 }
-
 export default Registration;
 
 
