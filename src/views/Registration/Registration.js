@@ -56,6 +56,7 @@ class Registration extends Component {
     this.setInputToNumeric = this.setInputToNumeric.bind(this);
     this.bulkUpload = this.bulkUpload.bind(this);
     this.checkPreviuosCount = this.checkPreviuosCount.bind(this);
+    this.createAttendee = this.createAttendee.bind(this);
   }
 
   // Method For render/set default profile data
@@ -192,6 +193,8 @@ class Registration extends Component {
     let intent = this.state.intent;
     let Firstletter;
     let attendeeLabel;
+    let attendeeCount;
+    let attendeeCode;
     if (intent == "Mentor")
     { Firstletter = "M" }
     if (intent == "Mentee")
@@ -200,14 +203,16 @@ class Registration extends Component {
     { Firstletter = "I" }
     if (intent == "Looking For Investment")
     { Firstletter = "I+" }
-
+    attendeeLabel = this.state.attendeeLabel;
+    attendeeCount = this.state.attendeeCount - 1;
+    attendeeCode = attendeeLabel + "-" + attendeeCount;
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
     newWindow.document.writeln("<div style='height:113px'> </div>");
-    newWindow.document.writeln("<table > <tr><td><img src='" + this.state.Qrurl + "' alt='Click to close' id='bigImage'/></td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>" + user.firstName + "<br/>" + user.lastName + "</h1></td></tr></table>")
-    //  newWindow.document.writeln("<div>"+this.state.attendeeLabel+"</div>");
-    newWindow.document.writeln("<hr align=left style='border: solid 1px black;margin-top:0px;margin-bottom:5px; width:420px'/>")
+    newWindow.document.writeln("<table> <tr><td><img src='" + this.state.Qrurl + "' alt='Click to close' id='bigImage'/></td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>" + user.firstName + "<br/>" + user.lastName + "</h1></td></tr></table>")
+    newWindow.document.writeln("<table><tr><td style='padding-left:15px;'>" + attendeeCode + "</td></tr></table>");
+    newWindow.document.writeln("<hr align=left style='border: solid 1px black; width:420px'/>")
     newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" + Firstletter + " </div>" + "</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
@@ -217,17 +222,34 @@ class Registration extends Component {
     }, 500);
   }
 
-  //Method for attendee creation
+  
   submitFunction(event) {
     event.preventDefault();
     let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
 
-    let attendeeLabel = user.profileServices[0].substring(0, 3);
+    let attendeeLabel = user.profileServices[0].substring(0, 3).toUpperCase();
     this.setState({ attendeeLabel: attendeeLabel });
+
     this.onHandleValidations(user);
-    // this.checkPreviuosCount();
+
+    setTimeout(() => {
+      this.checkPreviuosCount();
+    }, 50);
+
+    setTimeout(() => {
+      this.createAttendee();
+    }, 1000);
+  }
+
+  //Method for attendee creation
+  createAttendee() {
+    let attendeeCount = this.state.attendeeCount;
+    const { user } = this.state;
+    let compRef = this;
+    let attendeeLabel = this.state.attendeeLabel;
+    
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let otpVal = Math.floor(1000 + Math.random() * 9000);
@@ -269,7 +291,8 @@ class Registration extends Component {
         attendanceId: '',
         sessionId: '',
         fullName: user.firstName + ' ' + user.lastName,
-        attendeeLabel: attendeeLabel
+        attendeeLabel: attendeeLabel,
+        attendeeCount: attendeeCount
       }
       DBUtil.addObj(tblAttendee, doc, function (id, error) {
         if (user.isAttendance == true) {
@@ -308,12 +331,14 @@ class Registration extends Component {
           });
         });
     }
-
   }
-
   //Method to check previous count of attendee
   checkPreviuosCount() {
-    DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", "Del")
+    let compRef = this;
+    let attendeeLabel = this.state.attendeeLabel;
+    let nextCount;
+   
+    DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", attendeeLabel)
       .onSnapshot(function (querySnapshot) {
         var countArray = [];
         querySnapshot.forEach(function (doc) {
@@ -321,7 +346,14 @@ class Registration extends Component {
             countArray.push(doc.data().attendeeCount);
           }
         });
+        if (countArray.length) {
+          nextCount = Math.max(...countArray) + 1;
+          compRef.setState({ attendeeCount: nextCount });
+        }
+        else
+        { compRef.setState({ attendeeCount: 1 }) }
       });
+
   }
 
   // Method for reset all fields
@@ -538,7 +570,7 @@ class Registration extends Component {
                   <Col xs="12" md="12">
                     <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button> &nbsp;&nbsp;
                       <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
-                    <ToastContainer autoClose={1000} />
+                    <ToastContainer autoClose={500} />
                   </Col>
                 </FormGroup>
               </CardBody>
