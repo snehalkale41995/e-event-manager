@@ -38,6 +38,7 @@
     "font-awesome": "4.7.0",
     "history": "4.7.2",
     "material-ui": "^0.20.0",
+    "qrcode": "^1.2.0",
     "react": "16.2.0",
     "react-avatar": "^2.5.1",
     "react-big-calendar": "^0.18.0",

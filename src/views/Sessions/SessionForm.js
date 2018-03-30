@@ -138,23 +138,16 @@ class SessionForm extends Component {
         let volunteerId;
         let speakerServices;
         let volunteerName;
-        DBUtil.addChangeListener("UserProfiles", function (list) {
-            list.forEach(function (document) {
-                if (document.data().profileName == "Speaker")
-                { speakerId = document.id; }
-                if (document.data().profileName == "Volunteer")
-                { volunteerId = document.id; }
-            });
-        })
+       
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
                 for (var i = 0; i < doc.data().profileServices.length; i++) {
                   
-                    if (doc.data().profileServices[i] == speakerId) {
+                    if (doc.data().profileServices[i] == "Speaker") {
                         speakerName = doc.data().firstName + " " + doc.data().lastName;
                         listSpeakers.push({ label: speakerName, value: doc.id })
                     }
-                    if (doc.data().profileServices[i] == volunteerId) {
+                    if (doc.data().profileServices[i] == "Volunteer") {
                         volunteerName = doc.data().firstName + " " + doc.data().lastName;
                         listVolunteers.push({ label: volunteerName, value: doc.id })
                     }
