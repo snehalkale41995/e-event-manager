@@ -22,57 +22,58 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     if (request.method !== 'POST') {
         return response.status(403).send('Forbidden!');
     }
-
-    if (!request.body.userEmail) {
+    let req  = JSON.parse(request.body);
+    
+    if (!req.userEmail) {
         return response.status(400).send('Invalid user email');
     }
-    if (!request.body.password) {
+    if (!req.password) {
         return response.status(400).send('Invalid password');
     }
-    if (!request.body.displayName) {
+    if (!req.displayName) {
         return response.status(400).send('Invalid display name');
     }
-    if (!request.body.contactNo) {
+    if (!req.contactNo) {
         return response.status(400).send('Invalid contactNo');
     }
-    if (!request.body.firstName) {
+    if (!req.firstName) {
         return response.status(400).send('Invalid firstName');
     }
-    if (!request.body.lastName) {
+    if (!req.lastName) {
         return response.status(400).send('Invalid lastName');
     }
-    if (!request.body.fullName) {
+    if (!req.fullName) {
         return response.status(400).send('Invalid fullName');
     }
-    if (!request.body.isAttendee) {
+    if (!req.isAttendee) {
         return response.status(400).send('Invalid isAttendee');
     }
-    if (!request.body.roleName) {
+    if (!req.roleName) {
         return response.status(400).send('Invalid roleName');
     }
-    if (!request.body.address) {
+    if (!req.address) {
         return response.status(400).send('Invalid address');
     }
     return admin.auth().createUser({
-        email: request.body.userEmail,
+        email: req.userEmail,
         emailVerified: false,
-        password: request.body.password,
-        displayName: request.body.displayName,
+        password: req.password,
+        displayName: req.displayName,
         disabled: false
     })
         .then((userRecord) => {
             console.log("Successfully created new user:", userRecord.uid);
             let attendeeDetails = { 
-                address: request.body.address, 
-                contactNo: request.body.contactNo, 
-                email:request.body.userEmail,
-                firstName:request.body.firstName,
-                lastName:request.body.lastName,
-                fullName:request.body.fullName,
-                roleName:request.body.roleName,
-                isAttendee:request.body.isAttendee,
+                address: req.address, 
+                contactNo: req.contactNo, 
+                email:req.userEmail,
+                firstName:req.firstName,
+                lastName:req.lastName,
+                fullName:req.fullName,
+                roleName:req.roleName,
+                isAttendee:req.isAttendee,
             };
-            return sendWelcomeEmail(request.body.userEmail, request.body.displayName, response, request.body.password, attendeeDetails, userRecord.uid);
+            return sendWelcomeEmail(req.userEmail, req.displayName, response, req.password, attendeeDetails, userRecord.uid);
         })
         .catch((error) => {
             console.log("Error creating new user:", error);
