@@ -567,7 +567,7 @@ class Registration extends Component {
                 </FormGroup>
                 <FormGroup>
                   <div>
-                    <Label> Mark as Attendance &nbsp;
+                    <Label> Mark Attendance &nbsp;
                         <input type="checkbox" checked={this.state.user.isAttendance} onChange={this.toggleChange} />
                     </Label>
                   </div>
