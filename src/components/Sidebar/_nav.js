@@ -73,7 +73,12 @@ export default {
       url: '/attendeeReport',
       icon: 'icon-pie-chart',
     },
-
+    {
+      name: 'Session Report',
+      url: '/sessionReport',
+      icon: 'icon-pie-chart',
+    },
+    
     
     {
       title: true,

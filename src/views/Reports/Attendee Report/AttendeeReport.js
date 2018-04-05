@@ -147,7 +147,7 @@ class AttendeeReport extends Component{
                         borderWidth: 1,
                         hoverBackgroundColor: 'rgba(255,99,132,0.4)',
                         hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [attendeeCounts[0].mentee, attendeeCounts[0].mentor,
+                        data: [attendeeCounts[0].mentor, attendeeCounts[0].mentee,
                         attendeeCounts[0].investor, attendeeCounts[0].lookingForInvestment]
                     }
                 ]

@@ -35,7 +35,8 @@ class SessionForm extends Component {
                 volunteers: [],
                 startTime: '',
                 endTime: '',
-                sessionCapacity: ''
+                sessionCapacity: '',
+                isBreak: false
                 // isRegrequired: false
             },
             EventgetObj: [],
@@ -82,6 +83,7 @@ class SessionForm extends Component {
         this.addQPopup = this.addQPopup.bind(this);
         this.slotConfirmSuccess = this.slotConfirmSuccess.bind(this);
         this.handleValidations = this.handleValidations.bind(this);
+        this.breakOutSessionChange = this.breakOutSessionChange.bind(this);
     }
 
    //Method to get session data from MainRoom onload
@@ -99,8 +101,10 @@ class SessionForm extends Component {
             let eventArray = []
             listItem.forEach(function (data) {
                 eventArray.push({
-                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers,
+                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime,
+                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
                 });
                 //  isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -242,6 +246,7 @@ class SessionForm extends Component {
                 volunteers: EventObj.volunteers,
                 startTime: EventObj.startTime,
                 endTime: EventObj.endTime,
+                isBreak: EventObj.isBreak
             }
             //  isRegrequired: EventObj.isRegrequired
             // let isRegrequired = this.state.EventObj.isRegrequired;
@@ -334,6 +339,7 @@ class SessionForm extends Component {
                 "volunteers": EventObj.volunteers,
                 "startTime": EventObj.startTime,
                 "endTime": EventObj.endTime,
+                "isBreak": EventObj.isBreak
             })
                 //    "isRegrequired": EventObj.isRegrequired
                 .then(function () {
@@ -360,7 +366,8 @@ class SessionForm extends Component {
                 volunteers: [],
                 // isRegrequired: false,
                 description: '',
-                sessionCapacity: ''
+                sessionCapacity: '',
+                isBreak: false
             },
             removeSelected: true,
             speakersValue: '',
@@ -401,8 +408,10 @@ class SessionForm extends Component {
 
             listItem.forEach(function (data) {
                 eventArray.push({
-                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers
+                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, 
+                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
                 });
                 // , isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -427,6 +436,13 @@ class SessionForm extends Component {
         // const EventObj = this.state.EventObj;
         // EventObj[isRegrequired] = !this.state.EventObj.isRegrequired;
         // this.setState({ EventObj: EventObj });
+    }
+
+    breakOutSessionChange() {
+        const isBreak = 'isBreak';
+        const EventObj = this.state.EventObj;
+        EventObj[isBreak] = !this.state.EventObj.isBreak;
+        this.setState({ EventObj: EventObj });
     }
 
 
@@ -521,6 +537,7 @@ class SessionForm extends Component {
         EventObj.volunteers = event.volunteers;
         EventObj.room = event.room;
         //  EventObj.isRegrequired = event.isRegrequired;
+        EventObj.isBreak = event.isBreak;
         let SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = '';
         this.setState({ SlotalertMessage: SlotalertMessage })
@@ -684,6 +701,15 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
+                                                     <Row>
+                                                        <Col xs="12">
+                                                            <FormGroup>
+                                                                <Label> Break out session &nbsp;
+                                                                <input type="checkbox" checked={this.state.EventObj.isBreak} onChange={this.breakOutSessionChange} />
+                                                                </Label>
+                                                            </FormGroup>
+                                                        </Col>
+                                                    </Row> 
                                                     {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>

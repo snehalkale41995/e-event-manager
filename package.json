@@ -36,6 +36,7 @@
     "firebase": "^4.10.1",
     "flag-icon-css": "2.9.0",
     "font-awesome": "4.7.0",
+    "highcharts": "^6.0.7",
     "history": "4.7.2",
     "material-ui": "^0.20.0",
     "qrcode": "^1.2.0",
