@@ -19,12 +19,12 @@ export default {
       url: '/rooms',
       icon: 'icon-home'
     },
-    {
-      name: 'Reports',
-      url: '/reports',
-      icon: 'icon-pie-chart',
-    },
-    {
+    // {
+    //   name: 'Reports',
+    //   url: '/reports',
+    //   icon: 'icon-pie-chart',
+    // },
+     {
       name: 'Attendance',
       url: '/attendance',
       icon: 'icon-note'
@@ -58,7 +58,28 @@ export default {
     //   name: 'Event Questions',
     //   url: '/eventQuestions',
     //   icon: 'icon-note'
-    // },    
+    // },  
+    
+    {
+      title: true,
+      name: 'Reports',
+      wrapper: {
+        element: '',
+        attributes: {}
+      },
+    },
+    {
+      name: 'Attendee Report',
+      url: '/attendeeReport',
+      icon: 'icon-pie-chart',
+    },
+    {
+      name: 'Session Report',
+      url: '/sessionReport',
+      icon: 'icon-pie-chart',
+    },
+    
+    
     {
       title: true,
       name: 'Users',

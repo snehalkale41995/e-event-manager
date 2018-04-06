@@ -20,6 +20,8 @@ import Rooms from '../../views/Rooms/Rooms';
 import RegistrationList from '../../views/RegistrationList/registrationList';
 //import EventQuestions from '../../views/EventQuestions/EventQuestions';
 import Attendee from '../../views/Attendee/Attendee';
+import AttendeeReport from '../../views//Reports/Attendee Report/AttendeeReport';
+import SessionReport from '../../views//Reports/Sessions Report/SessionReport';
 
 class Full extends Component {
   render() {
@@ -35,7 +37,7 @@ class Full extends Component {
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                 <Route path="/user" name="User" component={User} />
                 <Route path="/role" name="Role" component={Role} />
-                <Route path='/reports' name='Reports' component={Reports} />
+                {/* <Route path='/reports' name='Reports' component={Reports} /> */}
                 <Route path='/registration' name='Registration' component={Registration} />
                 <Route path='/attendance' name='Attendance' component={Attendance} />
                 <Route path='/session' name='Session' component={Session} />
@@ -45,7 +47,9 @@ class Full extends Component {
                 <Route path='/registrationList' name='Registration List' component={RegistrationList} />
                 {/* <Route path='/eventQuestions' name='Event Questions' component={EventQuestions} /> */}
                 <Route path='/attendee' name='Attendee' component={Attendee} />
-                
+                <Route path='/attendeeReport' name='Attendee Report' component={AttendeeReport} />
+                <Route path='/sessionReport' name='Session Report' component={SessionReport} />
+              
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>

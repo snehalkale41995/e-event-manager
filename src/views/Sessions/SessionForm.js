@@ -35,7 +35,9 @@ class SessionForm extends Component {
                 volunteers: [],
                 startTime: '',
                 endTime: '',
-               // isRegrequired: false
+                sessionCapacity: '',
+                isBreak: false
+                // isRegrequired: false
             },
             EventgetObj: [],
             submitted: false,
@@ -59,8 +61,8 @@ class SessionForm extends Component {
             deletePopupFlag: false,
             slotPopupFlag: false,
             addQPopupFlag: false,
-            invalidSpeaker:false,
-            invalidVolunteer:false
+            invalidSpeaker: false,
+            invalidVolunteer: false
         };
         this.changeFunction = this.changeFunction.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
@@ -81,8 +83,10 @@ class SessionForm extends Component {
         this.addQPopup = this.addQPopup.bind(this);
         this.slotConfirmSuccess = this.slotConfirmSuccess.bind(this);
         this.handleValidations = this.handleValidations.bind(this);
+        this.breakOutSessionChange = this.breakOutSessionChange.bind(this);
     }
 
+   //Method to get session data from MainRoom onload
     componentDidMount() {
         this.getAllList();
         let thisRef = this;
@@ -97,8 +101,10 @@ class SessionForm extends Component {
             let eventArray = []
             listItem.forEach(function (data) {
                 eventArray.push({
-                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers,
+                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime,
+                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
                 });
                 //  isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -106,6 +112,7 @@ class SessionForm extends Component {
         })
     }
 
+    //Method to get mainRoom name
     getMainroom() {
         let thisRef = this;
         let mainRoom = [];
@@ -124,6 +131,7 @@ class SessionForm extends Component {
         return firstRoom;
     }
 
+  //Method to populate room, volunteer and speaker dropdown
     getAllList() {
         let thisRef = this;
         let listSpeakers = [];
@@ -138,23 +146,16 @@ class SessionForm extends Component {
         let volunteerId;
         let speakerServices;
         let volunteerName;
-        DBUtil.addChangeListener("UserProfiles", function (list) {
-            list.forEach(function (document) {
-                if (document.data().profileName == "Speaker")
-                { speakerId = document.id; }
-                if (document.data().profileName == "Volunteer")
-                { volunteerId = document.id; }
-            });
-        })
+
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
                 for (var i = 0; i < doc.data().profileServices.length; i++) {
-                  
-                    if (doc.data().profileServices[i] == speakerId) {
+
+                    if (doc.data().profileServices[i] == "Speaker") {
                         speakerName = doc.data().firstName + " " + doc.data().lastName;
                         listSpeakers.push({ label: speakerName, value: doc.id })
                     }
-                    if (doc.data().profileServices[i] == volunteerId) {
+                    if (doc.data().profileServices[i] == "Volunteer") {
                         volunteerName = doc.data().firstName + " " + doc.data().lastName;
                         listVolunteers.push({ label: volunteerName, value: doc.id })
                     }
@@ -194,73 +195,80 @@ class SessionForm extends Component {
         });
     }
 
-        handleValidations() {
-          const EventObj = this.state.EventObj;
-            let length = EventObj.speakers.length;
-            if(length){
+    //Method for form validation
+    handleValidations() {
+        const EventObj = this.state.EventObj;
+        let length = EventObj.speakers.length;
+        if (length) {
             let lastElement = EventObj.speakers[length - 1]
             let speakerArray = lastElement.split(',');
             this.state.EventObj.speakers = speakerArray;
-           }
-            let len = EventObj.volunteers.length;
-            if(len){
+        }
+        let len = EventObj.volunteers.length;
+        if (len) {
             let lastEle = EventObj.volunteers[len - 1]
             let volunteersArray = lastEle.split(',');
-            this.state.EventObj.volunteers = volunteersArray;}
-             
-            if(!EventObj.speakers.length) {
-            this.state.invalidSpeaker = true;
-            }
-            else if(EventObj.speakers=="" ){
-            this.state.invalidSpeaker = true;}
-            if(!EventObj.volunteers.length){
-              this.state.invalidVolunteer = true;
-            }
-            else if(EventObj.volunteers==""){
-             this.state.invalidVolunteer = true;
-             }
+            this.state.EventObj.volunteers = volunteersArray;
         }
 
-       submitFunction(event) {
+        if (!EventObj.speakers.length) {
+            this.state.invalidSpeaker = true;
+        }
+        else if (EventObj.speakers == "") {
+            this.state.invalidSpeaker = true;
+        }
+        if (!EventObj.volunteers.length) {
+            this.state.invalidVolunteer = true;
+        }
+        else if (EventObj.volunteers == "") {
+            this.state.invalidVolunteer = true;
+        }
+    }
+
+    //Method to create session
+    submitFunction(event) {
         event.preventDefault();
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
         this.handleValidations();
         if (EventObj.eventName && !this.state.invalidSpeaker && !this.state.invalidVolunteer
-            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+            && EventObj.description && EventObj.sessionCapacity && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
             let compRef = this;
             let tableName = Sessions;
             let docName = EventObj.eventName;
             let doc = {
                 eventName: EventObj.eventName,
                 room: EventObj.room,
-                description:EventObj.description,
+                sessionCapacity: EventObj.sessionCapacity,
+                description: EventObj.description,
                 extraServices: EventObj.extraServices,
                 speakers: EventObj.speakers,
                 volunteers: EventObj.volunteers,
                 startTime: EventObj.startTime,
                 endTime: EventObj.endTime,
+                isBreak: EventObj.isBreak
             }
             //  isRegrequired: EventObj.isRegrequired
             // let isRegrequired = this.state.EventObj.isRegrequired;
             DBUtil.addObj(tableName, doc, function (response) {
-                 toast.success("Session added successfully.", {
+                toast.success("Session added successfully.", {
                     position: toast.POSITION.BOTTOM_RIGHT,
                 });
                 let EventObj = compRef.state.EventObj;
-                 const eventID = 'eventID';
+                const eventID = 'eventID';
                 EventObj[eventID] = response.id;
-                compRef.setState({EventObj : EventObj});
+                compRef.setState({ EventObj: EventObj });
                 let SlotalertMessage = compRef.state.SlotalertMessage;
                 SlotalertMessage = '';
                 compRef.setState({ SlotalertMessage: SlotalertMessage })
                 // if (isRegrequired == true)
                 // {compRef.addQPopup();}
-             compRef.resetField();
+                compRef.resetField();
             }, function (err) { });
-          }
+        }
     }
 
+    //method to delete session
     deleteEvent() {
         let compRef = this;
         DBUtil.getDocRef(Sessions).doc(this.state.EventObj.eventID).delete().then(function (response) {
@@ -312,6 +320,7 @@ class SessionForm extends Component {
         });
     }
 
+    //Method to update session
     updateEvent() {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
@@ -323,14 +332,16 @@ class SessionForm extends Component {
             DBUtil.getDocRef(Sessions).doc(EventObj.eventID).update({
                 "eventName": EventObj.eventName,
                 "room": EventObj.room,
-                "description":EventObj.description,
+                "description": EventObj.description,
+                "sessionCapacity": EventObj.sessionCapacity,
                 "extraServices": EventObj.extraServices,
                 "speakers": EventObj.speakers,
                 "volunteers": EventObj.volunteers,
                 "startTime": EventObj.startTime,
                 "endTime": EventObj.endTime,
+                "isBreak": EventObj.isBreak
             })
-            //    "isRegrequired": EventObj.isRegrequired
+                //    "isRegrequired": EventObj.isRegrequired
                 .then(function () {
                     toast.success("Session updated successfully.", {
                         position: toast.POSITION.BOTTOM_RIGHT,
@@ -343,8 +354,8 @@ class SessionForm extends Component {
                         editDeleteFlag: false
                     })
                 });
-          }
-       }
+        }
+    }
 
     resetField() {
         this.setState({
@@ -353,8 +364,10 @@ class SessionForm extends Component {
                 extraServices: '',
                 speakers: [],
                 volunteers: [],
-               // isRegrequired: false,
-                description:''
+                // isRegrequired: false,
+                description: '',
+                sessionCapacity: '',
+                isBreak: false
             },
             removeSelected: true,
             speakersValue: '',
@@ -365,6 +378,7 @@ class SessionForm extends Component {
         });
     }
 
+    //Method to get session data on selecting room
     changeRoom(item) {
         let thisRef = this;
         let roomsValue = item.target.value;
@@ -394,8 +408,10 @@ class SessionForm extends Component {
 
             listItem.forEach(function (data) {
                 eventArray.push({
-                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, end: data.eventInfo.endTime,
-                    room: data.eventInfo.room, extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers
+                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, 
+                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
                 });
                 // , isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -412,7 +428,7 @@ class SessionForm extends Component {
     multichangeVolunteers(volunteersValue) {
         this.state.EventObj.volunteers.push(volunteersValue);
         this.setState({ volunteersValue });
-         this.state.invalidVolunteer = false;
+        this.state.invalidVolunteer = false;
     }
 
     toggleChange() {
@@ -420,6 +436,13 @@ class SessionForm extends Component {
         // const EventObj = this.state.EventObj;
         // EventObj[isRegrequired] = !this.state.EventObj.isRegrequired;
         // this.setState({ EventObj: EventObj });
+    }
+
+    breakOutSessionChange() {
+        const isBreak = 'isBreak';
+        const EventObj = this.state.EventObj;
+        EventObj[isBreak] = !this.state.EventObj.isBreak;
+        this.setState({ EventObj: EventObj });
     }
 
 
@@ -454,6 +477,7 @@ class SessionForm extends Component {
         })
     }
 
+    //Method for selecting slots
     ToggleSelectclick(slotStart, slotEnd) {
         let Currentroom = this.state.EventObj.room;
         let startSlot = slotStart;
@@ -477,64 +501,63 @@ class SessionForm extends Component {
     }
 
     dateSelected(slotInfo) {
-    this.ToggleSelectclick(slotInfo.start, slotInfo.end)
-    setTimeout(() => {
-      this.alertAction(slotInfo)
-    }, 500);
-  }
+        this.ToggleSelectclick(slotInfo.start, slotInfo.end)
+        setTimeout(() => {
+            this.alertAction(slotInfo)
+        }, 500);
+    }
 
-  alertAction(slotInfo) {
+    alertAction(slotInfo) {
+        let slotStartTime = this.state.slotStartTime;
+        let slotEndTime = this.state.slotEndTime;
 
-     let slotStartTime = this.state.slotStartTime;
-     let slotEndTime = this.state.slotEndTime;
-    
-    if (this.state.clickBigFlag) {
-        var SlotalertMessage = this.state.SlotalertMessage;
-        SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
-         `, End Time: ${slotInfo.end.toLocaleString()}`;
-        SlotalertMessage = "Confirm slot :"+ " " + " " + "Start Time :" + " " + slotInfo.start.toLocaleString() + " "+ "and " +"" + "End Time :" +"" + slotInfo.end.toLocaleString()  
-         this.setState({ SlotalertMessage: SlotalertMessage })
-         this.setState({slotStartTime : slotInfo.start});
-         this.setState({slotEndTime : slotInfo.end})
-         this.slotConfirmPopup();
-      }
-  }
+        if (this.state.clickBigFlag) {
+            var SlotalertMessage = this.state.SlotalertMessage;
+            SlotalertMessage = `Start Time : ${slotInfo.start.toLocaleString()} ` +
+                `, End Time: ${slotInfo.end.toLocaleString()}`;
+            SlotalertMessage = "Confirm slot :" + " " + " " + "Start Time :" + " " + slotInfo.start.toLocaleString() + " " + "and " + "" + "End Time :" + "" + slotInfo.end.toLocaleString()
+            this.setState({ SlotalertMessage: SlotalertMessage })
+            this.setState({ slotStartTime: slotInfo.start });
+            this.setState({ slotEndTime: slotInfo.end })
+            this.slotConfirmPopup();
+        }
+    }
+   //method for editing session onclick
+    formAction(event) {
+        let editobj = {};
+        const EventObj = this.state.EventObj;
+        EventObj.eventID = event.id;
+        EventObj.eventName = event.title;
+        EventObj.startTime = event.start;
+        EventObj.endTime = event.end;
+        EventObj.description = event.description;
+        EventObj.sessionCapacity = event.sessionCapacity,
+            EventObj.extraServices = event.extraServices;
+        EventObj.speakers = event.speakers;
+        EventObj.volunteers = event.volunteers;
+        EventObj.room = event.room;
+        //  EventObj.isRegrequired = event.isRegrequired;
+        EventObj.isBreak = event.isBreak;
+        let SlotalertMessage = this.state.SlotalertMessage;
+        SlotalertMessage = '';
+        this.setState({ SlotalertMessage: SlotalertMessage })
+        this.setState({ EventObj: EventObj });
+        this.setState({ roomsValue: EventObj.room })
+        this.setState({ volunteersValue: EventObj.volunteers })
+        this.setState({ speakersValue: EventObj.speakers })
+        this.setState({
+            createFlag: false,
+            editDeleteFlag: true
+        })
+    }
 
-  formAction(event) {
-  
-    let editobj = {};
-    const EventObj = this.state.EventObj;
-    EventObj.eventID = event.id;
-    EventObj.eventName = event.title;
-    EventObj.startTime = event.start;
-    EventObj.endTime = event.end;
-    EventObj.description= event.description;
-    EventObj.extraServices = event.extraServices;
-    EventObj.speakers = event.speakers;
-    EventObj.volunteers = event.volunteers;
-    EventObj.room = event.room;
-  //  EventObj.isRegrequired = event.isRegrequired;
-    let SlotalertMessage = this.state.SlotalertMessage;
-    SlotalertMessage = '';
-    this.setState({ SlotalertMessage: SlotalertMessage })
-    this.setState({ EventObj: EventObj });
-    this.setState({ roomsValue: EventObj.room })
-    this.setState({ volunteersValue: EventObj.volunteers })
-    this.setState({ speakersValue: EventObj.speakers })
-    this.setState({
-      createFlag: false,
-      editDeleteFlag: true
-    })
-
-  }
-
-   render() {
+    render() {
         const { EventObj, speakersValue, volunteersValue, speakerData, volunteerData, roomsValue, roomData, editDeleteFlag, createFlag, submitted } = this.state;
         let options = speakerData;
         let volunteerOptions = volunteerData;
         let roomOptions = roomData;
         let optionItems = roomOptions.map((roomOption) =>
-            <option key={roomOption.value}>{roomOption.value}</option>
+        <option key={roomOption.value}>{roomOption.value}</option>
         );
         return (
             <div>
@@ -543,7 +566,7 @@ class SessionForm extends Component {
                     <Modal isOpen={this.state.addQPopupFlag} toggle={this.addQPopup} className="modal-lg">
                         <ModalHeader toggle={this.addQPopup}>  </ModalHeader>
                         <ModalBody>
-                            <QuestionsForm   sessionName={EventObj.eventName}    sessionId={EventObj.eventID} addQPopup={this.addQPopup} />
+                            <QuestionsForm sessionName={EventObj.eventName} sessionId={EventObj.eventID} addQPopup={this.addQPopup} />
                         </ModalBody>
 
                     </Modal>
@@ -559,15 +582,13 @@ class SessionForm extends Component {
                         </Col>
                     </FormGroup>
                 </div>
-
                 <Row>
                     <Col md='8'>
                         <div>
                             <BigCalendar events={this.state.myEventsList} defaultView="week" selectable={true} defaultDate={new Date()} onSelectEvent={event => this.formAction(event)} onSelectSlot={(slotInfo) => this.dateSelected(slotInfo)}
-                              min={new Date('2018, 1, 1, 08:00')} max={new Date('2018, 1, 1, 20:00')} step={15}  />
-                         </div>
+                                min={new Date('2018, 1, 1, 08:00')} max={new Date('2018, 1, 1, 20:00')} step={15} />
+                        </div>
                     </Col>
-
                     <Col md='4'>
                         <div className="animated fadeIn">
                             <div> <span style={{ color: "red" }}>{this.state.SlotconfirmMessage}</span></div>
@@ -583,7 +604,6 @@ class SessionForm extends Component {
                                                 </Col>
                                             </CardHeader>
                                             <CardBody className="sessionCardBody">
-
                                                 <form name="form" onSubmit={this.submitFunction}>
                                                     <FormGroup row>
                                                         <Col xs="12" className={(submitted && !EventObj.eventName ? ' has-error' : '')}>
@@ -636,11 +656,26 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
-                                                     <FormGroup>
+                                                    <FormGroup>
+                                                        <Row>
+                                                            <Col xs="12" className={(submitted && !EventObj.sessionCapacity ? ' has-error' : '')}>
+                                                                <Label> Session Capacity : </Label>
+                                                                <Input type="number" placeholder="Session Capacity" name="sessionCapacity" value={this.state.EventObj.sessionCapacity} onChange={this.changeFunction} />
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col>
+                                                                {submitted && !EventObj.sessionCapacity &&
+                                                                    <div className="help-block" style={{ color: "red" }}>*sessionCapacity is required</div>
+                                                                }
+                                                            </Col>
+                                                        </Row>
+                                                    </FormGroup>
+                                                    <FormGroup>
                                                         <Row>
                                                             <Col xs="12" className={(submitted && !EventObj.description ? ' has-error' : '')}>
                                                                 <Label> Description : </Label>
-                                                                 <Input type="textarea" placeholder="Description" name="description" value={this.state.EventObj.description} onChange={this.changeFunction} />
+                                                                <Input type="textarea" placeholder="Description" name="description" value={this.state.EventObj.description} onChange={this.changeFunction} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
@@ -666,7 +701,15 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
-
+                                                     <Row>
+                                                        <Col xs="12">
+                                                            <FormGroup>
+                                                                <Label> Break out session &nbsp;
+                                                                <input type="checkbox" checked={this.state.EventObj.isBreak} onChange={this.breakOutSessionChange} />
+                                                                </Label>
+                                                            </FormGroup>
+                                                        </Col>
+                                                    </Row> 
                                                     {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>
@@ -675,7 +718,6 @@ class SessionForm extends Component {
                                                             </FormGroup>
                                                         </Col>
                                                     </Row> */}
-
                                                     {editDeleteFlag &&
                                                         <div>
                                                             <Row>
@@ -701,7 +743,6 @@ class SessionForm extends Component {
                                                 </form>
                                             </CardBody>
                                         </Card>
-
                                         <Modal isOpen={this.state.deletePopupFlag} toggle={this.deleteConfirmPopup} className={'modal-lg ' + this.props.className}>
                                             <ModalHeader toggle={this.deleteConfirmPopup}>Confirm</ModalHeader>
                                             <ModalBody>
