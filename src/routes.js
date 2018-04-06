@@ -17,7 +17,8 @@ const routes = {
   '/attendee' : 'Attendee',
   '/attendeeReport' : 'Attendee Report',
   '/sessionReport' : 'Session Report',
-  '/aboutUs' : 'About Us'
+  '/aboutUs' : 'About Us',
+  '/sponsor' : 'Sponsor'
   
 };
 export default routes;
