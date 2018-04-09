@@ -190,38 +190,43 @@ class Registration extends Component {
 
   // Method for open new window of generated QR code
   openWin(user, profiles) {
-    let intent = this.state.intent;
-    let Firstletter;
     let attendeeLabel;
     let attendeeCount;
     let attendeeCode;
-    if (intent == "Mentor")
-    { Firstletter = "M" }
-    if (intent == "Mentee")
-    { Firstletter = "M+" }
-    if (intent == "Investor")
-    { Firstletter = "I" }
-    if (intent == "Looking For Investment")
-    { Firstletter = "I+" }
+    let eternuslogopath = "../../img/eternus.png";
     attendeeLabel = this.state.attendeeLabel;
     attendeeCount = this.state.attendeeCount - 1;
     attendeeCode = attendeeLabel + "-" + attendeeCount;
+
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div style='height:113px'> </div>");
-    newWindow.document.writeln("<table> <tr><td><img src='" + this.state.Qrurl + "' alt='Click to close' id='bigImage'/></td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>" + user.firstName + "<br/>" + user.lastName + "</h1></td></tr></table>")
-    newWindow.document.writeln("<table><tr><td style='padding-left:15px;'>" + attendeeCode + "</td></tr></table>");
-    newWindow.document.writeln("<hr align=left style='border: solid 1px black; width:420px'/>")
-    newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" + Firstletter + " </div>" + "</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
+    newWindow.document.write("<div style='width:298px;height:357px;text-align:center;margin:auto;border:1px solid #666;'>")
+    newWindow.document.write("<div style='height:100%;'>")
+    //layer1
+    newWindow.document.write("<div style='height:29%; border-bottom:2px solid red;'> </div>")
+    //layer2
+    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.firstName + " " + user.lastName + "</h1>")
+    newWindow.document.write("<p style='font-size: 1rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+    newWindow.document.write("</div>")
+    //layer2a
+    newWindow.document.write("<div style='text-align: left;padding: 0 5px;padding-bottom:0;'>")
+    newWindow.document.write("<img style='width:60px;height:60px;' src='" + this.state.Qrurl + "'/>")
+    newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:0.9rem;font-family:'Arial';margin-top:0;padding: 0 5px;'>" + attendeeCode + "</div> <br/>")
+    newWindow.document.write("</div>")
+    //layer3
+    newWindow.document.write("<div style='border-bottom:50px solid green;border-left:1px solid #666;border-right:1px solid #666;border-top:1px solid #666;'>")
+    newWindow.document.write("</div>")
+    newWindow.document.write("</div>")
+    newWindow.document.write("</div>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
+
     setTimeout(function () {
       newWindow.print();
       newWindow.close();
     }, 500);
   }
-
 
   submitFunction(event) {
     event.preventDefault();
@@ -237,12 +242,8 @@ class Registration extends Component {
     }
     let attendeeLabel = profileArray[0].substring(0, 3).toUpperCase();
     this.setState({ attendeeLabel: attendeeLabel });
-
     this.onHandleValidations(user);
-
-    setTimeout(() => {
-      this.checkPreviuosCount();
-    }, 50);
+    this.checkPreviuosCount(attendeeLabel);
 
     setTimeout(() => {
       this.createAttendee();
@@ -341,10 +342,9 @@ class Registration extends Component {
   //Method to check previous count of attendee
   checkPreviuosCount() {
     let compRef = this;
-    let attendeeLabel = this.state.attendeeLabel;
     let nextCount;
 
-    DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", attendeeLabel)
+    DBUtil.getDocRef("Attendee")
       .onSnapshot(function (querySnapshot) {
         var countArray = [];
         querySnapshot.forEach(function (doc) {
@@ -357,9 +357,8 @@ class Registration extends Component {
           compRef.setState({ attendeeCount: nextCount });
         }
         else
-        { compRef.setState({ attendeeCount: 1 }) }
+        { compRef.setState({ attendeeCount: 1000 }) }
       });
-
   }
 
   // Method for reset all fields
@@ -517,7 +516,7 @@ class Registration extends Component {
                   </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Col xs="12" md="6">
+                  {/* <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <Input type="select" style={{ width: 200 }} name="intent" value={this.state.intent} id='intent' placeholder="Intent" onChange={(e) => this.onChangeIntentField(e)} >
                         <option value='Select Intent'>Select Intent</option>
@@ -527,7 +526,7 @@ class Registration extends Component {
                         <option value="Looking For Investment">Looking For Investment</option>
                       </Input>
                     </InputGroup>
-                  </Col>
+                  </Col> */}
                   <Col xs="12" md="6"  >
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -536,8 +535,6 @@ class Registration extends Component {
                       <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
                     </InputGroup>
                   </Col>
-                </FormGroup>
-                <FormGroup row>
                   <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -546,6 +543,8 @@ class Registration extends Component {
                       <Input type="text" placeholder="LinkedIn URL" name="linkedInURL" value={this.state.user.linkedInURL} onChange={this.changeFunction} />
                     </InputGroup>
                   </Col>
+                </FormGroup>
+                <FormGroup row>
                   <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -554,9 +553,7 @@ class Registration extends Component {
                       <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
                     </InputGroup>
                   </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Col xs="12" md="12">
+                  <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText><i className="fa fa-info"></i></InputGroupText>
