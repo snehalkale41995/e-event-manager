@@ -36,7 +36,8 @@ class SessionForm extends Component {
                 startTime: '',
                 endTime: '',
                 sessionCapacity: '',
-                isBreak: false
+                //isBreak: false,
+                sessionType: ''
                 // isRegrequired: false
             },
             EventgetObj: [],
@@ -83,7 +84,8 @@ class SessionForm extends Component {
         this.addQPopup = this.addQPopup.bind(this);
         this.slotConfirmSuccess = this.slotConfirmSuccess.bind(this);
         this.handleValidations = this.handleValidations.bind(this);
-        this.breakOutSessionChange = this.breakOutSessionChange.bind(this);
+        //this.breakOutSessionChange = this.breakOutSessionChange.bind(this);
+        this.onChangeSessionType = this.onChangeSessionType.bind(this);
     }
 
    //Method to get session data from MainRoom onload
@@ -104,7 +106,8 @@ class SessionForm extends Component {
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime,
                     end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
                     extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
-                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, //isBreak:data.eventInfo.isBreak,
+                    sessionType: data.eventInfo.sessionType
                 });
                 //  isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -246,7 +249,8 @@ class SessionForm extends Component {
                 volunteers: EventObj.volunteers,
                 startTime: EventObj.startTime,
                 endTime: EventObj.endTime,
-                isBreak: EventObj.isBreak
+               // isBreak: EventObj.isBreak,
+                sessionType: EventObj.sessionType
             }
             //  isRegrequired: EventObj.isRegrequired
             // let isRegrequired = this.state.EventObj.isRegrequired;
@@ -338,9 +342,10 @@ class SessionForm extends Component {
                 "speakers": EventObj.speakers,
                 "volunteers": EventObj.volunteers,
                 "startTime": EventObj.startTime,
-                "endTime": EventObj.endTime,
-                "isBreak": EventObj.isBreak
+                "endTime": EventObj.endTime,                
+                "sessionType": EventObj.sessionType
             })
+                //"isBreak": EventObj.isBreak,
                 //    "isRegrequired": EventObj.isRegrequired
                 .then(function () {
                     toast.success("Session updated successfully.", {
@@ -367,7 +372,8 @@ class SessionForm extends Component {
                 // isRegrequired: false,
                 description: '',
                 sessionCapacity: '',
-                isBreak: false
+                //isBreak: false,
+                sessionType: ''
             },
             removeSelected: true,
             speakersValue: '',
@@ -411,7 +417,8 @@ class SessionForm extends Component {
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, 
                     end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
                     extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
-                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, isBreak:data.eventInfo.isBreak
+                    speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, //isBreak:data.eventInfo.isBreak,
+                    sessionType: data.eventInfo.sessionType
                 });
                 // , isRegrequired: data.eventInfo.isRegrequired
                 thisRef.setState({ myEventsList: eventArray });
@@ -438,11 +445,21 @@ class SessionForm extends Component {
         // this.setState({ EventObj: EventObj });
     }
 
-    breakOutSessionChange() {
-        const isBreak = 'isBreak';
+    // breakOutSessionChange() {
+    //     const isBreak = 'isBreak';
+    //     const EventObj = this.state.EventObj;
+    //     EventObj[isBreak] = !this.state.EventObj.isBreak;
+    //     this.setState({ EventObj: EventObj });
+    // }
+
+    onChangeSessionType(e) {
         const EventObj = this.state.EventObj;
-        EventObj[isBreak] = !this.state.EventObj.isBreak;
-        this.setState({ EventObj: EventObj });
+        this.setState({
+            EventObj: {
+                 ...EventObj,
+                 sessionType : e.target.value
+             }   
+        });
     }
 
 
@@ -537,7 +554,8 @@ class SessionForm extends Component {
         EventObj.volunteers = event.volunteers;
         EventObj.room = event.room;
         //  EventObj.isRegrequired = event.isRegrequired;
-        EventObj.isBreak = event.isBreak;
+        //EventObj.isBreak = event.isBreak;
+        EventObj.sessionType = event.sessionType;
         let SlotalertMessage = this.state.SlotalertMessage;
         SlotalertMessage = '';
         this.setState({ SlotalertMessage: SlotalertMessage })
@@ -701,7 +719,21 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
-                                                     <Row>
+                                                    <FormGroup>
+                                                        <Row>
+                                                            <Col xs="12">
+                                                                <Input type="select" name="sessionType" multiple= {false} value={this.state.EventObj.sessionType} id='sessionType' placeholder="SessionType" onChange={(e) => this.onChangeSessionType(e)} >
+                                                                    <option value='Select Session Type'>Select Session Type</option>
+                                                                    <option value="break">Break </option>
+                                                                    <option value="keynote">Keynote</option>
+                                                                    <option value="deepdive">Deep Dive</option>
+                                                                    <option value="panel">Panel Discussion</option>
+                                                                    <option value="breakout">Break Out</option>
+                                                                </Input>
+                                                            </Col>
+                                                        </Row>
+                                                    </FormGroup>
+                                                     {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>
                                                                 <Label> Break out session &nbsp;
@@ -709,7 +741,7 @@ class SessionForm extends Component {
                                                                 </Label>
                                                             </FormGroup>
                                                         </Col>
-                                                    </Row> 
+                                                    </Row>  */}
                                                     {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>
