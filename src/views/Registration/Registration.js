@@ -201,7 +201,7 @@ class Registration extends Component {
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.write("<div style='width:394px;height:490px;text-align:center;border:1px solid #000;margin-left:0;margin-top:0;'>")
+    newWindow.document.write("<div style='width:394px;height:490px;text-align:center;margin-left:0;margin-top:0;'>")
     newWindow.document.write("<div style='height:100%;'>")
     //layer1
     newWindow.document.write("<div style='height:29%;'> </div>")
