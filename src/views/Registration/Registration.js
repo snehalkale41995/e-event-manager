@@ -201,21 +201,21 @@ class Registration extends Component {
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.write("<div style='width:298px;height:357px;text-align:center;margin:auto;border:1px solid #666;'>")
+    newWindow.document.write("<div style='width:394px;height:490px;text-align:center;border:1px solid #000;margin-left:0;margin-top:0;'>")
     newWindow.document.write("<div style='height:100%;'>")
     //layer1
-    newWindow.document.write("<div style='height:29%; border-bottom:2px solid red;'> </div>")
+    newWindow.document.write("<div style='height:29%;'> </div>")
     //layer2
     newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.firstName + " " + user.lastName + "</h1>")
-    newWindow.document.write("<p style='font-size: 1rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
     newWindow.document.write("</div>")
     //layer2a
-    newWindow.document.write("<div style='text-align: left;padding: 0 5px;padding-bottom:0;'>")
-    newWindow.document.write("<img style='width:60px;height:60px;' src='" + this.state.Qrurl + "'/>")
-    newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:0.9rem;font-family:'Arial';margin-top:0;padding: 0 5px;'>" + attendeeCode + "</div> <br/>")
+    newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
+    newWindow.document.write("<img style='width:60px;height:60px;margin-left:-4px;margin-bottom:-4px;' src='" + this.state.Qrurl + "'/>")
+    newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:13px;font-family:'Arial';margin-top:-4px;padding: 0 0px;padding-right:0px;margin-left:4px;'>" + attendeeCode + "</div> <br/>")
     newWindow.document.write("</div>")
     //layer3
-    newWindow.document.write("<div style='border-bottom:50px solid green;border-left:1px solid #666;border-right:1px solid #666;border-top:1px solid #666;'>")
+    newWindow.document.write("<div style='border-left:1px solid #666;border-right:1px solid #666;'>")
     newWindow.document.write("</div>")
     newWindow.document.write("</div>")
     newWindow.document.write("</div>")
