@@ -497,7 +497,6 @@ class Registration extends Component {
   resetField(resetFlag) {
     this.setState({
       user: {
-        id:'',
         firstName: '',
         lastName: '',
         email: '',
@@ -566,13 +565,24 @@ class Registration extends Component {
   render() {
     const { user, submitted, value, intentVal } = this.state;
     const options = this.state.profileDropDown;
+    this.headerText = '';
+    if(this.state.user.id != ''){
+      this.headerText = "Attendee";
+      this.buttons = <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button>
+    }
+    else
+    {
+      this.headerText = "Registration";
+      this.buttons = <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
+    }
+
     return (
       <div className="animated fadeIn">
         <Row className="justify-content-left">
           <Col md="8">
             <Card className="mx-6">
               <CardBody className="p-4">
-                <h1>Registration</h1>
+                <h1>{this.headerText}</h1>
                 <FormGroup row>
                   <Col xs="12" md="6" className={(submitted && !user.firstName ? ' has-error' : '')}  >
                     <InputGroup className="mb-3">
@@ -705,9 +715,9 @@ class Registration extends Component {
                   </div>
                 </FormGroup>
                 <FormGroup row>
-                  <Col xs="12" md="12">
-                    <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button> &nbsp;&nbsp;
-                    <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button> &nbsp;&nbsp;
+                  <Col xs="12" md="12"> 
+                    {this.buttons}                 
+                    &nbsp;&nbsp;
                     <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                     <ToastContainer autoClose={4000} />
                   </Col>
