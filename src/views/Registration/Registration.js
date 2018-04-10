@@ -30,7 +30,8 @@ class Registration extends Component {
         info: '',
         profileImageURL: '',
         sessionId: '',
-        linkedInURL: ''
+        linkedInURL: '',
+        roleName: ''
       },
       intent: '',
       submitted: false,
@@ -269,6 +270,7 @@ class Registration extends Component {
         else {
           let serviceArray = serviceString.split(',');
           this.state.user.profileServices = serviceArray;
+          this.state.user.roleName = serviceArray[0];
         }
       }
       let intentVal = '';
@@ -299,7 +301,8 @@ class Registration extends Component {
         sessionId: '',
         fullName: user.firstName + ' ' + user.lastName,
         attendeeLabel: attendeeLabel,
-        attendeeCount: attendeeCount
+        attendeeCount: attendeeCount,
+        roleName: user.roleName
       }
       DBUtil.addObj(tblAttendee, doc, function (id, error) {
         if (user.isAttendance == true) {
@@ -358,7 +361,7 @@ class Registration extends Component {
         }
         else
         { compRef.setState({ attendeeCount: 1000 }) }
-      });
+      })
   }
 
   // Method for reset all fields
