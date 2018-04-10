@@ -87,7 +87,7 @@ class AttendeeList extends Component {
     render() {
         let componentRef = this;
         this.rows = this.state.attendee.map(function (row) {
-            return <tr key={row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName}>
+            return <tr key={row.attendeeIDs}>
                 <td>{row.attendeeItems.firstName + ' ' + row.attendeeItems.lastName}</td>
                 <td>{row.attendeeItems.email == undefined ? '' : row.attendeeItems.email}</td>
                 <td>{row.attendeeItems.contactNo == undefined ? '' : row.attendeeItems.contactNo}</td>
