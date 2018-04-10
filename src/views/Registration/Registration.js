@@ -248,8 +248,8 @@ class Registration extends Component {
     //layer1
     newWindow.document.write("<div style='height:29%;'> </div>")
     //layer2
-    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.firstName + " " + user.lastName + "</h1>")
-    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;text-align:center;'>" + user.firstName + " " + user.lastName + "</h1>")
+    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';text-align:center;'>Eternus Solutions Pvt Ltd</p>")
     newWindow.document.write("</div>")
     //layer2a
     newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
