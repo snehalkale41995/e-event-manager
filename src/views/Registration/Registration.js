@@ -231,38 +231,43 @@ class Registration extends Component {
 
   // Method for open new window of generated QR code
   openWin(user, profiles) {
-    let intent = this.state.intent;
-    let Firstletter;
     let attendeeLabel;
     let attendeeCount;
     let attendeeCode;
-    if (intent == "Mentor")
-    { Firstletter = "M" }
-    if (intent == "Mentee")
-    { Firstletter = "M+" }
-    if (intent == "Investor")
-    { Firstletter = "I" }
-    if (intent == "Looking For Investment")
-    { Firstletter = "I+" }
+    let eternuslogopath = "../../img/eternus.png";
     attendeeLabel = this.state.attendeeLabel;
     attendeeCount = this.state.attendeeCount - 1;
     attendeeCode = attendeeLabel + "-" + attendeeCount;
+
     var newWindow = window.open('', '', 'width=1000,height=1000');
     newWindow.document.writeln("<html>");
     newWindow.document.writeln("<body>");
-    newWindow.document.writeln("<div style='height:113px'> </div>");
-    newWindow.document.writeln("<table> <tr><td><img src='" + this.state.Qrurl + "' alt='Click to close' id='bigImage'/></td><td style='vertical-align:middle;'><h1 style='padding-left:15px;font-size:40px;font-family:Arial;padding-top:15px;'>" + user.firstName + "<br/>" + user.lastName + "</h1></td></tr></table>")
-    newWindow.document.writeln("<table><tr><td style='padding-left:15px;'>" + attendeeCode + "</td></tr></table>");
-    newWindow.document.writeln("<hr align=left style='border: solid 1px black; width:420px'/>")
-    newWindow.document.writeln("<table > <tr><td style='width:35%;text-align:left;padding-left:15px;'> <div class='badge' style='border-width:2px;text-align:center; vertical-align:middle;border-style:solid;width:80px;height:80px;border-radius:50%;display:table-cell;font-size:40px;margin-left:-40px;'>" + Firstletter + " </div>" + "</td><td style='padding-left:0;text-align:left;vertical-align:middle;'><h2 style='text-align:center;padding-top:10px;'>ETERNUS  SOLUTIONS<br/>PRIVATE  LIMITED</h2></td></tr></table>")
+    newWindow.document.write("<div style='width:394px;height:490px;text-align:center;margin-left:0;margin-top:0;'>")
+    newWindow.document.write("<div style='height:100%;'>")
+    //layer1
+    newWindow.document.write("<div style='height:29%;'> </div>")
+    //layer2
+    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.firstName + " " + user.lastName + "</h1>")
+    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+    newWindow.document.write("</div>")
+    //layer2a
+    newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
+    newWindow.document.write("<img style='width:60px;height:60px;margin-left:-4px;margin-bottom:-4px;' src='" + this.state.Qrurl + "'/>")
+    newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:13px;font-family:'Arial';margin-top:-4px;padding: 0 0px;padding-right:0px;margin-left:4px;'>" + attendeeCode + "</div> <br/>")
+    newWindow.document.write("</div>")
+    //layer3
+    newWindow.document.write("<div style='border-left:1px solid #666;border-right:1px solid #666;'>")
+    newWindow.document.write("</div>")
+    newWindow.document.write("</div>")
+    newWindow.document.write("</div>")
     newWindow.document.writeln("</body></html>");
     newWindow.document.close();
+
     setTimeout(function () {
       newWindow.print();
       newWindow.close();
     }, 500);
   }
-
 
   submitFunction(event) {
     event.preventDefault();
@@ -302,81 +307,81 @@ class Registration extends Component {
       );
     })
     .catch(function(error) {
-       // console.log("Error getting documents: ", error);
         toast.error("User data not loaded.", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
     });
   }
 
+  // Method for update attendee details
   updateFunction(){
-    //event.preventDefault();
     let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
+
+    let profileArray = [];
+    let length = user.profileServices.length;
+    if (length) {
+      let lastElement = user.profileServices[length - 1]
+      profileArray = lastElement.split(',');
+    }
+    let attendeeLabel = profileArray[0].substring(0, 3).toUpperCase();
+    compRef.setState({ attendeeLabel: attendeeLabel });
+    compRef.onHandleValidations(user);
+    compRef.checkPreviuosCount(attendeeLabel);
     
-        if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) 
-        {
-            let tblAttendance = "Attendance", tblAttendee = "Attendee";
-            if (user.profileServices.length > 0) {
-              let length = user.profileServices.length;
-              let serviceString = user.profileServices[length - 1]
-              if (serviceString == "") {
-                this.state.user.profileServices = [];
-              }
-              else {
-                let serviceArray = serviceString.split(',');
-                this.state.user.profileServices = serviceArray;
-              }
-            }
-            let intentVal = '';
-            if (this.state.intent == 'Select Intent' || this.state.intent == "") {
-              intentVal = '';
-            }
-            else {
-              intentVal = this.state.intent
-            }
-            
-
-            DBUtil.getDocRef(tblAttendee).doc(user.id).update({
-              "firstName": user.firstName,
-              "lastName": user.lastName,
-              "email": user.email,
-              "contactNo": user.contactNo,
-              "address": user.address,
-              "profileServices": user.profileServices,
-              "isAttendance": user.isAttendance,
-              "timestamp": new Date(),
-              "registrationType": 'On Spot Registration',
-              "briefInfo": user.briefInfo,
-              "info": user.info,
-              "profileImageURL": user.profileImageURL,
-              "intent": intentVal,
-              //otp
-              "linkedInURL": user.linkedInURL,
-              //"attendanceId": '',
-              //"sessionId": '',
-              "fullName": user.firstName + ' ' + user.lastName,
-              //"attendeeLabel": attendeeLabel,
-              //"attendeeCount": attendeeCount
-            }).then(function () {
-
-            
-              // DBUtil.getDocRef(tblAttendee).doc(user.id).update({
-              // })
-
-
-
-
-                toast.success("User updated successfully.", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                });
-                compRef.resetField(true);
-                setTimeout(() => {
-                  compRef.props.history.push('/attendee');     
-                }, 2000);
-            });
+    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) 
+    {
+        let tblAttendance = "Attendance", tblAttendee = "Attendee";
+        if (user.profileServices.length > 0) {
+          let length = user.profileServices.length;
+          let serviceString = user.profileServices[length - 1]
+          if (serviceString == "") {
+            this.state.user.profileServices = [];
+          }
+          else {
+            let serviceArray = serviceString.split(',');
+            this.state.user.profileServices = serviceArray;
+          }
         }
+        let intentVal = '';
+        if (this.state.intent == 'Select Intent' || this.state.intent == "") {
+          intentVal = '';
+        }
+        else {
+          intentVal = this.state.intent
+        }
+
+        DBUtil.getDocRef(tblAttendee).doc(user.id).update({
+          "firstName": user.firstName,
+          "lastName": user.lastName,
+          "email": user.email,
+          "contactNo": user.contactNo,
+          "address": user.address,
+          "profileServices": user.profileServices,
+          "isAttendance": user.isAttendance,
+          "timestamp": new Date(),
+          "registrationType": 'On Spot Registration',
+          "briefInfo": user.briefInfo,
+          "info": user.info,
+          "profileImageURL": user.profileImageURL,
+          "intent": intentVal,
+          //otp
+          "linkedInURL": user.linkedInURL,
+          //"attendanceId": '',
+          //"sessionId": '',
+          "fullName": user.firstName + ' ' + user.lastName,
+          //"attendeeLabel": attendeeLabel,
+          //"attendeeCount": attendeeCount
+        }).then(function () {
+            toast.success("User updated successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            setTimeout(() => {
+              compRef.props.history.push('/attendee');     
+            }, 2000);
+        });
+    }
   }
 
 
@@ -472,10 +477,9 @@ class Registration extends Component {
   //Method to check previous count of attendee
   checkPreviuosCount() {
     let compRef = this;
-    let attendeeLabel = this.state.attendeeLabel;
     let nextCount;
 
-    DBUtil.getDocRef("Attendee").where("attendeeLabel", "==", attendeeLabel)
+    DBUtil.getDocRef("Attendee")
       .onSnapshot(function (querySnapshot) {
         var countArray = [];
         querySnapshot.forEach(function (doc) {
@@ -488,9 +492,8 @@ class Registration extends Component {
           compRef.setState({ attendeeCount: nextCount });
         }
         else
-        { compRef.setState({ attendeeCount: 1 }) }
+        { compRef.setState({ attendeeCount: 1000 }) }
       });
-
   }
 
   // Method for reset all fields
@@ -659,7 +662,7 @@ class Registration extends Component {
                   </Col>
                 </FormGroup>
                 <FormGroup row>
-                  <Col xs="12" md="6">
+                  {/* <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <Input type="select" style={{ width: 200 }} name="intent" value={this.state.intent} id='intent' placeholder="Intent" onChange={(e) => this.onChangeIntentField(e)} >
                         <option value='Select Intent'>Select Intent</option>
@@ -669,7 +672,7 @@ class Registration extends Component {
                         <option value="Looking For Investment">Looking For Investment</option>
                       </Input>
                     </InputGroup>
-                  </Col>
+                  </Col> */}
                   <Col xs="12" md="6"  >
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -678,8 +681,6 @@ class Registration extends Component {
                       <Input type="text" placeholder="Image URL" name="profileImageURL" value={this.state.user.profileImageURL} onChange={this.changeFunction} required />
                     </InputGroup>
                   </Col>
-                </FormGroup>
-                <FormGroup row>
                   <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -688,6 +689,8 @@ class Registration extends Component {
                       <Input type="text" placeholder="LinkedIn URL" name="linkedInURL" value={this.state.user.linkedInURL} onChange={this.changeFunction} />
                     </InputGroup>
                   </Col>
+                </FormGroup>
+                <FormGroup row>
                   <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -696,9 +699,7 @@ class Registration extends Component {
                       <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
                     </InputGroup>
                   </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Col xs="12" md="12">
+                  <Col xs="12" md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText><i className="fa fa-info"></i></InputGroupText>
