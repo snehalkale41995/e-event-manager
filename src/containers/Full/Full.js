@@ -24,6 +24,7 @@ import AttendeeReport from '../../views/Reports/Attendee Report/AttendeeReport';
 import SessionReport from '../../views/Reports/Sessions Report/SessionReport';
 import AboutUs from '../../views/AboutUs/AboutUs';
 import Sponsor from '../../views/Sponsor/Sponsor';
+import InitialQuestions from '../../views/InitialQuestions/InitialQuestions';
 
 class Full extends Component {
   render() {
@@ -46,13 +47,14 @@ class Full extends Component {
                 <Route path='/rooms' name='Rooms' component={Rooms} />
                 {/* <Route path='/renderForm' name='RenderForm' component={RenderForm} />
                 <Route path='/questions' name='Questions' component={Questions} />*/}
-                <Route path='/registrationList' name='Registration List' component={RegistrationList} />
+                {/* <Route path='/registrationList' name='Registration List' component={RegistrationList} /> */}
                 {/* <Route path='/eventQuestions' name='Event Questions' component={EventQuestions} /> */}
                 <Route path='/attendee' name='Attendee' component={Attendee} />
                 <Route path='/attendeeReport' name='Attendee Report' component={AttendeeReport} />
                 <Route path='/sessionReport' name='Session Report' component={SessionReport} />
                 <Route path='/aboutUs' name='AboutUs' component={AboutUs} />
                 <Route path='/sponsor' name='Sponsor' component={Sponsor} />
+                <Route path='/initialQuestions' name='Initial Questions' component={InitialQuestions} />
 
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
