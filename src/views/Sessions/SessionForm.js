@@ -217,19 +217,6 @@ class SessionForm extends Component {
             let volunteersArray = lastEle.split(',');
             this.state.EventObj.volunteers = volunteersArray;
         }
-
-        if (!EventObj.speakers.length) {
-            this.state.invalidSpeaker = true;
-        }
-        else if (EventObj.speakers == "") {
-            this.state.invalidSpeaker = true;
-        }
-        if (!EventObj.volunteers.length) {
-            this.state.invalidVolunteer = true;
-        }
-        else if (EventObj.volunteers == "") {
-            this.state.invalidVolunteer = true;
-        }
     }
 
     //Method to create session
@@ -238,8 +225,7 @@ class SessionForm extends Component {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
         this.handleValidations();
-        if (EventObj.eventName && !this.state.invalidSpeaker && !this.state.invalidVolunteer
-            && EventObj.description && EventObj.sessionCapacity && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+        if (EventObj.eventName && EventObj.startTime && EventObj.endTime) {
             let compRef = this;
             let tableName = Sessions;
             let docName = EventObj.eventName;
@@ -333,8 +319,7 @@ class SessionForm extends Component {
         this.setState({ submitted: true });
         const EventObj = this.state.EventObj;
         this.handleValidations();
-        if (EventObj.eventName && !this.state.invalidSpeaker && !this.state.invalidVolunteer
-            && EventObj.description && EventObj.extraServices && EventObj.startTime && EventObj.endTime) {
+        if (EventObj.eventName && EventObj.startTime && EventObj.endTime) {
             let compRef = this;
             //let isRegrequired = this.state.EventObj.isRegrequired;
             DBUtil.getDocRef(Sessions).doc(EventObj.eventID).update({
@@ -649,78 +634,54 @@ class SessionForm extends Component {
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && this.state.invalidSpeaker ? ' has-error' : '')}>
+                                                            <Col xs="12">
                                                                 <Label> Speakers : </Label>
                                                                 <Select multi onChange={this.multichangeSpeakers} placeholder="--Select--" simpleValue value={speakersValue} options={options} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col>
-                                                                {submitted && this.state.invalidSpeaker &&
-                                                                    <div className="help-block" style={{ color: "red" }}>*Please select Speakers</div>
-                                                                }
-                                                            </Col>
                                                         </Row>
                                                     </FormGroup>
 
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && this.state.invalidVolunteer ? ' has-error' : '')}>
+                                                            <Col xs="12">
                                                                 <Label>Volunteers : </Label>
                                                                 <Select multi onChange={this.multichangeVolunteers} placeholder="--Select--" simpleValue value={volunteersValue} options={volunteerOptions} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col>
-                                                                {submitted && this.state.invalidVolunteer &&
-                                                                    <div className="help-block" style={{ color: "red" }}>*Please select Volunteers</div>
-                                                                }
-                                                            </Col>
                                                         </Row>
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && !EventObj.sessionCapacity ? ' has-error' : '')}>
+                                                            <Col xs="12">
                                                                 <Label> Session Capacity : </Label>
                                                                 <Input type="number" placeholder="Session Capacity" name="sessionCapacity" value={this.state.EventObj.sessionCapacity} onChange={this.changeFunction} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col>
-                                                                {submitted && !EventObj.sessionCapacity &&
-                                                                    <div className="help-block" style={{ color: "red" }}>*sessionCapacity is required</div>
-                                                                }
-                                                            </Col>
                                                         </Row>
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && !EventObj.description ? ' has-error' : '')}>
+                                                            <Col xs="12">
                                                                 <Label> Description : </Label>
                                                                 <Input type="textarea" placeholder="Description" name="description" value={this.state.EventObj.description} onChange={this.changeFunction} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col>
-                                                                {submitted && !EventObj.description &&
-                                                                    <div className="help-block" style={{ color: "red" }}>*Description is required</div>
-                                                                }
-                                                            </Col>
                                                         </Row>
                                                     </FormGroup>
                                                     <FormGroup>
                                                         <Row>
-                                                            <Col xs="12" className={(submitted && !EventObj.extraServices ? ' has-error' : '')}>
+                                                            <Col xs="12">
                                                                 <Label> Extra Services : </Label>
                                                                 <Input type="textarea" placeholder="Extra Services" name="extraServices" value={this.state.EventObj.extraServices} onChange={this.changeFunction} />
                                                             </Col>
                                                         </Row>
                                                         <Row>
-                                                            <Col>
-                                                                {submitted && !EventObj.extraServices &&
-                                                                    <div className="help-block" style={{ color: "red" }}>*Services are required</div>
-                                                                }
-                                                            </Col>
+
                                                         </Row>
                                                     </FormGroup>
                                                     <FormGroup>
