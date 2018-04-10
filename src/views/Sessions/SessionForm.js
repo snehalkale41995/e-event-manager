@@ -88,7 +88,7 @@ class SessionForm extends Component {
         this.onChangeSessionType = this.onChangeSessionType.bind(this);
     }
 
-   //Method to get session data from MainRoom onload
+    //Method to get session data from MainRoom onload
     componentDidMount() {
         this.getAllList();
         let thisRef = this;
@@ -104,8 +104,8 @@ class SessionForm extends Component {
             listItem.forEach(function (data) {
                 eventArray.push({
                     id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime,
-                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
-                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    end: data.eventInfo.endTime, room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description,
                     speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, //isBreak:data.eventInfo.isBreak,
                     sessionType: data.eventInfo.sessionType
                 });
@@ -134,7 +134,7 @@ class SessionForm extends Component {
         return firstRoom;
     }
 
-  //Method to populate room, volunteer and speaker dropdown
+    //Method to populate room, volunteer and speaker dropdown
     getAllList() {
         let thisRef = this;
         let listSpeakers = [];
@@ -152,15 +152,19 @@ class SessionForm extends Component {
 
         DBUtil.addChangeListener("Attendee", function (response) {
             response.forEach(function (doc) {
-                for (var i = 0; i < doc.data().profileServices.length; i++) {
-
-                    if (doc.data().profileServices[i] == "Speaker") {
-                        speakerName = doc.data().firstName + " " + doc.data().lastName;
-                        listSpeakers.push({ label: speakerName, value: doc.id })
-                    }
-                    if (doc.data().profileServices[i] == "Volunteer") {
-                        volunteerName = doc.data().firstName + " " + doc.data().lastName;
-                        listVolunteers.push({ label: volunteerName, value: doc.id })
+                if (doc.data().profileServices) {
+                    let length = doc.data().profileServices.length;
+                    if (length != undefined && length != 0) {
+                        for (var i = 0; i < length; i++) {
+                            if (doc.data().profileServices[i] == "Speaker") {
+                                speakerName = doc.data().firstName + " " + doc.data().lastName;
+                                listSpeakers.push({ label: speakerName, value: doc.id })
+                            }
+                            if (doc.data().profileServices[i] == "Volunteer") {
+                                volunteerName = doc.data().firstName + " " + doc.data().lastName;
+                                listVolunteers.push({ label: volunteerName, value: doc.id })
+                            }
+                        }
                     }
                 }
             });
@@ -249,7 +253,7 @@ class SessionForm extends Component {
                 volunteers: EventObj.volunteers,
                 startTime: EventObj.startTime,
                 endTime: EventObj.endTime,
-               // isBreak: EventObj.isBreak,
+                // isBreak: EventObj.isBreak,
                 sessionType: EventObj.sessionType
             }
             //  isRegrequired: EventObj.isRegrequired
@@ -342,7 +346,7 @@ class SessionForm extends Component {
                 "speakers": EventObj.speakers,
                 "volunteers": EventObj.volunteers,
                 "startTime": EventObj.startTime,
-                "endTime": EventObj.endTime,                
+                "endTime": EventObj.endTime,
                 "sessionType": EventObj.sessionType
             })
                 //"isBreak": EventObj.isBreak,
@@ -414,9 +418,9 @@ class SessionForm extends Component {
 
             listItem.forEach(function (data) {
                 eventArray.push({
-                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime, 
-                    end: data.eventInfo.endTime,room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
-                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description, 
+                    id: data.eventId, title: data.eventInfo.eventName, start: data.eventInfo.startTime,
+                    end: data.eventInfo.endTime, room: data.eventInfo.room, sessionCapacity: data.eventInfo.sessionCapacity,
+                    extraServices: data.eventInfo.extraServices, description: data.eventInfo.description,
                     speakers: data.eventInfo.speakers, volunteers: data.eventInfo.volunteers, //isBreak:data.eventInfo.isBreak,
                     sessionType: data.eventInfo.sessionType
                 });
@@ -456,9 +460,9 @@ class SessionForm extends Component {
         const EventObj = this.state.EventObj;
         this.setState({
             EventObj: {
-                 ...EventObj,
-                 sessionType : e.target.value
-             }   
+                ...EventObj,
+                sessionType: e.target.value
+            }
         });
     }
 
@@ -539,7 +543,7 @@ class SessionForm extends Component {
             this.slotConfirmPopup();
         }
     }
-   //method for editing session onclick
+    //method for editing session onclick
     formAction(event) {
         let editobj = {};
         const EventObj = this.state.EventObj;
@@ -575,7 +579,7 @@ class SessionForm extends Component {
         let volunteerOptions = volunteerData;
         let roomOptions = roomData;
         let optionItems = roomOptions.map((roomOption) =>
-        <option key={roomOption.value}>{roomOption.value}</option>
+            <option key={roomOption.value}>{roomOption.value}</option>
         );
         return (
             <div>
@@ -722,7 +726,7 @@ class SessionForm extends Component {
                                                     <FormGroup>
                                                         <Row>
                                                             <Col xs="12">
-                                                                <Input type="select" name="sessionType" multiple= {false} value={this.state.EventObj.sessionType} id='sessionType' placeholder="SessionType" onChange={(e) => this.onChangeSessionType(e)} >
+                                                                <Input type="select" name="sessionType" multiple={false} value={this.state.EventObj.sessionType} id='sessionType' placeholder="SessionType" onChange={(e) => this.onChangeSessionType(e)} >
                                                                     <option value='Select Session Type'>Select Session Type</option>
                                                                     <option value="break">Break </option>
                                                                     <option value="keynote">Keynote</option>
@@ -733,7 +737,7 @@ class SessionForm extends Component {
                                                             </Col>
                                                         </Row>
                                                     </FormGroup>
-                                                     {/* <Row>
+                                                    {/* <Row>
                                                         <Col xs="12">
                                                             <FormGroup>
                                                                 <Label> Break out session &nbsp;
