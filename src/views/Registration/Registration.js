@@ -43,7 +43,11 @@ class Registration extends Component {
       profileDropDown: [],
       attendeeId: '',
       attendeeLabel: '',
-      counter: ''
+      counter: '',
+      attendeeCountId: '',
+      delCount: '',
+      totalCount: '',
+      updateflag: false
     };
     this.changeFunction = this.changeFunction.bind(this);
     this.submitFunction = this.submitFunction.bind(this);
@@ -65,43 +69,42 @@ class Registration extends Component {
   // Method For render/set default profile data
   componentWillMount() {
     let thisRef = this;
-     if (this.props.match.params.id != undefined)
-     {
-        var docRef =  DBUtil.getDocRef("Attendee").doc(this.props.match.params.id);
-        docRef.get().then(function(doc) {
-          if (doc.exists)
-          {
-              let attendeeData = doc.data();
-              thisRef.setState({
-                user: {
-                  id: doc.id,
-                  firstName: attendeeData.firstName,
-                  lastName: attendeeData.lastName,
-                  email: attendeeData.email,
-                  contactNo: attendeeData.contactNo,
-                  profileServices: attendeeData.profileServices,
-                  isAttendance: attendeeData.isAttendance,
-                  address: attendeeData.address,
-                  briefInfo: attendeeData.briefInfo,
-                  info: attendeeData.info,
-                  profileImageURL: attendeeData.profileImageURL,
-                  linkedInURL: attendeeData.linkedInURL
-                },
-                intent: attendeeData.intent
-              });
-              thisRef.setState({ value:attendeeData.profileServices});
-          } 
-          else {
-              toast.error("Invalid data.", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-              });
-          }
-        }).catch(function(error) {
-            toast.error("Invalid data.", {
-              position: toast.POSITION.BOTTOM_RIGHT,
-            });
+    if (this.props.match.params.id != undefined) {
+      this.setState({ updateflag: true })
+      var docRef = DBUtil.getDocRef("Attendee").doc(this.props.match.params.id);
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          let attendeeData = doc.data();
+          thisRef.setState({
+            user: {
+              id: doc.id,
+              firstName: attendeeData.firstName,
+              lastName: attendeeData.lastName,
+              email: attendeeData.email,
+              contactNo: attendeeData.contactNo,
+              profileServices: attendeeData.profileServices,
+              isAttendance: attendeeData.isAttendance,
+              address: attendeeData.address,
+              briefInfo: attendeeData.briefInfo,
+              info: attendeeData.info,
+              profileImageURL: attendeeData.profileImageURL,
+              linkedInURL: attendeeData.linkedInURL
+            },
+            intent: attendeeData.intent
+          });
+          thisRef.setState({ value: attendeeData.profileServices });
+        }
+        else {
+          toast.error("Invalid data.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      }).catch(function (error) {
+        toast.error("Invalid data.", {
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
-     }   
+      });
+    }
 
     let componentRef = this;
     DBUtil.addChangeListener("UserProfiles", function (objectList) {
@@ -248,8 +251,8 @@ class Registration extends Component {
     //layer1
     newWindow.document.write("<div style='height:29%;'> </div>")
     //layer2
-    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.firstName + " " + user.lastName + "</h1>")
-    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+    newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;text-align:center;'>" + user.firstName + " " + user.lastName + "</h1>")
+    newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';text-align:center;'>Eternus Solutions Pvt Ltd</p>")
     newWindow.document.write("</div>")
     //layer2a
     newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
@@ -277,45 +280,45 @@ class Registration extends Component {
     const { user } = this.state;
 
     DBUtil.getDocRef("Attendee").where("email", "==", user.email)
-    .get()
-    .then(function(querySnapshot) {
-          if(querySnapshot.docs.length == 0){
-              let profileArray = [];
-              let length = user.profileServices.length;
-              if (length) {
-                let lastElement = user.profileServices[length - 1]
-                profileArray = lastElement.split(',');
-              }
-              if(profileArray.length != 0){
-                let attendeeLabel = profileArray[0].substring(0, 3).toUpperCase();
-                compRef.setState({ attendeeLabel: attendeeLabel });
-              }
-              compRef.onHandleValidations(user);
-              setTimeout(() => {
-                compRef.checkPreviuosCount();
-              }, 50);
-              setTimeout(() => {
-                compRef.createAttendee();
-              }, 1000);
+      .get()
+      .then(function (querySnapshot) {
+        if (querySnapshot.docs.length == 0) {
+          let profileArray = [];
+          let length = user.profileServices.length;
+          if (length) {
+            let lastElement = user.profileServices[length - 1]
+            profileArray = lastElement.split(',');
           }
-          querySnapshot.forEach(function(doc) {
-            if(doc.data().email == user.email){
-              toast.error("Email Id already exists.", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-              });
-            }
+          if (profileArray.length != 0) {
+            let attendeeLabel = profileArray[0].substring(0, 3).toUpperCase();
+            compRef.setState({ attendeeLabel: attendeeLabel });
           }
-      );
-    })
-    .catch(function(error) {
+          compRef.onHandleValidations(user);
+
+          compRef.checkPreviuosCount();
+
+          setTimeout(() => {
+            compRef.createAttendee();
+          }, 1000);
+        }
+        querySnapshot.forEach(function (doc) {
+          if (doc.data().email == user.email) {
+            toast.error("Email Id already exists.", {
+              position: toast.POSITION.BOTTOM_RIGHT,
+            });
+          }
+        }
+        );
+      })
+      .catch(function (error) {
         toast.error("User data not loaded.", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
-    });
+      });
   }
 
   // Method for update attendee details
-  updateFunction(){
+  updateFunction() {
     let compRef = this;
     this.setState({ submitted: true });
     const { user } = this.state;
@@ -330,68 +333,64 @@ class Registration extends Component {
     compRef.setState({ attendeeLabel: attendeeLabel });
     compRef.onHandleValidations(user);
     compRef.checkPreviuosCount(attendeeLabel);
-    
-    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) 
-    {
-        let tblAttendance = "Attendance", tblAttendee = "Attendee";
-        if (user.profileServices.length > 0) {
-          let length = user.profileServices.length;
-          let serviceString = user.profileServices[length - 1]
-          if (serviceString == "") {
-            this.state.user.profileServices = [];
-          }
-          else {
-            let serviceArray = serviceString.split(',');
-            this.state.user.profileServices = serviceArray;
-          }
-        }
-        let intentVal = '';
-        if (this.state.intent == 'Select Intent' || this.state.intent == "") {
-          intentVal = '';
+
+    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
+      let tblAttendance = "Attendance", tblAttendee = "Attendee";
+      if (user.profileServices.length > 0) {
+        let length = user.profileServices.length;
+        let serviceString = user.profileServices[length - 1]
+        if (serviceString == "") {
+          this.state.user.profileServices = [];
         }
         else {
-          intentVal = this.state.intent
+          let serviceArray = serviceString.split(',');
+          this.state.user.profileServices = serviceArray;
         }
+      }
+      let intentVal = '';
+      if (this.state.intent == 'Select Intent' || this.state.intent == "") {
+        intentVal = '';
+      }
+      else {
+        intentVal = this.state.intent
+      }
 
-        DBUtil.getDocRef(tblAttendee).doc(user.id).update({
-          "firstName": user.firstName,
-          "lastName": user.lastName,
-          "email": user.email,
-          "contactNo": user.contactNo,
-          "address": user.address,
-          "profileServices": user.profileServices,
-          "isAttendance": user.isAttendance,
-          "timestamp": new Date(),
-          "registrationType": 'On Spot Registration',
-          "briefInfo": user.briefInfo,
-          "info": user.info,
-          "profileImageURL": user.profileImageURL,
-          "intent": intentVal,
-          //otp
-          "linkedInURL": user.linkedInURL,
-          //"attendanceId": '',
-          //"sessionId": '',
-          "fullName": user.firstName + ' ' + user.lastName,
-          //"attendeeLabel": attendeeLabel,
-          //"attendeeCount": attendeeCount
-        }).then(function () {
-            toast.success("User updated successfully.", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-            });
-            setTimeout(() => {
-              compRef.props.history.push('/attendee');     
-            }, 2000);
+      DBUtil.getDocRef(tblAttendee).doc(user.id).update({
+        "firstName": user.firstName,
+        "lastName": user.lastName,
+        "email": user.email,
+        "contactNo": user.contactNo,
+        "address": user.address,
+        "profileServices": user.profileServices,
+        "isAttendance": user.isAttendance,
+        "timestamp": new Date(),
+        "registrationType": 'On Spot Registration',
+        "briefInfo": user.briefInfo,
+        "info": user.info,
+        "profileImageURL": user.profileImageURL,
+        "intent": intentVal,
+        "linkedInURL": user.linkedInURL,
+        "fullName": user.firstName + ' ' + user.lastName,
+      }).then(function () {
+        toast.success("User updated successfully.", {
+          position: toast.POSITION.BOTTOM_RIGHT,
         });
+        setTimeout(() => {
+          compRef.props.history.push('/attendee');
+        }, 2000);
+      });
     }
   }
-
 
   //Method for attendee creation
   createAttendee() {
     let attendeeCount = this.state.attendeeCount;
+    let delCount = this.state.delCount;
+    let totalCount = this.state.totalCount;
     const { user } = this.state;
     let compRef = this;
     let attendeeLabel = this.state.attendeeLabel;
+    let attendeeCountId = this.state.attendeeCountId;
 
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
@@ -439,6 +438,13 @@ class Registration extends Component {
         attendeeCount: attendeeCount,
         roleName: user.roleName
       }
+      DBUtil.getDocRef("AttendeeCount").doc(attendeeCountId).update({
+        "totalCount": totalCount,
+        "delCount": delCount
+      }).then(function () {
+        // console.log("updated successfully");
+      })
+
       DBUtil.addObj(tblAttendee, doc, function (id, error) {
         if (user.isAttendance == true) {
           let attendanceDoc = {
@@ -454,7 +460,7 @@ class Registration extends Component {
             });
           },
             function (error) {
-              toast.error("User not registered.", {
+              toast.error("user registration failed", {
                 position: toast.POSITION.BOTTOM_RIGHT,
               });
             });
@@ -471,7 +477,7 @@ class Registration extends Component {
         }, 500);
       },
         function (error) {
-          toast.error("User not registered.", {
+          toast.error("user registration failed", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
         });
@@ -481,21 +487,31 @@ class Registration extends Component {
   checkPreviuosCount() {
     let compRef = this;
     let nextCount;
-
-    DBUtil.getDocRef("Attendee")
+    let attendeeLabel = this.state.attendeeLabel;
+    DBUtil.getDocRef("AttendeeCount")
       .onSnapshot(function (querySnapshot) {
-        var countArray = [];
+        let totalCount;
+        let delCount;
+        let attendeeCountId;
         querySnapshot.forEach(function (doc) {
-          if (doc.data().attendeeCount != undefined) {
-            countArray.push(doc.data().attendeeCount);
-          }
+          attendeeCountId = doc.id;
+          totalCount = doc.data().totalCount;
+          delCount = doc.data().delCount;
         });
-        if (countArray.length) {
-          nextCount = Math.max(...countArray) + 1;
-          compRef.setState({ attendeeCount: nextCount });
+        if (attendeeLabel == "DEL") {
+          nextCount = delCount + 1;
+          delCount = delCount + 1;
         }
-        else
-        { compRef.setState({ attendeeCount: 1000 }) }
+        else {
+          nextCount = totalCount + 1;
+          totalCount = totalCount + 1;
+        }
+        compRef.setState({
+          attendeeCount: nextCount,
+          delCount: delCount,
+          totalCount: totalCount,
+          attendeeCountId: attendeeCountId
+        });
       })
   }
 
@@ -572,16 +588,14 @@ class Registration extends Component {
     const { user, submitted, value, intentVal } = this.state;
     const options = this.state.profileDropDown;
     this.headerText = '';
-    if(this.state.user.id != ''){
+    if (this.state.updateflag) {
       this.headerText = "Attendee";
       this.buttons = <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button>
     }
-    else
-    {
+    else {
       this.headerText = "Registration";
       this.buttons = <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Register</Button>
     }
-
     return (
       <div className="animated fadeIn">
         <Row className="justify-content-left">
@@ -719,8 +733,8 @@ class Registration extends Component {
                   </div>
                 </FormGroup>
                 <FormGroup row>
-                  <Col xs="12" md="12"> 
-                    {this.buttons}                 
+                  <Col xs="12" md="12">
+                    {this.buttons}
                     &nbsp;&nbsp;
                     <Button onClick={this.resetField} type="reset" size="md" color="danger" ><i className="fa fa-ban"></i> Reset</Button>
                     <ToastContainer autoClose={4000} />
