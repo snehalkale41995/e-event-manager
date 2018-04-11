@@ -5,18 +5,11 @@ import {CardColumns, Card, CardHeader, CardBody, Row, Col, FormGroup} from 'reac
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../../services';
+import Highcharts from 'highcharts';
 
 
-class AttendeeReport extends Component{
-    constructor(props){
-        super(props);
-
-        this.state = {
-            attendeeData: []
-        };
-    }
-
-    componentWillMount() {
+class PieHighcharts extends Component {
+    componentDidMount() {
         let componentRef = this;
         let profileList = [];
         // Call method for get user profiles list
@@ -34,8 +27,8 @@ class AttendeeReport extends Component{
         // Call method for get attendees data
         DBUtil.getDocRef("Attendee")
         .get().then((snapshot) => {
-           let attendees  = [], attendeeCountList = [];
-           snapshot.forEach(function (doc) {
+        let attendees  = [], attendeeCountList = [];
+        snapshot.forEach(function (doc) {
             attendees.push(doc.data());
             });
             // Declaration of required counts
@@ -43,7 +36,7 @@ class AttendeeReport extends Component{
             adminCount = 0, delegatesCount = 0, sponsorCount = 0, attendeeCount = 0, ecoSystemCount = 0,
             organizingCommitteeCount = 0, guestCount = 0, volunteerCount = 0, speakerCount = 0, 
             mediaCount = 0, charterMemberCount= 0;
-           
+        
             // This loop for get attendees intent & profile count
             for (var i = 0; i < attendees.length; i++) {
                 if(attendees[i].intent == 'Mentee'){
@@ -117,106 +110,183 @@ class AttendeeReport extends Component{
                 }
             }
             attendeeCountList.push({
-                 mentee : menteeCount,
-                 mentor : mentorCount,
-                 investor: investorCount,
-                 lookingForInvestment : lookingForInvestmentCount,
-                 admin : adminCount,
-                 attendee : attendeeCount,
-                 charterMember : charterMemberCount,
-                 ecoSystem : ecoSystemCount,
-                 delegates : delegatesCount,
-                 guest : guestCount,
-                 media : mediaCount,
-                 organizingCommittee : organizingCommitteeCount,
-                 sponsor : sponsorCount,
-                 speaker : speakerCount,
-                 volunteer : volunteerCount
+                mentee : menteeCount,
+                mentor : mentorCount,
+                investor: investorCount,
+                lookingForInvestment : lookingForInvestmentCount,
+                admin : adminCount,
+                attendee : attendeeCount,
+                charterMember : charterMemberCount,
+                ecoSystem : ecoSystemCount,
+                delegates : delegatesCount,
+                guest : guestCount,
+                media : mediaCount,
+                organizingCommittee : organizingCommitteeCount,
+                sponsor : sponsorCount,
+                speaker : speakerCount,
+                volunteer : volunteerCount
             });
-            componentRef.setState({attendeeData : attendeeCountList}) 
+
+            // Created Pie chart for Intent report
+            Highcharts.chart('intentReport', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Intent Report'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.0f} ',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Intent Report',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Mentor',
+                        y: attendeeCountList[0].mentor,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'Mentee',
+                        y: attendeeCountList[0].mentee
+                    }, {
+                        name: 'Investor',
+                        y: attendeeCountList[0].investor
+                    }, {
+                        name: 'Looking For Investment',
+                        y: attendeeCountList[0].lookingForInvestment
+                    }]
+                }]
+            });
+
+            // Created Pie chart for Profile Report
+            Highcharts.chart('profileReport', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Profile Report'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.0f} ',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Intent Report',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Admin',
+                        y: attendeeCountList[0].admin,
+                        sliced: true,
+                        selected: true 
+                    }, {
+                        name: 'Attendee',
+                        y: attendeeCountList[0].attendee
+                    }, {
+                        name: 'Charter Member',
+                        y: attendeeCountList[0].charterMember
+                    }, {
+                        name: 'Eco System Partner',
+                        y: attendeeCountList[0].ecoSystem
+                    }, {
+                        name: 'Delegates',
+                        y: attendeeCountList[0].delegates
+                    }, {
+                        name: 'Guest',
+                        y: attendeeCountList[0].guest
+                    }, {
+                        name: 'Media',
+                        y: attendeeCountList[0].media
+                    }, {
+                        name: 'Organizing Committee',
+                        y: attendeeCountList[0].organizingCommittee
+                    }, {
+                        name: 'Sponsor',
+                        y: attendeeCountList[0].sponsor
+                    }, {
+                        name: 'Speaker',
+                        y: attendeeCountList[0].speaker
+                    }, {
+                        name: 'Volunteer',
+                        y: attendeeCountList[0].volunteer
+                    }]
+
+                }]
+            });
         });
     }
-
-    render(){
-        let attendeeCounts =  this.state.attendeeData;
-        if(attendeeCounts.length != 0){
-            this.printIntentData = {
-                labels: ['Mentor', 'Mentee', 'Investor', 'Looking For Investment'],
-                datasets: [
-                    {
-                        label: 'Intent Report',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                        hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [attendeeCounts[0].mentor, attendeeCounts[0].mentee,
-                        attendeeCounts[0].investor, attendeeCounts[0].lookingForInvestment]
-                    }
-                ]
-            };
-            
-            this.loadIntentData = <div className="chart-wrapper">
-                                    <Bar data={this.printIntentData} options={{ maintainAspectRatio: false}}/>
-                                  </div>
-
-            this.printProfileData = {
-                labels: ['Admin', 'Attendee', 'Charter Member', 'Eco System Partner', 'Delegates', 'Guest', 'Media', 'Organizing Committee', 'Sponsor', 'Speaker', 'Volunteer'],
-                datasets: [
-                    {
-                        label: 'Profile Report',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                        hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [attendeeCounts[0].admin, attendeeCounts[0].attendee, attendeeCounts[0].charterMember , attendeeCounts[0].ecoSystem ,
-                        attendeeCounts[0].delegates , attendeeCounts[0].guest  ,  attendeeCounts[0].media    , attendeeCounts[0].organizingCommittee ,
-                        attendeeCounts[0].sponsor , attendeeCounts[0].speaker , attendeeCounts[0].volunteer
-                    ]
-                    }
-                ]
-            };
-
-            this.loadProfileData = <div className="chart-wrapper">
-                                     <Bar data={this.printProfileData} options={{ maintainAspectRatio: false}}/>
-                                   </div>
-        }
-        else{
-            this.loadIntentData = "Loading...";
-            this.loadProfileData = "Loading...";
-        }
-
+    render() {
         return (
             <div className="animated fadeIn">
                 <Row className="justify-content-left">
-                    <Col md="12">
-                    <FormGroup row>
-                        <Col xs="12" md="12">
-                            <Card>
-                                <CardHeader>
-                                    Intent Report
-                                </CardHeader>
-                                <CardBody>
-                                    {this.loadIntentData}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                     </FormGroup>
-                     <FormGroup row>
-                        <Col xs="12" md="12">
-                            <Card>
-                                <CardHeader>
-                                    Profile Report
-                                </CardHeader>
-                                <CardBody>
-                                    {this.loadProfileData}
-                                </CardBody>
-                            </Card>
-                        </Col>
-                     </FormGroup>
+                    <Col>
+                        <FormGroup>
+                            <Col xs="12" md="6" style={{ float: "left" }}>
+                                <Card>
+                                    <CardHeader>
+                                        Intent Report
+                                    </CardHeader>
+                                    <CardBody>
+                                        <div className="chart-wrapper">                                        
+                                            <div id="intentReport" style={{minwidth: "310px", height: "400px", maxwidth: "600px", margin: "0 auto"}} ></div>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            <Col xs="12" md="6" style={{ float: "left" }}>
+                                <Card>
+                                    <CardHeader>
+                                        Profile Report
+                                    </CardHeader>
+                                    <CardBody>
+                                            <div id="profileReport" style={{minwidth: "310px", height: "400px", maxwidth: "600px", margin: "0 auto"}} ></div>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        </FormGroup>
                     </Col>
-               </Row>
+                </Row>
+            </div>
+        );
+    }
+}
+
+class AttendeeReport extends Component{
+    render() {
+        return (
+            <div>
+                <PieHighcharts />
             </div>
         );
     }
