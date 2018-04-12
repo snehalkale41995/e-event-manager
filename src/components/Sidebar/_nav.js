@@ -2,11 +2,7 @@ export default {
   items: [{
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW'
-      }
+      icon: 'icon-speedometer'
     },
     {
       name: 'Session',
@@ -19,11 +15,6 @@ export default {
       url: '/rooms',
       icon: 'icon-home'
     },
-    // {
-    //   name: 'Reports',
-    //   url: '/reports',
-    //   icon: 'icon-pie-chart',
-    // },
      {
       name: 'Attendance',
       url: '/attendance',
@@ -34,16 +25,6 @@ export default {
       url: '/attendee',
       icon: 'icon-note'
     },
-    // {
-    //   name: 'RenderForm',
-    //   url: '/renderForm',
-    //   icon: 'icon-note'
-    // },
-    // {
-    //   name: 'Questions',
-    //   url: '/questions',
-    //   icon: 'icon-question'
-    // },
     {
       name: 'Registration',
       url: '/registration',     
@@ -54,11 +35,6 @@ export default {
       url: '/registrationList',
       icon: 'icon-note'
     },
-    // {
-    //   name: 'Event Questions',
-    //   url: '/eventQuestions',
-    //   icon: 'icon-note'
-    // },  
     {
       name: 'Sponsor',
       url: '/sponsor',
@@ -68,9 +44,7 @@ export default {
       name: 'About Us',
       url: '/aboutUs',
       icon: 'icon-note'
-    },
-
-    
+    },   
     {
       title: true,
       name: 'Reports',
@@ -89,8 +63,6 @@ export default {
       url: '/sessionReport',
       icon: 'icon-pie-chart',
     },
-    
-    
     {
       title: true,
       name: 'Users',
@@ -99,11 +71,7 @@ export default {
         attributes: {}
       },
     },
-    // {
-    //   name: 'User',
-    //   url: '/user',
-    //   icon: 'icon-user',
-    // },
+   
     {
       name: 'Role',
       url: '/role',
@@ -111,7 +79,7 @@ export default {
     },
     {
       name: 'Logout',
-      url: '/login',
+      url: '/logOut',
       icon: 'icon-lock'
     },
   ]
