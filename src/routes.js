@@ -17,7 +17,8 @@ const routes = {
   '/aboutUs' : 'About Us',
   '/sponsor' : 'Sponsor',
   '/login' : 'Login',
-  '/logOut' : 'logOut'
+  '/logOut' : 'logOut',
+  '/sessionQuestions' : 'SessionQuestions'
   
 };
 export default routes;

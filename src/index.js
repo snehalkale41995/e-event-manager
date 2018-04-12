@@ -11,6 +11,8 @@ import Full from './containers/Full/'
 import Login from './views/Pages/Login/'
 import Logout from './views/Pages/logOut/'
 import Register from './views/Pages/Register/Register'
+import SessionQuestions from './views/SessionQuestions/SessionQuestions'
+
 import '../customStyle.css'
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -33,6 +35,7 @@ ReactDOM.render((
       <Route path="/user" name="Home" component={Full} />
       <Route path="/role" name="Home" component={Full} />
 
+      <Route exact path="/sessionQuestions" name="Session Questions" component={SessionQuestions} />
       <Route exact path="/register" name="Register" component={Register} />
       <Route exact path="/logOut" name="logOut" component={Logout} />
       <Route path="/" name="Login" component={Login} />

@@ -19,6 +19,7 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.onLoginBtn = this.onLoginBtn.bind(this);
     this.onForgetPassword = this.onForgetPassword.bind(this);
+    this.onDisplayQuestion = this.onDisplayQuestion.bind(this);
   }
   handleChange(event) {
     const { name, value } = event.target;
@@ -96,13 +97,16 @@ class Login extends Component {
       thisRef.setState({ loginMessage: "Please enter Email Id" });
     }
   }
+  onDisplayQuestion (){
+    this.props.history.push( '/sessionQuestions');
+  }
 
   render() {
     return (
       <div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
-            <Col md="6">
+            <Col md="8">
               <CardGroup>
                 <Card className="p-4">
                   <CardBody>
@@ -142,6 +146,15 @@ class Login extends Component {
                         <Button color="link" onClick={this.onForgetPassword} className="px-0">Forgot password?</Button>
                       </Col>
                     </Row>
+                  </CardBody>
+                </Card>
+                <Card className="text-white bg-primary py-5 d-md-down-none" style={{ width: 44 + '%' }}>
+                  <CardBody className="text-center">
+                    <div>
+                      <h2>Questions</h2>
+                      <p>Display questions for the onGoing session</p>
+                      <Button color="primary" className="mt-3" onClick={this.onDisplayQuestion} active>Display Questions</Button>
+                    </div>
                   </CardBody>
                 </Card>
               </CardGroup>
