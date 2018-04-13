@@ -25,6 +25,7 @@ import Logout from '../../views/Pages/logOut/';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import InitialQuestions from '../../views/InitialQuestions/InitialQuestions';
 
 class Full extends Component {
   constructor(props) {

@@ -18,7 +18,7 @@ const routes = {
   '/sponsor' : 'Sponsor',
   '/login' : 'Login',
   '/logOut' : 'logOut',
-  '/sessionQuestions' : 'SessionQuestions'
-  
+  '/sessionQuestions' : 'SessionQuestions',
+  '/initialQuestions' : 'Initial Questions',
 };
 export default routes;
