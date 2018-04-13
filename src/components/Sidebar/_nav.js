@@ -44,14 +44,19 @@ export default {
     //   url: '/questions',
     //   icon: 'icon-question'
     // },
+    // {
+    //   name: 'Registration',
+    //   url: '/registration',     
+    //   icon: 'icon-note'
+    // },
+    // {
+    //   name: 'Registration List',
+    //   url: '/registrationList',
+    //   icon: 'icon-note'
+    // },
     {
-      name: 'Registration',
-      url: '/registration',     
-      icon: 'icon-note'
-    },
-    {
-      name: 'Registration List',
-      url: '/registrationList',
+      name: 'Initial Questions',
+      url: '/initialQuestions',
       icon: 'icon-note'
     },
     // {

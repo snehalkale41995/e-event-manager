@@ -12,13 +12,14 @@ const routes = {
   'session/sessionForm' : 'sessionForm',
   '/registration' : 'Registration',
   '/rooms' : 'Rooms',
-  '/registrationList' : 'Registration List',
+  //'/registrationList' : 'Registration List',
  //, '/eventQuestions': 'Event Questions'
   '/attendee' : 'Attendee',
   '/attendeeReport' : 'Attendee Report',
   '/sessionReport' : 'Session Report',
   '/aboutUs' : 'About Us',
-  '/sponsor' : 'Sponsor'
+  '/sponsor' : 'Sponsor',
+  '/initialQuestions' : 'Initial Questions'
   
 };
 export default routes;
