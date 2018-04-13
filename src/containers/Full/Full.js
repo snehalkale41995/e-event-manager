@@ -22,10 +22,13 @@ import SessionReport from '../../views/Reports/Sessions Report/SessionReport';
 import AboutUs from '../../views/AboutUs/AboutUs';
 import Sponsor from '../../views/Sponsor/Sponsor';
 import Logout from '../../views/Pages/logOut/';
-
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import InitialQuestions from '../../views/InitialQuestions/InitialQuestions';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
 
 class Full extends Component {
   constructor(props) {
@@ -55,6 +58,10 @@ class Full extends Component {
     });
   }
   render() {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
     if (!this.state.initialLoad) {
       if (this.state.authUser == true) {
         return (
@@ -80,6 +87,7 @@ class Full extends Component {
                     <Route path='/aboutUs' name='AboutUs' component={AboutUs} />
                     <Route path='/sponsor' name='Sponsor' component={Sponsor} />
                     <Route path='/logOut' name='logOut' component={Logout} />
+                    <Route path='/initialQuestions' name='Initial Questions' component={InitialQuestions} />
                     <Redirect from="/" to="/dashboard" />
                   </Switch>
                 </Container>
@@ -97,7 +105,11 @@ class Full extends Component {
       }
     } else {
       return (<span></span>);
+<<<<<<< HEAD
     }
+=======
+              }
+>>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
   }
 }
 
