@@ -67,13 +67,14 @@ exports.registerUser = functions.https.onRequest((request, response) => {
                 email:req.userEmail,
                 firstName:req.firstName,
                 lastName:req.lastName,
+                password:req.password,
                 fullName:req.fullName,
                 roleName:req.roleName,
-                isAttendee:req.isAttendee,
                 profileServices: req.profileServices,
                 timestamp :req.timestamp,
                 registrationType: req.registrationType,
                 briefInfo: req.briefInfo,
+                info : req.info,
                 attendeeCount: req.attendeeCount,
                 attendeeLabel: req.attendeeLabel,
                 attendanceId: req.attendanceId,
@@ -81,7 +82,8 @@ exports.registerUser = functions.https.onRequest((request, response) => {
                 linkedInURL: req.linkedInURL,
                 profileImageURL: req.profileImageURL
             };
-            return sendWelcomeEmail(req.userEmail, req.displayName, response, req.password, attendeeDetails, userRecord.uid);
+        
+        return sendWelcomeEmail(req.userEmail, req.displayName, response, req.password, attendeeDetails, userRecord.uid);
         })
         .catch((error) => {
             console.log("Error creating new user:", error);
@@ -112,20 +114,21 @@ function sendWelcomeEmail(email, displayName, response, password, attendeeDetail
                         \nLooking forward to seeing you at the Event !!
                         \nCheers,
                         \nTeam Tie`;
-    return mailTransport.sendMail(mailOptions).then(() => {
-        console.log('New welcome email sent to:', email);
-        return admin.firestore().collection("Attendee").doc(uid)
+
+     return admin.firestore().collection("Attendee").doc(uid)
             .set(attendeeDetails)
             .then((docRef) => {
                 console.log('Attendde added', attendeeDetails);
-               return response.status(200).send("Success:"+uid);
+                let resData = JSON.stringify({
+                    status : "success",
+                    uid : uid,
+                    abc : 'Snehal Kale'
+                });
+               return response.status(200).send(resData);
+           
             })
             .catch((ex) => {
                 console.log('Error Adding Attendee', ex);
-                return response.status(500).send("Error updating attendance table for user:" + email);
+                return response.status(500).send("Error updating attendance table for user:" + ex);
             });
-    }).catch((error) => {
-        console.log("Error sending mail to user:", error);
-        return response.status(500).send("Error sending mail to user:" + email);
-    });
-}
+       }

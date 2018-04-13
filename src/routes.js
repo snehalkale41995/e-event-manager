@@ -19,6 +19,8 @@ const routes = {
   '/login' : 'Login',
   '/logOut' : 'logOut',
   '/sessionQuestions' : 'SessionQuestions'
+  '/initialQuestions' : 'Initial Questions'
+
   
 };
 export default routes;
