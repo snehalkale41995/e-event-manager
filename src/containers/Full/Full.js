@@ -25,10 +25,6 @@ import Logout from '../../views/Pages/logOut/';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import InitialQuestions from '../../views/InitialQuestions/InitialQuestions';
-<<<<<<< HEAD
-=======
-
->>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
 
 class Full extends Component {
   constructor(props) {
@@ -58,10 +54,6 @@ class Full extends Component {
     });
   }
   render() {
-<<<<<<< HEAD
-=======
-
->>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
     if (!this.state.initialLoad) {
       if (this.state.authUser == true) {
         return (
@@ -105,11 +97,7 @@ class Full extends Component {
       }
     } else {
       return (<span></span>);
-<<<<<<< HEAD
     }
-=======
-              }
->>>>>>> 7ed0dabd2e35c615a1882812172dc7d9c1e614b2
   }
 }
 
