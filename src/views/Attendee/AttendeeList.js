@@ -124,14 +124,21 @@ class AttendeeList extends Component {
         
         return (
             <div>
+                <Link to={`${this.props.match.url}/registration`}> 
+                    <Button type="button" color="primary">
+                        <i className="fa fa-plus"></i>
+                        Add Attendee
+                    </Button>
+                </Link> &nbsp;&nbsp;
                 <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
+                    <i class="fa fa-print"></i>
                     Print QR Code For All
-                </Button>&nbsp;&nbsp;                
+                </Button>                
                 <BootstrapTable ref='table' data={ this.state.attendee } pagination={ true } search={ true } 
                      selectRow={ selectRowProp } options={ options }>
                     <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>ID</TableHeaderColumn>
                     <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField='email' headerAlign='left' width='200'>Email</TableHeaderColumn> 
+                    <TableHeaderColumn dataField='email' headerAlign='left' width='250'>Email</TableHeaderColumn> 
                     <TableHeaderColumn dataField='contactNo' headerAlign='left' width='150'>Contact No</TableHeaderColumn>  
                     <TableHeaderColumn dataField='registrationType' headerAlign='left' width='200'>Registration Type</TableHeaderColumn>
                     <TableHeaderColumn dataField='edit' dataFormat={ this.onEditAttendee.bind(this) } headerAlign='left'>Edit</TableHeaderColumn>
