@@ -20,7 +20,10 @@ class AttendeeList extends Component {
         let componentRef = this;
         DBUtil.addChangeListener("Attendee", function (objectList) {
             let attendeeItems = [];
+            let attendeeId;
+            let array = []
             objectList.forEach(function (doc) {
+                attendeeId = doc.id;
                 if (doc.data().isDelete != true) {
                     attendeeItems.push({
                         id: doc.id,
@@ -30,10 +33,12 @@ class AttendeeList extends Component {
                         timestamp: doc.data().timestamp,
                         registrationType: doc.data().registrationType,
                         attendeeLabel: doc.data().attendeeLabel,
-                        attendeeCount: doc.data().attendeeCount
+                        attendeeCount: doc.data().attendeeCount,
+                        briefInfo: doc.data().briefInfo
                     });
                 }
             });
+
             componentRef.setState({ attendee: attendeeItems });
         });
     }
@@ -41,10 +46,15 @@ class AttendeeList extends Component {
     // Method for print ID card
     openWin(user) {
         let briefInfo;
-        let CompanyName
-        let attendeeLabel = user.attendeeLabel;
-        let attendeeCount = user.attendeeCount;
-        let attendeeCode = attendeeLabel + "-" + attendeeCount;
+        let CompanyName = '';
+        let attendeeLabel = '';
+        let attendeeCount = '';
+        let attendeeCode = ''
+        if (user.attendeeLabel)
+            attendeeLabel = user.attendeeLabel;
+        if (user.attendeeCount)
+            attendeeCount = user.attendeeCount;
+        attendeeCode = attendeeLabel + "-" + attendeeCount;
         if (user.briefInfo != undefined) {
             briefInfo = user.briefInfo;
             CompanyName = briefInfo.split('\n')[0];
@@ -54,6 +64,7 @@ class AttendeeList extends Component {
         }
 
         var newWindow = window.open('', '', 'width=1000,height=1000');
+        setTimeout(() => newWindow.document.title = '' + attendeeCode + '', 0);
         newWindow.document.writeln("<html>");
         newWindow.document.writeln("<body>");
         newWindow.document.write("<div style='width:394px;height:490px;text-align:center;margin-left:0;margin-top:0;'>")
@@ -88,8 +99,10 @@ class AttendeeList extends Component {
         let generatedQR;
         let compRef = this;
         let id = user.id;
-        let Lable = user.attendeeLabel
-        QRCode.toDataURL("TIE:" + Lable + ":" + id)
+        let Label = user.attendeeLabel
+        let Count = user.attendeeCount;
+        let AttendeeCode = Label + "-" + Count;
+        QRCode.toDataURL("TIE" + ":" + AttendeeCode + ":" + id)
             .then(url => {
                 generatedQR = url;
                 compRef.setState({ Qrurl: url })
@@ -146,7 +159,7 @@ class AttendeeList extends Component {
                 </Button>
                 <BootstrapTable ref='table' data={this.state.attendee} pagination={true} search={true}
                     selectRow={selectRowProp} options={options}>
-                    <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
                     <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
                     <TableHeaderColumn dataField='email' headerAlign='left' width='250'>Email</TableHeaderColumn>
                     <TableHeaderColumn dataField='contactNo' headerAlign='left' width='150'>Contact No</TableHeaderColumn>
