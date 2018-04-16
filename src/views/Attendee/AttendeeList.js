@@ -19,7 +19,7 @@ class AttendeeList extends Component {
     componentWillMount() {
         let componentRef = this;
         DBUtil.addChangeListener("Attendee", function (objectList) {
-           let attendeeItems = []; 
+            let attendeeItems = [];
             objectList.forEach(function (doc) {
                 if (doc.data().isDelete != true) {
                     attendeeItems.push({
@@ -40,9 +40,19 @@ class AttendeeList extends Component {
 
     // Method for print ID card
     openWin(user) {
+        let briefInfo;
+        let CompanyName
         let attendeeLabel = user.attendeeLabel;
         let attendeeCount = user.attendeeCount;
         let attendeeCode = attendeeLabel + "-" + attendeeCount;
+        if (user.briefInfo != undefined) {
+            briefInfo = user.briefInfo;
+            CompanyName = briefInfo.split('\n')[0];
+        }
+        else {
+            CompanyName = '';
+        }
+
         var newWindow = window.open('', '', 'width=1000,height=1000');
         newWindow.document.writeln("<html>");
         newWindow.document.writeln("<body>");
@@ -52,7 +62,7 @@ class AttendeeList extends Component {
         newWindow.document.write("<div style='height:29%;'> </div>")
         //layer2
         newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.name + "</h1>")
-        newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>Eternus Solutions Pvt Ltd</p>")
+        newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>" + CompanyName + "</p>")
         newWindow.document.write("</div>")
         //layer2a
         newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
@@ -78,7 +88,8 @@ class AttendeeList extends Component {
         let generatedQR;
         let compRef = this;
         let id = user.id;
-        QRCode.toDataURL("TIECON:" + id)
+        let Lable = user.attendeeLabel
+        QRCode.toDataURL("TIE:" + Lable + ":" + id)
             .then(url => {
                 generatedQR = url;
                 compRef.setState({ Qrurl: url })
@@ -89,24 +100,23 @@ class AttendeeList extends Component {
     }
 
     // Method for edit attendee (Screen redirect from attendee to registration module)
-    onEditAttendee(cell,row) {
+    onEditAttendee(cell, row) {
         let componentRef = this;
         return <Link to={`${componentRef.props.match.url}/registration/${row.id}`}>
-                  <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button>
-               </Link>
+            <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button>
+        </Link>
     }
 
     // Method for print individual QR code
-    onPrintAttendeeQRCode(cell,row) {
+    onPrintAttendeeQRCode(cell, row) {
         let componentRef = this;
         return <Button type="button" onClick={() => componentRef.onGenerateQRcode(row)} color="success">
-               <i className="icon-note"></i>Print</Button>
+            <i className="icon-note"></i>Print</Button>
     }
 
     // Method for get selected row keys for print all QR Code
     getSelectedRowKeys() {
         // Not implemented 
-        console.log(this.refs.table.state.selectedRowKeys);
         //alert("We got Selected Row Keys");
     }
 
@@ -114,17 +124,17 @@ class AttendeeList extends Component {
     render() {
         // Define constant for sorting
         const options = {
-            defaultSortName: 'name', 
-            defaultSortOrder: 'asc'  
-        };  
+            defaultSortName: 'name',
+            defaultSortOrder: 'asc'
+        };
         // Define constant for checkbox      
         const selectRowProp = {
             mode: 'checkbox'
         };
-        
+
         return (
             <div>
-                <Link to={`${this.props.match.url}/registration`}> 
+                <Link to={`${this.props.match.url}/registration`}>
                     <Button type="button" color="primary">
                         <i className="fa fa-plus"></i>
                         Add Attendee
@@ -133,16 +143,16 @@ class AttendeeList extends Component {
                 <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
                     <i class="fa fa-print"></i>
                     Print QR Code For All
-                </Button>                
-                <BootstrapTable ref='table' data={ this.state.attendee } pagination={ true } search={ true } 
-                     selectRow={ selectRowProp } options={ options }>
+                </Button>
+                <BootstrapTable ref='table' data={this.state.attendee} pagination={true} search={true}
+                    selectRow={selectRowProp} options={options}>
                     <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>ID</TableHeaderColumn>
                     <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField='email' headerAlign='left' width='250'>Email</TableHeaderColumn> 
-                    <TableHeaderColumn dataField='contactNo' headerAlign='left' width='150'>Contact No</TableHeaderColumn>  
+                    <TableHeaderColumn dataField='email' headerAlign='left' width='250'>Email</TableHeaderColumn>
+                    <TableHeaderColumn dataField='contactNo' headerAlign='left' width='150'>Contact No</TableHeaderColumn>
                     <TableHeaderColumn dataField='registrationType' headerAlign='left' width='200'>Registration Type</TableHeaderColumn>
-                    <TableHeaderColumn dataField='edit' dataFormat={ this.onEditAttendee.bind(this) } headerAlign='left'>Edit</TableHeaderColumn>
-                    <TableHeaderColumn dataField='print' dataFormat={ this.onPrintAttendeeQRCode.bind(this) } headerAlign='left'>Print</TableHeaderColumn>
+                    <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left'>Edit</TableHeaderColumn>
+                    <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left'>Print</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         )
