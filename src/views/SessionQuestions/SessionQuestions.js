@@ -6,6 +6,7 @@ import {
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import * as firebase from 'firebase';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import Avatar from 'react-avatar';
@@ -13,19 +14,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import HeaderQue from '../../components/Header/HeaderQue';
 import FooterQueScreen from '../../components/Footer/FooterQueScreen';
 
+const questionTable = "AskedQuestions";
 class SessionQuestions extends Component {
     constructor(props) {
         super(props);
         this.state = {
             sessionList: [],
             sessionValue: '',
-            categoryValue: ''
+            categoryValue: '',
+            questionData: []
         };
         this.onCategorySelect = this.onCategorySelect.bind(this);
         this.onSessionSelect = this.onSessionSelect.bind(this);
-        // this.setApporveRejectButtonByStatus = this.setApporveRejectButtonByStatus.bind(this);
-        // this.onApproved = this.onApproved.bind(this);
-        // this.onRejected = this.onRejected.bind(this);      
+        this.getQuestions = this.getQuestions.bind(this);
     }
 
     // Method For render/set default data
@@ -43,38 +44,100 @@ class SessionQuestions extends Component {
                     thisRef.setState({
                         sessionList: sessionData
                     })
-                    console.log('sessions', sessionData);
                 }
             }).catch((error) => {
 
             });
     }
     onCategorySelect(value) {
-        console.log("onCategorySelect Value", value);
         if (value != null) {
             this.setState({
                 categoryValue: value.value
             });
+            let filter = value.value;
+            let session = this.state.sessionValue;
+            this.getQuestions(session, filter);
         }
-        console.log("state category Value", this.state);
+        else {
+            this.setState({
+                categoryValue: ''
+            });
+        }
     }
     onSessionSelect(value) {
-        console.log("onSessionSelect Value", value);
         if (value != null) {
             this.setState({
                 sessionValue: value.value
             });
+            let session = value.value;
+            let filter = this.state.categoryValue;
+            this.getQuestions(session, filter);
         }
-        console.log("state session Value", this.state);
+        else {
+            this.setState({
+                sessionValue: '',
+                questionData: []
+            });
+        }
     }
+    getQuestions(session, filter) {
 
+        let thisRef = this;
+        let sessionId = session;
+        let questionSet = [];
+        if (filter == "" || filter == undefined) {
+            filter = 'timestamp'
+        }
+        let filterParam = filter;
+        DBUtil.getDocRef(questionTable)
+            .where("SessionId", "==", sessionId)
+            .orderBy(filterParam, 'desc')
+            .onSnapshot((snapshot) => {
+                if (snapshot.size > 0) {
+                    snapshot.forEach(question => {
+                        questionSet.push({
+                            Question: question.data().Question,
+                            askedBy: question.data().askedBy.fullName,
+                            voteCount: question.data().voteCount
+                        })
+                    });
+                    thisRef.setState({
+                        questionData: questionSet
+                    })
+                }
+                else {
+                    thisRef.setState({
+                        questionData: []
+                    })
+                }
+            });
+    }
     render() {
         const { sessionList, sessionValue, categoryValue } = this.state;
         let sessionOptions = sessionList;
         let categoryOptions = [
-            { label: 'Recent', value: 'Recent' },
-            { label: 'Top', value: 'Top' }
+            { label: 'Recent', value: 'timestamp' },
+            { label: 'Top', value: 'voteCount' }
         ]
+        if(this.state.questionData.length > 0){
+            this.renderQuestions = this.state.questionData.map(question => {
+                return (
+                    <CardGroup style={{ marginLeft: -508, alignSelf: 'center' }}>
+                        <Card>
+                            <Row className="justify-content-center">
+                                <text style={{fontSize :20, fontWeight: 'bold' }}>{question.Question}</text>
+                            </Row>
+                            <Row className="justify-content-center">
+                                {question.askedBy}
+                            </Row>
+                        </Card>
+                    </CardGroup >
+                )
+            })
+        }
+        else{
+            this.renderQuestions = null;
+        }
         return (
             <div className="app">
                 <HeaderQue />
@@ -91,7 +154,7 @@ class SessionQuestions extends Component {
                                                         <Col xs="12" md="6">
                                                             <FormGroup row className="marginBottomZero">
                                                                 <Col xs="12" md="3">
-                                                                    <h4 >Sessions :</h4>
+                                                                    <h5 >Sessions :</h5>
                                                                 </Col>
                                                                 <Col xs="12" md="9">
                                                                     <Select
@@ -105,13 +168,14 @@ class SessionQuestions extends Component {
                                                         <Col md="6">
                                                             <FormGroup row className="marginBottomZero">
                                                                 <Col xs="12" md="3">
-                                                                    <h4 >Category :</h4>
+                                                                    <h5 >Category :</h5>
                                                                 </Col>
                                                                 <Col xs="12" md="9">
                                                                     <Select
                                                                         placeholder="--Select--"
                                                                         value={categoryValue}
                                                                         options={categoryOptions}
+                                                                        clearable={true}
                                                                         onChange={this.onCategorySelect} />
                                                                 </Col>
                                                             </FormGroup>
@@ -120,6 +184,16 @@ class SessionQuestions extends Component {
                                                 </CardBody>
                                             </Card>
                                         </CardGroup>
+                                        {/* <CardGroup style={{  marginLeft: -508, alignSelf: 'center' }}> */}
+                                            {/* width: 251 + '%', <BootstrapTable ref='table' data={this.state.questionData} style={{ marginLeft: -511, marginTop: -20, width: 800 }} >
+                                                <TableHeaderColumn dataField='askedBy' headerAlign='left' width='400' >Asked By</TableHeaderColumn>
+                                                <TableHeaderColumn dataField='Question' headerAlign='left' isKey width='800'>Question</TableHeaderColumn>
+                                                <TableHeaderColumn dataField='voteCount' headerAlign='left' width='300'>Likes</TableHeaderColumn>
+                                            </BootstrapTable> */}
+                                            {this.renderQuestions}
+
+
+                                        {/* </CardGroup> */}
                                     </Col>
                                 </Row>
                             </Container>
