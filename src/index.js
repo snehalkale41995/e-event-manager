@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter, Route, Switch} from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 import 'flag-icon-css/css/flag-icon.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import 'simple-line-icons/css/simple-line-icons.css';
@@ -20,16 +20,16 @@ import 'firebase/firestore';
 ReactDOM.render((
   <HashRouter>
     <Switch>
-      <Route  path="/dashboard" name="Home" component={Full}/>
-      <Route  path="/rooms" name="Home" component={Full} />
-      <Route  path="/session" name="Home" component={Full} />
-      <Route  path="/attendance" name="Home" component={Full} />
-      <Route  path="/attendee" name="Home" component={Full} />
-      <Route  path="/questions" name="Home" component={Full} />
-      <Route  path="/registration" name="Home" component={Full} />
-      <Route  path="/registrationList" name="Home" component={Full} />
-      <Route  path="/sponsor" name="Home" component={Full} />
-      <Route  path="/aboutUs" name="Home" component={Full} />
+      <Route path="/dashboard" name="Home" component={Full} />
+      <Route path="/rooms" name="Home" component={Full} />
+      <Route path="/session" name="Home" component={Full} />
+      <Route path="/attendance" name="Home" component={Full} />
+      <Route path="/attendee" name="Home" component={Full} />
+      <Route path="/questions" name="Home" component={Full} />
+      <Route path="/registration" name="Home" component={Full} />
+      <Route path="/registrationList" name="Home" component={Full} />
+      <Route path="/sponsor" name="Home" component={Full} />
+      <Route path="/aboutUs" name="Home" component={Full} />
       <Route path='/attendeeReport' name='Home' component={Full} />
       <Route path='/sessionReport' name='Home' component={Full} />
       <Route path="/user" name="Home" component={Full} />
