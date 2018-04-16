@@ -20,16 +20,16 @@ import 'firebase/firestore';
 ReactDOM.render((
   <HashRouter>
     <Switch>
-      <Route exact path="/dashboard" name="Home" component={Full}/>
-      <Route exact path="/rooms" name="Home" component={Full} />
-      <Route exact path="/session" name="Home" component={Full} />
-      <Route exact path="/attendance" name="Home" component={Full} />
-      <Route exact path="/attendee" name="Home" component={Full} />
-      <Route exact path="/questions" name="Home" component={Full} />
-      <Route exact path="/registration" name="Home" component={Full} />
-      <Route exact path="/registrationList" name="Home" component={Full} />
-      <Route exact path="/sponsor" name="Home" component={Full} />
-      <Route exact path="/aboutUs" name="Home" component={Full} />
+      <Route  path="/dashboard" name="Home" component={Full}/>
+      <Route  path="/rooms" name="Home" component={Full} />
+      <Route  path="/session" name="Home" component={Full} />
+      <Route  path="/attendance" name="Home" component={Full} />
+      <Route  path="/attendee" name="Home" component={Full} />
+      <Route  path="/questions" name="Home" component={Full} />
+      <Route  path="/registration" name="Home" component={Full} />
+      <Route  path="/registrationList" name="Home" component={Full} />
+      <Route  path="/sponsor" name="Home" component={Full} />
+      <Route  path="/aboutUs" name="Home" component={Full} />
       <Route path='/attendeeReport' name='Home' component={Full} />
       <Route path='/sessionReport' name='Home' component={Full} />
       <Route path="/user" name="Home" component={Full} />
