@@ -154,7 +154,7 @@ class AttendeeList extends Component {
                     </Button>
                 </Link> &nbsp;&nbsp;
                 <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
-                    <i class="fa fa-print"></i>
+                    <i className="fa fa-print"></i>
                     Print QR Code For All
                 </Button>
                 <BootstrapTable ref='table' data={this.state.attendee} pagination={true} search={true}
