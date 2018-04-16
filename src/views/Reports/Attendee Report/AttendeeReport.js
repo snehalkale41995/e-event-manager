@@ -31,12 +31,29 @@ class PieHighcharts extends Component {
         snapshot.forEach(function (doc) {
             attendees.push(doc.data());
             });
+
             // Declaration of required counts
-            var menteeCount = 0, mentorCount = 0, investorCount = 0, lookingForInvestmentCount = 0,
-            adminCount = 0, delegatesCount = 0, sponsorCount = 0, attendeeCount = 0, ecoSystemCount = 0,
-            organizingCommitteeCount = 0, guestCount = 0, volunteerCount = 0, speakerCount = 0, 
-            mediaCount = 0, charterMemberCount= 0;
-        
+            var menteeCount = 0, mentorCount = 0, investorCount = 0, lookingForInvestmentCount = 0; //,
+            // adminCount = 0, delegatesCount = 0, sponsorCount = 0, attendeeCount = 0, ecoSystemCount = 0,
+            // organizingCommitteeCount = 0, guestCount = 0, volunteerCount = 0, speakerCount = 0,
+            // mediaCount = 0, charterMemberCount= 0;            
+            let profileArray =[], profileData = [];
+
+            // Loop for pre-define profile report default data
+            for(var m = 0; m < profileList.length; m++)
+            {
+                if(m == 0){
+                    profileArray.push([{name:profileList[m].profiles.profileName, y:0, sliced: true, selected: true}])
+                }
+                else{
+                    profileArray.push([{name:profileList[m].profiles.profileName, y:0}])
+                }
+            }
+            for(var i =0;i< profileArray.length;i++){
+                profileData[i] =profileArray[i][0];
+            }
+
+
             // This loop for get attendees intent & profile count
             for (var i = 0; i < attendees.length; i++) {
                 if(attendees[i].intent == 'Mentee'){
@@ -51,61 +68,70 @@ class PieHighcharts extends Component {
                 else if(attendees[i].intent == 'Looking For Investment'){
                     lookingForInvestmentCount = lookingForInvestmentCount + 1;
                 }
-                
+
                 if(attendees[i].profileServices != undefined){
                     // This loop for get attendees multiple profiles count
                     for(var j = 0; j < attendees[i].profileServices.length; j++){
-                        // This loop for check actual profiles
-                        for (var k = 0; k < profileList.length; k++) {
-                            // This condition for check/match actual profiles with attendee profiles
-                            if(profileList[k].profiles.profileName == attendees[i].profileServices[j]){
-
-                                if(attendees[i].profileServices[j] == 'Admin'){
-                                    adminCount = adminCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Attendee'){
-                                    attendeeCount = attendeeCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Charter Member'){
-                                    charterMemberCount = charterMemberCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Delegates'){
-                                    delegatesCount = delegatesCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Eco System Partner'){
-                                    ecoSystemCount = ecoSystemCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Guest'){
-                                    guestCount = guestCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Media'){
-                                    mediaCount = mediaCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Organizing Committee'){
-                                    organizingCommitteeCount = organizingCommitteeCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Sponsor'){
-                                    sponsorCount = sponsorCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Speaker'){
-                                    speakerCount = speakerCount + 1;
-                                    break;
-                                }
-                                else if(attendees[i].profileServices[j] == 'Volunteer'){
-                                    volunteerCount = volunteerCount + 1;
-                                    break;
-                                }
+                        // This loop for default profiles
+                        for(var l=0; l < profileData.length; l++ )
+                        {                            
+                            if(profileData[l].name == attendees[i].profileServices[j])
+                            {
+                                profileData[l].y =  profileData[l].y + 1;
                             }
                         }
+
+                        // // This loop for check actual profiles
+                        // for (var k = 0; k < profileList.length; k++) {
+                        //     // This condition for check/match actual profiles with attendee profiles
+                        //     if(profileList[k].profiles.profileName == attendees[i].profileServices[j]){
+
+                        //         if(attendees[i].profileServices[j] == 'Admin'){
+                        //             adminCount = adminCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Attendee'){
+                        //             attendeeCount = attendeeCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Charter Member'){
+                        //             charterMemberCount = charterMemberCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Delegates'){
+                        //             delegatesCount = delegatesCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Eco System Partner'){
+                        //             ecoSystemCount = ecoSystemCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Guest'){
+                        //             guestCount = guestCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Media'){
+                        //             mediaCount = mediaCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Organizing Committee'){
+                        //             organizingCommitteeCount = organizingCommitteeCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Sponsor'){
+                        //             sponsorCount = sponsorCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Speaker'){
+                        //             speakerCount = speakerCount + 1;
+                        //             break;
+                        //         }
+                        //         else if(attendees[i].profileServices[j] == 'Volunteer'){
+                        //             volunteerCount = volunteerCount + 1;
+                        //             break;
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             }
@@ -113,18 +139,18 @@ class PieHighcharts extends Component {
                 mentee : menteeCount,
                 mentor : mentorCount,
                 investor: investorCount,
-                lookingForInvestment : lookingForInvestmentCount,
-                admin : adminCount,
-                attendee : attendeeCount,
-                charterMember : charterMemberCount,
-                ecoSystem : ecoSystemCount,
-                delegates : delegatesCount,
-                guest : guestCount,
-                media : mediaCount,
-                organizingCommittee : organizingCommitteeCount,
-                sponsor : sponsorCount,
-                speaker : speakerCount,
-                volunteer : volunteerCount
+                lookingForInvestment : lookingForInvestmentCount //,
+                // admin : adminCount,
+                // attendee : attendeeCount,
+                // charterMember : charterMemberCount,
+                // ecoSystem : ecoSystemCount,
+                // delegates : delegatesCount,
+                // guest : guestCount,
+                // media : mediaCount,
+                // organizingCommittee : organizingCommitteeCount,
+                // sponsor : sponsorCount,
+                // speaker : speakerCount,
+                // volunteer : volunteerCount
             });
 
             // Created Pie chart for Intent report
@@ -203,44 +229,45 @@ class PieHighcharts extends Component {
                     }
                 },
                 series: [{
-                    name: 'Intent Report',
+                    name: 'Profile Report',
                     colorByPoint: true,
-                    data: [{
-                        name: 'Admin',
-                        y: attendeeCountList[0].admin,
-                        sliced: true,
-                        selected: true 
-                    }, {
-                        name: 'Attendee',
-                        y: attendeeCountList[0].attendee
-                    }, {
-                        name: 'Charter Member',
-                        y: attendeeCountList[0].charterMember
-                    }, {
-                        name: 'Eco System Partner',
-                        y: attendeeCountList[0].ecoSystem
-                    }, {
-                        name: 'Delegates',
-                        y: attendeeCountList[0].delegates
-                    }, {
-                        name: 'Guest',
-                        y: attendeeCountList[0].guest
-                    }, {
-                        name: 'Media',
-                        y: attendeeCountList[0].media
-                    }, {
-                        name: 'Organizing Committee',
-                        y: attendeeCountList[0].organizingCommittee
-                    }, {
-                        name: 'Sponsor',
-                        y: attendeeCountList[0].sponsor
-                    }, {
-                        name: 'Speaker',
-                        y: attendeeCountList[0].speaker
-                    }, {
-                        name: 'Volunteer',
-                        y: attendeeCountList[0].volunteer
-                    }]
+                    data: profileData
+                    // [{
+                    //     name: 'Admin',
+                    //     y: attendeeCountList[0].admin,
+                    //     sliced: true,
+                    //     selected: true
+                    // }, {
+                    //     name: 'Attendee',
+                    //     y: attendeeCountList[0].attendee
+                    // }, {
+                    //     name: 'Charter Member',
+                    //     y: attendeeCountList[0].charterMember
+                    // }, {
+                    //     name: 'Eco System Partner',
+                    //     y: attendeeCountList[0].ecoSystem
+                    // }, {
+                    //     name: 'Delegates',
+                    //     y: attendeeCountList[0].delegates
+                    // }, {
+                    //     name: 'Guest',
+                    //     y: attendeeCountList[0].guest
+                    // }, {
+                    //     name: 'Media',
+                    //     y: attendeeCountList[0].media
+                    // }, {
+                    //     name: 'Organizing Committee',
+                    //     y: attendeeCountList[0].organizingCommittee
+                    // }, {
+                    //     name: 'Sponsor',
+                    //     y: attendeeCountList[0].sponsor
+                    // }, {
+                    //     name: 'Speaker',
+                    //     y: attendeeCountList[0].speaker
+                    // }, {
+                    //     name: 'Volunteer',
+                    //     y: attendeeCountList[0].volunteer
+                    // }]
 
                 }]
             });
@@ -258,7 +285,7 @@ class PieHighcharts extends Component {
                                         Intent Report
                                     </CardHeader>
                                     <CardBody>
-                                        <div className="chart-wrapper">                                        
+                                        <div className="chart-wrapper">
                                             <div id="intentReport" style={{minwidth: "310px", height: "400px", maxwidth: "600px", margin: "0 auto"}} ></div>
                                         </div>
                                     </CardBody>
