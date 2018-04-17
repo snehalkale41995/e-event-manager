@@ -2,12 +2,12 @@ import * as firebase from 'firebase';
 import 'firebase/firestore';
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyCR4V9izNXnxqg-fqb5XIaS7VcHKCwWQso",
-    authDomain: "tie-eventmanager.firebaseapp.com",
-    databaseURL: "https://tie-eventmanager.firebaseio.com",
-    projectId: "tie-eventmanager",
-    storageBucket: "tie-eventmanager.appspot.com",
-    messagingSenderId: "1054501443257"
+    apiKey: "AIzaSyDqHj6cAno1pzb2_MqJPo3Fc5Djvzqjtak",
+     authDomain: "tiecon-portal.firebaseapp.com",
+     databaseURL: "https://tiecon-portal.firebaseio.com",
+     projectId: "tiecon-portal",
+     storageBucket: "",
+    messagingSenderId: "835953773150"
 } // from Firebase Console
 
 firebase.initializeApp(firebaseConfig)

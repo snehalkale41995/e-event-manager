@@ -23,6 +23,7 @@ class SessionQuestions extends Component {
             sessionList: [],
             sessionValue: '',
             categoryValue: '',
+            sessionName: '',
             questionData: [],
             render:true,
         };
@@ -94,6 +95,7 @@ class SessionQuestions extends Component {
             filter = 'timestamp'
         }
         let filterParam = filter;
+        
         DBUtil.getDocRef(questionTable)
             .where("SessionId", "==", sessionId)
             .orderBy(filterParam, 'desc')
@@ -134,17 +136,14 @@ class SessionQuestions extends Component {
             this.renderQuestions = this.state.questionData.map(question => {
                 return (
                     <Col md='12'>
-                        <Card style={{border: '#E7060E 1px solid'}}>
-                            <div>
-                            <CardTitle style={{padding:'12px',margin:0}}> " {question.Question} " </CardTitle>
-                            <CardFooter  style={{padding:'4px 10px 4px 10px', borderTop:"1px #E7060E solid"}}>
-                            <span style={{ fontSize: '12pt', color: '#E7060E'}}> -- {question.askedBy}</span>
-                            <span style={{float:'right',marginTop: 3}} ><i className="icon-like" style= {{color: '#E7060E',fontSize: 'large',fontWeight: 'bold'}}> </i>   {question.voteCount}</span >
-                            </CardFooter>
-                            
+                            <div className='question-box'>
+                                <div className='question'>{question.Question}</div>
+                                <span className='username'>{question.askedBy}</span>
+                                <span className='like' >
+                                <div><i className="icon-like" style={{color:'#E7060E'}}> </i></div>
+                                <div>{question.voteCount}</div> </span>
                             </div>
-                        </Card>
-                        </Col>
+                    </Col>
                 )
             })
         }
@@ -156,7 +155,7 @@ class SessionQuestions extends Component {
                 <HeaderQue heading={this.state.sessionName}/>
                 <div className="app-body">
                     <main className="main" style={{ marginLeft: 0 }}>
-                        <div style={{ marginTop: 20 }} className="animated fadeIn">
+                        <div className="animated fadeIn">
                             <Container  style={{maxWidth: '100%', marginRight: 0,marginLeft: 0}}>
                                 <Row className="justify-content-center">
                                     <Col md="12">
