@@ -35,7 +35,7 @@ class Header extends Component {
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>
         <NavbarBrand href="#">
-            <img src="../../img/eternus.png" className="logoImg" />
+            <img src="../../img/tie-pune-logo.jpg" className="logoImg" />
         </NavbarBrand>
         <NavbarToggler className="d-md-down-none mr-auto" onClick={this.sidebarToggle}>
           <span className="navbar-toggler-icon"></span>
