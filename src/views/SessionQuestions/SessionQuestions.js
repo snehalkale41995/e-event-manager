@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    CardGroup, Container, Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Label,
+    CardGroup, CardColumns, CardTitle, Container, Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Label,
     Table, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
 import Select from 'react-select';
@@ -12,6 +12,7 @@ import { DBUtil } from '../../services';
 import Avatar from 'react-avatar';
 import { ToastContainer, toast } from 'react-toastify';
 import HeaderQue from '../../components/Header/HeaderQue';
+import _ from 'lodash';
 import FooterQueScreen from '../../components/Footer/FooterQueScreen';
 
 const questionTable = "AskedQuestions";
@@ -22,7 +23,8 @@ class SessionQuestions extends Component {
             sessionList: [],
             sessionValue: '',
             categoryValue: '',
-            questionData: []
+            questionData: [],
+            render:true,
         };
         this.onCategorySelect = this.onCategorySelect.bind(this);
         this.onSessionSelect = this.onSessionSelect.bind(this);
@@ -65,9 +67,11 @@ class SessionQuestions extends Component {
         }
     }
     onSessionSelect(value) {
+        let list = Object.assign([],this.state.sessionList);
         if (value != null) {
             this.setState({
-                sessionValue: value.value
+                sessionValue: value.value,
+                sessionName: _.filter(list,{'value': value.value})[0].label
             });
             let session = value.value;
             let filter = this.state.categoryValue;
@@ -76,7 +80,8 @@ class SessionQuestions extends Component {
         else {
             this.setState({
                 sessionValue: '',
-                questionData: []
+                questionData: [],
+                sessionName:''
             });
         }
     }
@@ -94,20 +99,25 @@ class SessionQuestions extends Component {
             .orderBy(filterParam, 'desc')
             .onSnapshot((snapshot) => {
                 if (snapshot.size > 0) {
+                   
                     snapshot.forEach(question => {
+                        console.log( question.data())
                         questionSet.push({
                             Question: question.data().Question,
                             askedBy: question.data().askedBy.fullName,
-                            voteCount: question.data().voteCount
+                            voteCount: question.data().voteCount,
+                            askedAt: question.data().timestamp.toLocaleTimeString() +' , '+question.data().timestamp.toDateString()
                         })
                     });
                     thisRef.setState({
-                        questionData: questionSet
+                        questionData: questionSet,
+                        render:false
                     })
                 }
                 else {
                     thisRef.setState({
-                        questionData: []
+                        questionData: [],
+                        render:true
                     })
                 }
             });
@@ -120,18 +130,21 @@ class SessionQuestions extends Component {
             { label: 'Top', value: 'voteCount' }
         ]
         if(this.state.questionData.length > 0){
+            
             this.renderQuestions = this.state.questionData.map(question => {
                 return (
-                    <CardGroup style={{ marginLeft: -508, alignSelf: 'center' }}>
-                        <Card>
-                            <Row className="justify-content-center">
-                                <text style={{fontSize :20, fontWeight: 'bold' }}>{question.Question}</text>
-                            </Row>
-                            <Row className="justify-content-center">
-                                {question.askedBy}
-                            </Row>
+                    <Col md='12'>
+                        <Card style={{border: '#E7060E 1px solid'}}>
+                            <div>
+                            <CardTitle style={{padding:'12px',margin:0}}> " {question.Question} " </CardTitle>
+                            <CardFooter  style={{padding:'4px 10px 4px 10px', borderTop:"1px #E7060E solid"}}>
+                            <span style={{ fontSize: '12pt', color: '#E7060E'}}> -- {question.askedBy}</span>
+                            <span style={{float:'right',marginTop: 3}} ><i className="icon-like" style= {{color: '#E7060E',fontSize: 'large',fontWeight: 'bold'}}> </i>   {question.voteCount}</span >
+                            </CardFooter>
+                            
+                            </div>
                         </Card>
-                    </CardGroup >
+                        </Col>
                 )
             })
         }
@@ -140,15 +153,15 @@ class SessionQuestions extends Component {
         }
         return (
             <div className="app">
-                <HeaderQue />
+                <HeaderQue heading={this.state.sessionName}/>
                 <div className="app-body">
-                    <main className="main">
+                    <main className="main" style={{ marginLeft: 0 }}>
                         <div style={{ marginTop: 20 }} className="animated fadeIn">
-                            <Container >
+                            <Container  style={{maxWidth: '100%', marginRight: 0,marginLeft: 0}}>
                                 <Row className="justify-content-center">
-                                    <Col md="6">
-                                        <CardGroup style={{ width: 851 }}>
-                                            <Card style={{ marginLeft: -511, marginTop: -20 }} className="p-4">
+                                    <Col md="12">
+                                        <CardGroup style={{display:this.state.render?'block':'none'}}>
+                                            <Card className="p-4">
                                                 <CardBody>
                                                     <Row>
                                                         <Col xs="12" md="6">
@@ -184,15 +197,9 @@ class SessionQuestions extends Component {
                                                 </CardBody>
                                             </Card>
                                         </CardGroup>
-                                        {/* <CardGroup style={{  marginLeft: -508, alignSelf: 'center' }}> */}
-                                            {/* width: 251 + '%', <BootstrapTable ref='table' data={this.state.questionData} style={{ marginLeft: -511, marginTop: -20, width: 800 }} >
-                                                <TableHeaderColumn dataField='askedBy' headerAlign='left' width='400' >Asked By</TableHeaderColumn>
-                                                <TableHeaderColumn dataField='Question' headerAlign='left' isKey width='800'>Question</TableHeaderColumn>
-                                                <TableHeaderColumn dataField='voteCount' headerAlign='left' width='300'>Likes</TableHeaderColumn>
-                                            </BootstrapTable> */}
+                                        <Row style={{marginTop:40}}>
                                             {this.renderQuestions}
-
-
+                                        </Row>
                                         {/* </CardGroup> */}
                                     </Col>
                                 </Row>

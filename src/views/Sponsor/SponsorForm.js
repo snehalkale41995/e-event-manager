@@ -1,75 +1,66 @@
-import React, {Component} from 'react';
-import {
-    Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
-    Card, CardBody, Button, Label, FormGroup
-  } from 'reactstrap';
-import {Link, Switch, Route, Redirect} from 'react-router-dom';
-
+import React, { Component } from 'react';
+import { Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
+         Card, CardBody, Button, Label, FormGroup} from 'reactstrap';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { DBUtil } from '../../services';
 import { ToastContainer, toast } from 'react-toastify';
- 
 
-class SponsorForm extends Component{
-
-    constructor(props){
+class SponsorForm extends Component {
+    constructor(props) {
         super(props);
-
         this.state = {
             sponsor: {
-                id:'',
-                name:'',
+                id: '',
+                name: '',
                 description: '',
-                websiteURL:'',
+                websiteURL: '',
                 imageURL: '',
                 category: '',
                 isDelete: false
             },
             submitted: false
         }
-
         this.changeFunction = this.changeFunction.bind(this);
         this.onChangeCategoryField = this.onChangeCategoryField.bind(this);
         this.setInputToAlphabets = this.setInputToAlphabets.bind(this);
         this.submitFunction = this.submitFunction.bind(this);
         this.updateFunction = this.updateFunction.bind(this);
         this.resetFields = this.resetFields.bind(this);
+        this.getOrderNumber = this.getOrderNumber.bind(this);
     }
-
     // Method for get default data of sponor
-    componentWillMount(){
+    componentWillMount() {
         let thisRef = this;
-        if (this.props.match.params.id != undefined)
-        {
-           var docRef =  DBUtil.getDocRef("Sponsor").doc(this.props.match.params.id);
-           docRef.get().then(function(doc) {
-             if (doc.exists)
-             {
-                 let sponsorData = doc.data();
-                 thisRef.setState({
-                   sponsor: {
-                     id: doc.id,
-                     name: sponsorData.name,
-                     description: sponsorData.description,
-                     websiteURL:sponsorData.websiteURL,
-                     imageURL: sponsorData.imageURL,
-                     category: sponsorData.category,
-                   }
-                 });
-             } 
-             else {
-                 toast.error("Invalid data.", {
-                   position: toast.POSITION.BOTTOM_RIGHT,
-                 });
-             }
-           }).catch(function(error) {
-               toast.error("Invalid data.", {
-                 position: toast.POSITION.BOTTOM_RIGHT,
-               });
-           });
-        }   
+        if (this.props.match.params.id != undefined) {
+            var docRef = DBUtil.getDocRef("Sponsor").doc(this.props.match.params.id);
+            docRef.get().then(function (doc) {
+                if (doc.exists) {
+                    let sponsorData = doc.data();
+                    thisRef.setState({
+                        sponsor: {
+                            id: doc.id,
+                            name: sponsorData.name,
+                            description: sponsorData.description,
+                            websiteURL: sponsorData.websiteURL,
+                            imageURL: sponsorData.imageURL,
+                            category: sponsorData.category,
+                        }
+                    });
+                }
+                else {
+                    toast.error("Invalid data.", {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                    });
+                }
+            }).catch(function (error) {
+                toast.error("Invalid data.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            });
+        }
     }
 
     // Method for set all text box values
@@ -88,7 +79,7 @@ class SponsorForm extends Component{
     setInputToAlphabets(e) {
         const re = /[a-zA-Z ]+/g;
         if (!re.test(e.key)) {
-        e.preventDefault();
+            e.preventDefault();
         }
     }
 
@@ -96,20 +87,20 @@ class SponsorForm extends Component{
     onChangeCategoryField(e) {
         const sponsor = this.state.sponsor;
         this.setState({
-             sponsor: {
-                 ...sponsor,
-                 category: e.target.value
-             }   
+            sponsor: {
+                ...sponsor,
+                category: e.target.value
+            }
         });
     }
 
     // Method for reset all fields 
-    resetFields(resetFlag){
+    resetFields(resetFlag) {
         this.setState({
             sponsor: {
-                name:'',
+                name: '',
                 description: '',
-                websiteURL:'',
+                websiteURL: '',
                 imageURL: '',
                 category: '',
                 isDelete: false
@@ -118,17 +109,51 @@ class SponsorForm extends Component{
         });
         if (resetFlag != true) {
             toast.success("Sponsor from reset successfully.", {
-            position: toast.POSITION.BOTTOM_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }
 
+    //Method to get orderNumber
+    getOrderNumber(category) {
+        let orderNumber = 0;
+        switch (category) {
+            case 'Gold':
+                orderNumber = 1;
+                break;
+            case 'Associate':
+                orderNumber = 2;
+                break;
+            case 'Award':
+                orderNumber = 3;
+                break;
+            case 'Lanyard and Badge':
+                orderNumber = 4;
+                break;
+            case 'Technoloogy Partner':
+                orderNumber = 5;
+                break;
+            case 'Strategic Communication Partner':
+                orderNumber = 6;
+                break;
+            case 'Ecosystem Partner':
+                orderNumber = 7;
+                break;
+            case 'Other':
+                orderNumber = 8;
+                break;
+        }
+        return orderNumber;
+    }
+
     // Method for insert sponsor data
-    submitFunction(event){
-        event.preventDefault();        
-        this.setState({ submitted: true });     
-        const { sponsor } = this.state;   
-       
+    submitFunction(event) {
+        event.preventDefault();
+        this.setState({ submitted: true });
+        const { sponsor } = this.state;
+        let orderNumber;
+        orderNumber = this.getOrderNumber(sponsor.category);
+
         let componentRef = this;
         if (sponsor.name && sponsor.description) {
             let tableName = "Sponsor";
@@ -139,30 +164,31 @@ class SponsorForm extends Component{
                 imageURL: sponsor.imageURL,
                 category: sponsor.category,
                 isDelete: false,
-                timestamp: new Date()
+                timestamp: new Date(),
+                orderNumber: orderNumber
             }
-    
-            DBUtil.addObj(tableName, doc, function (id, error) { 
-                if(id != ""){   
+
+            DBUtil.addObj(tableName, doc, function (id, error) {
+                if (id != "") {
                     toast.success("Sponsor saved successfully.", {
                         position: toast.POSITION.BOTTOM_RIGHT,
                     });
                     componentRef.resetFields(true);
                     setTimeout(() => {
-                        componentRef.props.history.push('/Sponsor');     
+                        componentRef.props.history.push('/Sponsor');
                     }, 3000);
                 }
             },
-            function (err) {
-                toast.error("Error: Sponsor not saved.", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
+                function (err) {
+                    toast.error("Error: Sponsor not saved.", {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                    });
                 });
-            });
         }
     }
 
     // Method for update sponsor data
-    updateFunction(){
+    updateFunction() {
         let componentRef = this;
         this.setState({ submitted: true });
         const { sponsor } = this.state;
@@ -171,113 +197,117 @@ class SponsorForm extends Component{
             description: sponsor.description,
             websiteURL: sponsor.websiteURL,
             imageURL: sponsor.imageURL,
-            category: sponsor.category          
-        }).then(function ()
-        {
+            category: sponsor.category
+        }).then(function () {
             toast.success("Sponsor updated successfully.", {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
             componentRef.resetFields(true);
             setTimeout(() => {
-                componentRef.props.history.push('/Sponsor');  
+                componentRef.props.history.push('/Sponsor');
             }, 2000);
         });
     }
 
-    render(){
-        const { sponsor, submitted, value } = this.state;   
-        if(this.state.sponsor.id != ""){
-            this.setButtons = ( 
-                <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button> 
+    render() {
+        const { sponsor, submitted, value } = this.state;
+        if (this.state.sponsor.id != "") {
+            this.setButtons = (
+                <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button>
             );
         }
-        else{
-            this.setButtons = ( 
-                <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Submit</Button> 
+        else {
+            this.setButtons = (
+                <Button type="submit" size="md" color="success" onClick={this.submitFunction} ><i className="icon-note"></i> Submit</Button>
             );
         }
         return (
             <div className="animated fadeIn">
-                <div>   
-                    <Link to="/sponsor"> 
+                <div>
+                    <Link to="/sponsor">
                         <Button type="button" color="primary">
                             <i className="fa fa-chevron-left"></i>
-                            Back to List 
+                            Back to List
                         </Button>
                     </Link>
-                 </div><br/>
-             
+                </div><br />
+
                 <Row className="justify-content-left">
                     <Col md="8">
                         <Card className="mx-6">
-                        <CardBody className="p-4">
-                            <h1>Sponsor</h1>
-                            <FormGroup row>
-                                <Col xs="12" md="6" className={(submitted && !sponsor.name ? ' has-error' : '')}  >
-                                    <InputGroup className="mb-3">
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>
-                                        <i className="fa fa-handshake-o"></i>
-                                        </InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="text" placeholder="Sponsor Name" name="name" onKeyPress={(e) => this.setInputToAlphabets(e)} value={this.state.sponsor.name} onChange={this.changeFunction} required />
-                                    {submitted && !sponsor.name &&
-                                        <div className="help-block" style={{ color: "red" }}>*Required</div>
-                                    }
-                                    </InputGroup>
-                                </Col>
-                                <Col md="6" className={(submitted && !sponsor.description ? ' has-error' : '')} >
-                                    <InputGroup className="mb-3">
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>
-                                        <i className="fa fa-info"></i>
-                                        </InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="text" placeholder="Description" name="description" value={this.state.sponsor.description} onChange={this.changeFunction} required />
-                                    {submitted && !sponsor.description &&
-                                        <div style={{ color: "red" }} className="help-block" >*Required</div>
-                                    }
-                                    </InputGroup>
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col xs="12" md="6">
-                                    <InputGroup className="mb-3">
-                                    <Input type="select" style={{ width: 200 }} name="category" multiple= {false} value={this.state.sponsor.category} id='category' placeholder="Category" onChange={(e) => this.onChangeCategoryField(e)} >
-                                        <option value='Select Category'>Select Category</option>
-                                        <option value="Gold">Gold</option>
-                                        <option value="Platinum">Platinum</option>
-                                        <option value="Sliver">Sliver</option>
-                                    </Input>
-                                    </InputGroup>
-                                </Col>
-                                <Col xs="12" md="6"  >
-                                    <InputGroup className="mb-3">
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText><i className="fa fa-external-link" aria-hidden="true"></i></InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="text" placeholder="Website URL" name="websiteURL" value={this.state.sponsor.websiteURL} onChange={this.changeFunction} required />
-                                    </InputGroup>
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col xs="12" md="6">
-                                    <InputGroup className="mb-3">
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText><i className="fa fa-image"></i></InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input type="text" placeholder="Image URL" name="imageURL" value={this.state.sponsor.imageURL} onChange={this.changeFunction} />
-                                    </InputGroup>
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col xs="12" md="12">
-                                    {this.setButtons} &nbsp;&nbsp;
+                            <CardBody className="p-4">
+                                <h1>Sponsor</h1>
+                                <FormGroup row>
+                                    <Col xs="12" md="6" className={(submitted && !sponsor.name ? ' has-error' : '')}  >
+                                        <InputGroup className="mb-3">
+                                            <InputGroupAddon addonType="prepend">
+                                                <InputGroupText>
+                                                    <i className="fa fa-handshake-o"></i>
+                                                </InputGroupText>
+                                            </InputGroupAddon>
+                                            <Input type="text" placeholder="Sponsor Name" name="name" onKeyPress={(e) => this.setInputToAlphabets(e)} value={this.state.sponsor.name} onChange={this.changeFunction} required />
+                                            {submitted && !sponsor.name &&
+                                                <div className="help-block" style={{ color: "red" }}>*Required</div>
+                                            }
+                                        </InputGroup>
+                                    </Col>
+                                    <Col md="6" className={(submitted && !sponsor.description ? ' has-error' : '')} >
+                                        <InputGroup className="mb-3">
+                                            <InputGroupAddon addonType="prepend">
+                                                <InputGroupText>
+                                                    <i className="fa fa-info"></i>
+                                                </InputGroupText>
+                                            </InputGroupAddon>
+                                            <Input type="text" placeholder="Description" name="description" value={this.state.sponsor.description} onChange={this.changeFunction} required />
+                                            {submitted && !sponsor.description &&
+                                                <div style={{ color: "red" }} className="help-block" >*Required</div>
+                                            }
+                                        </InputGroup>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Col xs="12" md="6">
+                                        <InputGroup className="mb-3">
+                                            <Input type="select" style={{ width: 200 }} name="category" multiple={false} value={this.state.sponsor.category} id='category' placeholder="Category" onChange={(e) => this.onChangeCategoryField(e)} >
+                                                <option value='Select Category'>Select Category</option>
+                                                <option value="Gold">Gold</option>
+                                                <option value="Associate">Associate</option>
+                                                <option value="Award">Award</option>
+                                                <option value="Lanyard and Badge">Lanyard and Badge</option>
+                                                <option value="Technoloogy Partner">Technoloogy Partner</option>
+                                                <option value="Strategic Communication Partner">Strategic Communication Partner</option>
+                                                <option value="Ecosystem Partner">Ecosystem Partner</option>
+                                                <option value="Other">Other</option>
+                                            </Input>
+                                        </InputGroup>
+                                    </Col>
+                                    <Col xs="12" md="6"  >
+                                        <InputGroup className="mb-3">
+                                            <InputGroupAddon addonType="prepend">
+                                                <InputGroupText><i className="fa fa-external-link" aria-hidden="true"></i></InputGroupText>
+                                            </InputGroupAddon>
+                                            <Input type="text" placeholder="Website URL" name="websiteURL" value={this.state.sponsor.websiteURL} onChange={this.changeFunction} required />
+                                        </InputGroup>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Col xs="12" md="6">
+                                        <InputGroup className="mb-3">
+                                            <InputGroupAddon addonType="prepend">
+                                                <InputGroupText><i className="fa fa-image"></i></InputGroupText>
+                                            </InputGroupAddon>
+                                            <Input type="text" placeholder="Image URL" name="imageURL" value={this.state.sponsor.imageURL} onChange={this.changeFunction} />
+                                        </InputGroup>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Col xs="12" md="12">
+                                        {this.setButtons} &nbsp;&nbsp;
                                     <Button type="reset" size="md" color="danger" onClick={this.resetFields} ><i className="fa fa-ban"></i> Reset</Button>
-                                    <ToastContainer autoClose={4000} />
-                                </Col>
-                            </FormGroup>
-                        </CardBody>
+                                        <ToastContainer autoClose={4000} />
+                                    </Col>
+                                </FormGroup>
+                            </CardBody>
                         </Card>
                     </Col>
                 </Row>
