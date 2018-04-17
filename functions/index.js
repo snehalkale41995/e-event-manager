@@ -22,8 +22,8 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     if (request.method !== 'POST') {
         return response.status(403).send('Forbidden!');
     }
-    let req  = JSON.parse(request.body);
-    
+    let req = JSON.parse(request.body);
+
     if (!req.userEmail) {
         return response.status(400).send('Invalid user email');
     }
@@ -45,7 +45,7 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     if (!req.fullName) {
         return response.status(400).send('Invalid fullName');
     }
-    
+
     if (!req.roleName) {
         return response.status(400).send('Invalid roleName');
     }
@@ -61,29 +61,29 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     })
         .then((userRecord) => {
             console.log("Successfully created new user:", userRecord.uid);
-            let attendeeDetails = { 
-                address: req.address, 
-                contactNo: req.contactNo, 
-                email:req.userEmail,
-                firstName:req.firstName,
-                lastName:req.lastName,
-                password:req.password,
-                fullName:req.fullName,
-                roleName:req.roleName,
+            let attendeeDetails = {
+                address: req.address,
+                contactNo: req.contactNo,
+                email: req.userEmail,
+                firstName: req.firstName,
+                lastName: req.lastName,
+                password: req.password,
+                fullName: req.fullName,
+                roleName: req.roleName,
                 profileServices: req.profileServices,
-                timestamp :req.timestamp,
+                timestamp: req.timestamp,
                 registrationType: req.registrationType,
                 briefInfo: req.briefInfo,
-                info : req.info,
+                info: req.info,
                 attendeeCount: req.attendeeCount,
                 attendeeLabel: req.attendeeLabel,
                 attendanceId: req.attendanceId,
-                sessionId:  req.sessionId,
+                sessionId: req.sessionId,
                 linkedInURL: req.linkedInURL,
                 profileImageURL: req.profileImageURL
             };
-        
-        return sendWelcomeEmail(req.userEmail, req.displayName, response, req.password, attendeeDetails, userRecord.uid);
+
+            return sendWelcomeEmail(req.userEmail, req.displayName, response, req.password, attendeeDetails, userRecord.uid);
         })
         .catch((error) => {
             console.log("Error creating new user:", error);
@@ -115,20 +115,39 @@ function sendWelcomeEmail(email, displayName, response, password, attendeeDetail
                         \nCheers,
                         \nTeam Tie`;
 
-     return admin.firestore().collection("Attendee").doc(uid)
-            .set(attendeeDetails)
+    return admin.firestore().collection("Attendee").doc(uid)
+        .set(attendeeDetails)
+        .then((docRef) => {
+            console.log('Attendde added', attendeeDetails);
+            let resData = JSON.stringify({
+                status: "success",
+                uid: uid,
+                abc: 'Snehal Kale'
+            });
+            return response.status(200).send(resData);
+
+        })
+        .catch((ex) => {
+            console.log('Error Adding Attendee', ex);
+            return response.status(500).send("Error updating attendance table for user:" + ex);
+        });
+}
+
+exports.createUser = functions.firestore
+    .document('Attendance')
+    .onCreate((snap, context) => {
+        // Get an object representing the document
+        // e.g. {'name': 'Marie', 'age': 66}
+        const newValue = snap.data();
+        console.log('New Data', newValue);
+        let userDetails = { userId: newValue.userId };
+        admin.firestore().collection("Sessions").doc(newValue.sessionId)
+            .collection('sessionUsers')
+            .add(userDetails)
             .then((docRef) => {
-                console.log('Attendde added', attendeeDetails);
-                let resData = JSON.stringify({
-                    status : "success",
-                    uid : uid,
-                    abc : 'Snehal Kale'
-                });
-               return response.status(200).send(resData);
-           
+                console.log('Updated Session User Info:', newValue);
             })
             .catch((ex) => {
-                console.log('Error Adding Attendee', ex);
-                return response.status(500).send("Error updating attendance table for user:" + ex);
+                console.log('Error Updating Session User Info:', ex);
             });
-       }
+    });
