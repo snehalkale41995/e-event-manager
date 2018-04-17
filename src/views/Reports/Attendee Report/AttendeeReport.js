@@ -70,17 +70,30 @@ class PieHighcharts extends Component {
                 }
 
                 if(attendees[i].profileServices != undefined){
+
+                    var tempProfile = attendees[i].profileServices;
+                    if(tempProfile[1] == undefined){
+                        attendees[i].profileServices.length = 1;
+                    }
                     // This loop for get attendees multiple profiles count
                     for(var j = 0; j < attendees[i].profileServices.length; j++){
-                        // This loop for default profiles
-                        for(var l=0; l < profileData.length; l++ )
-                        {                            
-                            if(profileData[l].name == attendees[i].profileServices[j])
-                            {
-                                profileData[l].y =  profileData[l].y + 1;
-                            }
-                        }
 
+                        for (var k = 0; k < profileList.length; k++) {
+                            if(profileList[k].profiles.profileName == attendees[i].profileServices[j]){
+
+                                // This loop for default profiles
+                                for(var l=0; l < profileData.length; l++ )
+                                {                            
+                                    //if(profileData[l].name == attendees[i].profileServices[j])
+                                    if(profileData[l].name == profileList[k].profiles.profileName)
+                                    {
+                                        profileData[l].y =  profileData[l].y + 1;
+                                    }
+                                }
+
+                            }
+
+                        }
                         // // This loop for check actual profiles
                         // for (var k = 0; k < profileList.length; k++) {
                         //     // This condition for check/match actual profiles with attendee profiles
@@ -133,6 +146,9 @@ class PieHighcharts extends Component {
                         //     }
                         // }
                     }
+
+
+
                 }
             }
             attendeeCountList.push({
@@ -165,7 +181,7 @@ class PieHighcharts extends Component {
                     text: 'Intent Report'
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -173,7 +189,7 @@ class PieHighcharts extends Component {
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: true,
-                            format: '<b>{point.name}</b>: {point.percentage:.0f} ',
+                            format: '<b>{point.name}</b>: {point.y} ',
                             style: {
                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                             }
@@ -213,7 +229,7 @@ class PieHighcharts extends Component {
                     text: 'Profile Report'
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
                 },
                 plotOptions: {
                     pie: {
@@ -221,7 +237,7 @@ class PieHighcharts extends Component {
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: true,
-                            format: '<b>{point.name}</b>: {point.percentage:.0f} ',
+                            format: '<b>{point.name}</b>: {point.y} ',
                             style: {
                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                             }
