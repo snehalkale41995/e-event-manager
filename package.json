@@ -42,6 +42,7 @@
     "history": "4.7.2",
     "lodash": "^4.17.5",
     "material-ui": "^0.20.0",
+    "node-firestore-import-export": "^0.8.0",
     "qrcode": "^1.2.0",
     "react": "16.2.0",
     "react-avatar": "^2.5.1",
@@ -66,7 +67,9 @@
     "dev": "webpack -d --progress --watch --profile --json > compilation-stats.json --env.dev",
     "start": "webpack-dev-server --progress --color --inline --env.dev",
     "build": "webpack -p --progress --env.prod",
-    "clean": "rimraf ./build"
+    "clean": "rimraf ./build",
+    "importDB": "./node_modules/node-firestore-import-export/dist/bin/firestore-import.js --accountCredentials shaggy.shelar\\ tiecon\\ service.json --backupFile ./backups/prod/17-04-2018.json",
+    "exportDB": "./node_modules/node-firestore-import-export/dist/bin/firestore-export.js --accountCredentials ./functions/tiecon-pune-production.json --backupFile /backups/17-04-2018.json"
   },
   "engines": {
     "node": ">= 8.9.4",
