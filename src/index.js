@@ -35,6 +35,8 @@ ReactDOM.render((
       <Route path="/user" name="Home" component={Full} />
       <Route path="/role" name="Home" component={Full} />
       <Route path='/initialQuestions' name='Home' component={Full} />
+      <Route path='/sessionRegistration' name='Home' component={Full} />
+      
 
       <Route exact path="/sessionQuestions" name="Session Questions" component={SessionQuestions} />
       <Route exact path="/register" name="Register" component={Register} />
