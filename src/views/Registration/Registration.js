@@ -573,7 +573,7 @@ class Registration extends Component {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText><i className="fa fa-info"></i></InputGroupText>
                       </InputGroupAddon>
-                      <Input type="text" placeholder="Brief Info" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
+                      <Input type="text" placeholder="Company Name" name="briefInfo" value={this.state.user.briefInfo} onChange={this.changeFunction} />
                     </InputGroup>
                   </Col>
                   <Col xs="12" md="6">
