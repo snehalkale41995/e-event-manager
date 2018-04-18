@@ -25,6 +25,8 @@ import Logout from '../../views/Pages/logOut/';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import InitialQuestions from '../../views/InitialQuestions/InitialQuestions';
+import SessionRegistration from '../../views/SessionRegistration/SessionRegistration';
+
 
 class Full extends Component {
   constructor(props) {
@@ -80,6 +82,8 @@ class Full extends Component {
                     <Route path='/sponsor' name='Sponsor' component={Sponsor} />
                     <Route path='/logOut' name='logOut' component={Logout} />
                     <Route path='/initialQuestions' name='Initial Questions' component={InitialQuestions} />
+                    <Route path='/sessionRegistration' name='Session Registration' component={SessionRegistration} />
+                    
                     <Redirect from="/" to="/dashboard" />
                   </Switch>
                 </Container>

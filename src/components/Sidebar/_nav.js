@@ -39,7 +39,12 @@ export default {
       name: 'About Us',
       url: '/aboutUs',
       icon: 'icon-note'
-    },   
+    },  
+    {
+      name: 'Session Registration',
+      url: '/SessionRegistration',
+      icon: 'icon-note'
+    },      
     {
       title: true,
       name: 'Reports',
