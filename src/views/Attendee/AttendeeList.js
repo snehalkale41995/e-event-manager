@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Row, Col, Card, CardBody, CardHeader, 
+    CardFooter, FormGroup, Button
+  } from 'reactstrap';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+import moment from "moment";
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -11,35 +17,27 @@ class AttendeeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            attendee: []
+            profileDropDown: [],
+            attendeeData: []
         }
+
+        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     // Method for get all Attendees data 
     componentWillMount() {
         let componentRef = this;
-        DBUtil.addChangeListener("Attendee", function (objectList) {
-            let attendeeItems = [];
-            let attendeeId;
-            let array = []
-            objectList.forEach(function (doc) {
-                attendeeId = doc.id;
-                if (doc.data().isDelete != true) {
-                    attendeeItems.push({
-                        id: doc.id,
-                        name: doc.data().firstName + ' ' + doc.data().lastName,
-                        email: doc.data().email,
-                        contactNo: doc.data().contactNo,
-                        timestamp: doc.data().timestamp,
-                        registrationType: doc.data().registrationType,
-                        attendeeLabel: doc.data().attendeeLabel,
-                        attendeeCount: doc.data().attendeeCount,
-                        briefInfo: doc.data().briefInfo
-                    });
-                }
-            });
-
-            componentRef.setState({ attendee: attendeeItems });
+        
+        DBUtil.getDocRef("UserProfiles")
+        .get().then((snapshot) => {
+            let profileList = [];
+            snapshot.forEach(function (doc) {
+                profileList.push({                    
+                    label: doc.data().profileName,
+                    value: doc.data().profileName
+                });
+            });   
+            componentRef.setState({profileDropDown : profileList});
         });
     }
 
@@ -133,12 +131,62 @@ class AttendeeList extends Component {
         //alert("We got Selected Row Keys");
     }
 
+    handleSelectChange(value) {
+        let attendeeList = [], attendeeData = [];
+        this.setState({
+            value           
+        });
+        if(value != null){
+            // Query for get attendance data by session Id
+            DBUtil.getDocRef("Attendee")
+            .get().then((snapshot) => {
+                snapshot.forEach(function (doc) {
+                    let attendeeObj = doc.data();
+                    if((attendeeObj.profileServices instanceof Array  
+                        && attendeeObj.profileServices.includes(value)) || (attendeeObj.profileServices[0] == value)){
+                        attendeeData.push({                    
+                            id: doc.id,
+                            name: attendeeObj.firstName + ' ' + attendeeObj.lastName,
+                            email: attendeeObj.email,
+                            contactNo: attendeeObj.contactNo,
+                            timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MM-YYYY') : '',
+                            attendeeLabel: attendeeObj.attendeeLabel,
+                            attendeeCount: attendeeObj.attendeeCount,
+                            attendeeCode: attendeeObj.attendeeLabel != undefined && attendeeObj.attendeeCount != undefined ? attendeeObj.attendeeLabel + "-" + attendeeObj.attendeeCount : '',
+                            briefInfo: attendeeObj.briefInfo,
+                            profileServices: value 
+                        });
+                    }
+                });   
+               
+                this.setState({attendeeData : attendeeData});
+            });
+        }
+        else {
+            // Set default value for current state
+            this.setState({attendeeData : attendeeData});
+        }
+    }
 
     render() {
+
+        const { value } = this.state; 
+        const profileOptions = this.state.profileDropDown;
+
         // Define constant for sorting
         const options = {
-            defaultSortName: 'name',
-            defaultSortOrder: 'asc'
+            defaultSortName: 'attendeeCode',
+            defaultSortOrder: 'asc',
+            sizePerPageList: [{
+                text: '250', value: 250
+              },{
+                text: '500', value: 500
+              },{
+                text: '1000', value: 1000
+              }, {
+                text: 'All', value: this.state.attendeeData.length
+              } ], // you can change the dropdown list for size per page
+              sizePerPage: 250,  // which size per page you want to locate as default
         };
         // Define constant for checkbox      
         const selectRowProp = {
@@ -147,26 +195,56 @@ class AttendeeList extends Component {
 
         return (
             <div>
-                <Link to={`${this.props.match.url}/registration`}>
-                    <Button type="button" color="primary">
-                        <i className="fa fa-plus"></i>
-                        Add Attendee
-                    </Button>
-                </Link> &nbsp;&nbsp;
-                <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
-                    <i className="fa fa-print"></i>
-                    Print QR Code For All
-                </Button>
-                <BootstrapTable ref='table' data={this.state.attendee} pagination={true} search={true}
-                    selectRow={selectRowProp} options={options}>
-                    <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
-                    <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField='email' headerAlign='left' width='250'>Email</TableHeaderColumn>
-                    <TableHeaderColumn dataField='contactNo' headerAlign='left' width='150'>Contact No</TableHeaderColumn>
-                    <TableHeaderColumn dataField='registrationType' headerAlign='left' width='200'>Registration Type</TableHeaderColumn>
-                    <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left'>Edit</TableHeaderColumn>
-                    <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left'>Print</TableHeaderColumn>
-                </BootstrapTable>
+                <div className="animated fadeIn">
+                    <Row>
+                        <Col xs="12" lg="12">
+                            <Card>
+                                <CardHeader>
+                                    <FormGroup row className="marginBottomZero">
+                                            <Col xs="12" md="9">
+                                                <h1 className="regHeading paddingTop8">Attendee List</h1>
+                                            </Col>
+                                            <Col xs="12" md="3">
+                                                <Select
+                                                    placeholder="Select Profile"
+                                                    simpleValue
+                                                    value={value}
+                                                    options={profileOptions}
+                                                    onChange={this.handleSelectChange}
+                                                    />
+                                            </Col>
+                                    </FormGroup>
+                                </CardHeader>
+                                <CardBody>
+                                    <div>
+                                        <Link to={`${this.props.match.url}/registration`}>
+                                            <Button type="button" color="primary">
+                                                <i className="fa fa-plus"></i>
+                                                Add Attendee
+                                            </Button>
+                                        </Link> &nbsp;&nbsp;
+                                        <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
+                                            <i className="fa fa-print"></i>
+                                            Print QR Code For All
+                                        </Button>
+                                        <BootstrapTable ref='table' data={this.state.attendeeData} pagination={true} search={true}
+                                            selectRow={selectRowProp} options={options} >
+                                            <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='attendeeCode' headerAlign='left' width='100' dataSort>Code</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='email' headerAlign='left' width='200'>Email</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='contactNo' headerAlign='left' width='100'>Contact No</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='profileServices' headerAlign='left' width='140'>Profile</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='timestamp' headerAlign='left' width='100'>Date</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='100'>Delete</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='100'>Print</TableHeaderColumn>
+                                        </BootstrapTable>
+                                    </div>
+                                </CardBody> 
+                            </Card>
+                        </Col>   
+                    </Row>
+                </div>
             </div>
         )
     }
