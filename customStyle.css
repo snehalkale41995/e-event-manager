@@ -1,5 +1,5 @@
 body{
-    background: #fff!important;
+    background: #F6F8F9!important;
     font-family: Roboto!important;
 }
 .sidebar .nav-link, .sidebar .navbar .dropdown-toggle, .navbar .sidebar .dropdown-toggle {    
@@ -188,3 +188,81 @@ input[type="radio"], input[type="checkbox"] {
 .rollNameError {
     margin-top: 35px;
 }
+
+.tilte-session {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 40px;
+    text-align: center;
+    color: #E7060E;        
+}
+
+.tie-logo{
+    float:left;
+    margin-top: -10px !important;
+    width: 116px !important;
+}
+.eternus-logo{
+    float:right;
+}
+
+.title-header {
+    width: 100%;
+}
+
+.like {
+
+    position: absolute;
+    top: 28%;
+    right: 2%;
+    font-size: 16pt;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    text-align: center;
+
+}
+
+.username {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 35px;
+    color: #E7060E;
+    margin-right: 30px;
+}
+
+.question {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 45px;
+    font-size: 40px;
+    margin-bottom: 15px;
+    width: 96%;
+}
+
+.question-box { 
+    position: relative;
+    padding: 20px;
+    margin: 10px 0px;
+    background-color: white;
+    width: 100%;
+    height: auto;
+    border-left: 10px #E7060E solid;
+}
+
+.time {
+    font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+font-size: 20px;
+text-align: center;
+
+color: #4F4F4F;
+}
+

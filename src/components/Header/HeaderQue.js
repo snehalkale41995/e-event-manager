@@ -31,12 +31,14 @@ class HeaderQue extends Component {
 
   render() {
     return (
-      <header className="app-header navbar">
+      <header className="app-header navbar title-header">
         <NavbarBrand href="#">
-            <img src="../../img/eternus.png" className="logoImg" />
-            
+            <img src="../../img/tie-pune-logo.jpg" className="logoImg tie-logo" />
         </NavbarBrand>
-        <span style ={{ margin: 'auto',fontSize: '15pt', fontWeight: 'bold',color: '#E7060E'}}>{this.props.heading}</span>
+        <span className='tilte-session'>{this.props.heading}</span>
+        <NavbarBrand href="#">
+            <img src="../../img/eternus.png" className="logoImg eternus-logo" />
+        </NavbarBrand>
       </header>
     );
   }
