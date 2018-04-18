@@ -33,10 +33,12 @@ class Attendance extends React.Component {
         .get().then((snapshot) => {
            let events  = [], eventList = [], eventsID = [];
            snapshot.forEach(function (doc) {
-                eventList.push({                    
-                    label: doc.data().eventName,
-                    value: doc.id
-                });
+               if(doc.data().eventName != "Tea Break"){
+                    eventList.push({                    
+                        label: doc.data().eventName,
+                        value: doc.id
+                    });
+                }
             });   
             componentRef.setState({eventDropDown : eventList});
         });
@@ -84,33 +86,10 @@ class Attendance extends React.Component {
             // Query for get attendee by using attendance user Id
             var docRef =  DBUtil.getDocRef("Attendee").doc(attendanceList[i].data.userId);
             docRef.get().then(function(doc) {
-                attendee = doc.data();
-                let serviceString = '', serviceArray = '';
-                if(attendee.profileServices != undefined){
-                    if (attendee.profileServices.length > 0) {
-                        for(var t = 0; t< attendee.profileServices.length; t++){
-                            serviceString = serviceString + attendee.profileServices[t]+", ";
-                        }
-                    }
-                }
-
-                if(serviceString != ''){
-                    serviceArray = serviceString.slice(0, serviceString.length - 2); 
-                    profileString = serviceArray;
-                }
-                else{
-                    profileString = '';
-                }
-
-                var fullName = '';
-                if(attendee.fullName != undefined) {
-                    fullName = attendee.fullName;
-                }
-                // Push data to attendanceData
                 attendanceData.push({
                     id: doc.id,
-                    fullName: fullName,
-                    profiles: profileString
+                    fullName: doc.data().fullName != undefined ? doc.data().fullName : '',
+                    profiles: doc.data().profileServices[0]
                 });
                 componentRef.setState({attendanceData : attendanceData});
             });
@@ -124,7 +103,17 @@ class Attendance extends React.Component {
         // Define constant for sorting
         const sortingOptions = {
             defaultSortName: 'fullName',
-            defaultSortOrder: 'asc'
+            defaultSortOrder: 'asc',
+            sizePerPageList: [{
+                text: '250', value: 250
+              },{
+                text: '500', value: 500
+              },{
+                text: '1000', value: 1000
+              }, {
+                text: 'All', value: this.state.attendanceData.length
+              } ], // you can change the dropdown list for size per page
+              sizePerPage: 250,  // which size per page you want to locate as default
         };
 
         return (
