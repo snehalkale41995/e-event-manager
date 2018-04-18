@@ -89,7 +89,7 @@ class SessionQuestions extends Component {
 
         let thisRef = this;
         let sessionId = session;
-        let questionSet = [];
+        //let questionSet = [];
         if (filter == "" || filter == undefined) {
             filter = 'timestamp'
         }
@@ -99,9 +99,8 @@ class SessionQuestions extends Component {
             .orderBy(filterParam, 'desc')
             .onSnapshot((snapshot) => {
                 if (snapshot.size > 0) {
-                   
+                    let questionSet = [];
                     snapshot.forEach(question => {
-                        console.log( question.data())
                         questionSet.push({
                             Question: question.data().Question,
                             askedBy: question.data().askedBy.fullName,
