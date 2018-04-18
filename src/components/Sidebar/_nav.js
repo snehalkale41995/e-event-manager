@@ -42,7 +42,7 @@ export default {
     },  
     {
       name: 'Session Registration',
-      url: '/SessionRegistration',
+      url: '/sessionRegistration',
       icon: 'icon-note'
     },      
     {
