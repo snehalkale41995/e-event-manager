@@ -46,7 +46,9 @@ class Registration extends Component {
       attendeeCountId: '',
       delCount: '',
       totalCount: '',
-      updateflag: false
+      updateflag: false,
+      attendeePassword: '',
+      displayPasswordFlag: false
     };
     this.changeFunction = this.changeFunction.bind(this);
     this.submitFunction = this.submitFunction.bind(this);
@@ -185,6 +187,20 @@ class Registration extends Component {
       this.state.invalidContact = false;
       this.setState({ contactError: " " });
     }
+
+    let len = user.profileServices.length;
+    let lastEle;
+    let profilesArray;
+    if (len) {
+      lastEle = user.profileServices[len - 1]
+      profilesArray = lastEle.split(',');
+    }
+
+    if (!user.profileServices.length || profilesArray == "") {
+      this.state.invalidProfile = true;
+    }
+
+
   }
 
   submitFunction(event) {
@@ -279,7 +295,7 @@ class Registration extends Component {
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let randomstring = 'ES' + Math.floor(1000 + Math.random() * 9000);
-
+      this.setState({ attendeePassword: randomstring });
       if (user.profileServices.length > 0) {
         let length = user.profileServices.length;
         let serviceString = user.profileServices[length - 1]
@@ -333,9 +349,7 @@ class Registration extends Component {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
           this.resetField();
-          setTimeout(() => {
-            this.props.history.push('/attendee');
-          }, 1000);
+          this.setState({ displayPasswordFlag: true });
         }
         ).catch(function (error) {
           toast.error("Registration failed", {
@@ -405,6 +419,7 @@ class Registration extends Component {
       invalidContact: false,
       invalidEmail: false,
       submitted: false
+
     });
     this.handleSelectChange(null);
   }
@@ -414,6 +429,7 @@ class Registration extends Component {
     if (value != null) {
       this.state.user.profileServices.push(value);
     }
+    this.state.invalidProfile = false;
     this.setState({ value });
   }
 
@@ -434,9 +450,14 @@ class Registration extends Component {
   }
 
   render() {
-    const { user, submitted, value } = this.state;
+    const { user, submitted, value, displayPasswordFlag } = this.state;
+
     const options = this.state.profileDropDown;
     this.headerText = '';
+    let password = '';
+    if (this.state.displayPasswordFlag) {
+      password = "password" + ":" + this.state.attendeePassword
+    }
     if (this.state.updateflag) {
       this.headerText = "Attendee";
       this.buttons = <Button type="submit" size="md" color="success" onClick={this.updateFunction} ><i className="icon-note"></i> Update</Button>
@@ -525,7 +546,7 @@ class Registration extends Component {
                         options={options}
                       />
                     </FormGroup>
-                    {submitted && this.state.invalidProfile && <div className="help-block" style={{ color: "red" }}>*Please select Speakers</div>}
+                    {submitted && this.state.invalidProfile && <div className="help-block" style={{ color: "red", marginTop: -13 }}>*Please select Speakers</div>}
                   </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -574,6 +595,9 @@ class Registration extends Component {
                 </FormGroup>
               </CardBody>
             </Card>
+          </Col>
+          <Col md="4">
+            {password}
           </Col>
         </Row>
       </div>
