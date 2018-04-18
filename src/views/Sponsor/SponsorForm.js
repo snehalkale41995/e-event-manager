@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
-         Card, CardBody, Button, Label, FormGroup} from 'reactstrap';
+import {
+    Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
+    Card, CardBody, Button, Label, FormGroup
+} from 'reactstrap';
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import Select from 'react-select';
 import * as firebase from 'firebase';
@@ -118,29 +120,35 @@ class SponsorForm extends Component {
     getOrderNumber(category) {
         let orderNumber = 0;
         switch (category) {
-            case 'Gold':
+            case 'Gold Sponsor':
                 orderNumber = 1;
                 break;
-            case 'Associate':
+            case 'Associate Sponsor':
                 orderNumber = 2;
                 break;
-            case 'Award':
+            case 'Award Sponsor':
                 orderNumber = 3;
                 break;
-            case 'Lanyard and Badge':
+            case 'Lanyard & Badge Sponsor':
                 orderNumber = 4;
                 break;
-            case 'Technoloogy Partner':
+            case 'Strategic Communication Partner':
                 orderNumber = 5;
                 break;
-            case 'Strategic Communication Partner':
+            case 'Technoloogy Partner':
                 orderNumber = 6;
                 break;
             case 'Ecosystem Partner':
                 orderNumber = 7;
                 break;
-            case 'Other':
+            case 'Radio Partner':
                 orderNumber = 8;
+                break;
+            case 'Post Event Engagement Partner':
+                orderNumber = 9;
+                break;
+            case 'Other':
+                orderNumber = 10;
                 break;
         }
         return orderNumber;
@@ -270,13 +278,15 @@ class SponsorForm extends Component {
                                         <InputGroup className="mb-3">
                                             <Input type="select" style={{ width: 200 }} name="category" multiple={false} value={this.state.sponsor.category} id='category' placeholder="Category" onChange={(e) => this.onChangeCategoryField(e)} >
                                                 <option value='Select Category'>Select Category</option>
-                                                <option value="Gold">Gold</option>
-                                                <option value="Associate">Associate</option>
-                                                <option value="Award">Award</option>
-                                                <option value="Lanyard and Badge">Lanyard and Badge</option>
-                                                <option value="Technoloogy Partner">Technoloogy Partner</option>
+                                                <option value="Gold Sponsor">Gold Sponsor</option>
+                                                <option value="Associate Sponsor">Associate Sponsor</option>
+                                                <option value="Award Sponsor">Award Sponsor</option>
+                                                <option value="Lanyard & Badge Sponsor">Lanyard & Badge Sponsor</option>
                                                 <option value="Strategic Communication Partner">Strategic Communication Partner</option>
+                                                <option value="Technoloogy Partner">Technoloogy Partner</option>
                                                 <option value="Ecosystem Partner">Ecosystem Partner</option>
+                                                <option value="Radio Partner">Radio Partner</option>
+                                                <option value="Post Event Engagement Partner">Post Event Engagement Partner</option>
                                                 <option value="Other">Other</option>
                                             </Input>
                                         </InputGroup>
