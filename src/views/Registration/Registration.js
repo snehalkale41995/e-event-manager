@@ -310,7 +310,7 @@ class Registration extends Component {
         }
       }
 
-      fetch('https://us-central1-tie-con-management.cloudfunctions.net/registerUser', {
+      fetch('https://us-central1-tiecon-pune.cloudfunctions.net/registerUser',{
         method: 'POST',
         mode: 'no-cors',
         headers: new Headers({
