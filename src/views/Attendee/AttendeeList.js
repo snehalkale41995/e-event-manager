@@ -127,7 +127,6 @@ class AttendeeList extends Component {
 
     // Method for get selected row keys for print all QR Code
     getSelectedRowKeys() {
-        // Not implemented 
         //alert("We got Selected Row Keys");
     }
 
@@ -148,13 +147,14 @@ class AttendeeList extends Component {
                             id: doc.id,
                             name: attendeeObj.firstName + ' ' + attendeeObj.lastName,
                             email: attendeeObj.email,
+                            password:attendeeObj.password,
                             contactNo: attendeeObj.contactNo,
                             timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MM-YYYY') : '',
                             attendeeLabel: attendeeObj.attendeeLabel,
                             attendeeCount: attendeeObj.attendeeCount,
                             attendeeCode: attendeeObj.attendeeLabel != undefined && attendeeObj.attendeeCount != undefined ? attendeeObj.attendeeLabel + "-" + attendeeObj.attendeeCount : '',
                             briefInfo: attendeeObj.briefInfo,
-                            profileServices: value 
+                            profileServices: value
                         });
                     }
                 });   
@@ -231,6 +231,7 @@ class AttendeeList extends Component {
                                             selectRow={selectRowProp} options={options} >
                                             <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
                                             <TableHeaderColumn dataField='attendeeCode' headerAlign='left' width='100' dataSort>Code</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='password' headerAlign='left' width='200' dataSort>Password</TableHeaderColumn>
                                             <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
                                             <TableHeaderColumn dataField='email' headerAlign='left' width='200'>Email</TableHeaderColumn>
                                             <TableHeaderColumn dataField='contactNo' headerAlign='left' width='100'>Contact No</TableHeaderColumn>
@@ -249,5 +250,4 @@ class AttendeeList extends Component {
         )
     }
 }
-
 export default AttendeeList;
