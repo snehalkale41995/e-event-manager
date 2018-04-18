@@ -48,7 +48,8 @@ class Registration extends Component {
       totalCount: '',
       updateflag: false,
       attendeePassword: '',
-      displayPasswordFlag: false
+      displayPasswordFlag: false,
+      attendeeCode:''
     };
     this.changeFunction = this.changeFunction.bind(this);
     this.submitFunction = this.submitFunction.bind(this);
@@ -291,11 +292,12 @@ class Registration extends Component {
     let compRef = this;
     let attendeeLabel = this.state.attendeeLabel;
     let attendeeCountId = this.state.attendeeCountId;
-
+    let attendeeCode = attendeeLabel+"-"+attendeeCount;
     if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let randomstring = 'ES' + Math.floor(1000 + Math.random() * 9000);
-      this.setState({ attendeePassword: randomstring });
+      this.setState({ attendeePassword: randomstring ,
+                      attendeeCode:attendeeCode});
       if (user.profileServices.length > 0) {
         let length = user.profileServices.length;
         let serviceString = user.profileServices[length - 1]
@@ -455,8 +457,10 @@ class Registration extends Component {
     const options = this.state.profileDropDown;
     this.headerText = '';
     let password = '';
+    let attendeeCode ='';
     if (this.state.displayPasswordFlag) {
-      password = "password" + ":" + this.state.attendeePassword
+      password = "password" + ":" + " "+this.state.attendeePassword;
+      attendeeCode="attendeeCode"+":"+ " "+this.state.attendeeCode;
     }
     if (this.state.updateflag) {
       this.headerText = "Attendee";
@@ -598,6 +602,8 @@ class Registration extends Component {
           </Col>
           <Col md="4">
             {password}
+            <br/>
+            {attendeeCode}
           </Col>
         </Row>
       </div>
