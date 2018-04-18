@@ -33,7 +33,7 @@ class Attendance extends React.Component {
         .get().then((snapshot) => {
            let events  = [], eventList = [], eventsID = [];
            snapshot.forEach(function (doc) {
-               if(doc.data().eventName != "Tea Break"){
+               if(doc.data().sessionType != "break"){
                     eventList.push({                    
                         label: doc.data().eventName,
                         value: doc.id
