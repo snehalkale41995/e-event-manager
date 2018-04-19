@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, CardBody, CardHeader, 
+import {
+    Row, Col, Card, CardBody, CardHeader,
     CardFooter, FormGroup, Button
-  } from 'reactstrap';
+} from 'reactstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import moment from "moment";
@@ -27,18 +28,18 @@ class AttendeeList extends Component {
     // Method for get all Attendees data 
     componentWillMount() {
         let componentRef = this;
-        
+
         DBUtil.getDocRef("UserProfiles")
-        .get().then((snapshot) => {
-            let profileList = [];
-            snapshot.forEach(function (doc) {
-                profileList.push({                    
-                    label: doc.data().profileName,
-                    value: doc.data().profileName
+            .get().then((snapshot) => {
+                let profileList = [];
+                snapshot.forEach(function (doc) {
+                    profileList.push({
+                        label: doc.data().profileName,
+                        value: doc.data().profileName
+                    });
                 });
-            });   
-            componentRef.setState({profileDropDown : profileList});
-        });
+                componentRef.setState({ profileDropDown: profileList });
+            });
     }
 
     // Method for print ID card
@@ -65,18 +66,19 @@ class AttendeeList extends Component {
         setTimeout(() => newWindow.document.title = '' + attendeeCode + '', 0);
         newWindow.document.writeln("<html>");
         newWindow.document.writeln("<body>");
-        newWindow.document.write("<div style='width:394px;height:490px;text-align:center;margin-left:0;margin-top:0;'>")
+        newWindow.document.write("<div style='width:4in;height:5in;text-align:center;margin-left:0;margin-top:0;'>")
         newWindow.document.write("<div style='height:100%;'>")
         //layer1
         newWindow.document.write("<div style='height:29%;'> </div>")
         //layer2
-        newWindow.document.write("<div style='padding: 0 30px;'><h1 style='font-size: 1.8rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.name + "</h1>")
-        newWindow.document.write("<p style='margin-top:-16px;font-size: 1.2rem;font-family:'Avenir-Book';'>" + CompanyName + "</p>")
+        newWindow.document.write("<div style='padding: 0 30px;max-height:150px;height:150px;margin-left:-15px;'><h1 style='font-size: 2.2rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.name + "</h1>")
+        newWindow.document.write("<p style='margin-top:-16px;font-size: 1.5rem;font-family:'Avenir-Book';'>" + CompanyName + "</p>")
+        //newWindow.document.write("<p style='margin-top:-16px;font-size: 1.5rem;font-family:'Avenir-Book';'>MarketAxis Consulting</p>")
         newWindow.document.write("</div>")
         //layer2a
-        newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:45px;'>")
-        newWindow.document.write("<img style='width:60px;height:60px;margin-left:-4px;margin-bottom:-4px;' src='" + this.state.Qrurl + "'/>")
-        newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:13px;font-family:'Arial';margin-top:-4px;padding: 0 0px;padding-right:0px;margin-left:4px;'>" + attendeeCode + "</div> <br/>")
+        newWindow.document.write("<div style='text-align: left;padding: 30px 30px;padding-bottom:0;margin-top:-20px;position:fixed;'>")
+        newWindow.document.write("<img style='width:90px;height:90px;margin-left:-14px;margin-bottom:-4px;' src='" + this.state.Qrurl + "'/>")
+        newWindow.document.write("<div style='text-align:left;font-weight:bold;font-size:13px;font-family:'Arial';margin-top:-4px;padding: 0 0px;padding-right:0px;padding-left:50px;'>" + attendeeCode + "</div> <br/>")
         newWindow.document.write("</div>")
         //layer3
         newWindow.document.write("<div style='border-left:1px solid #666;border-right:1px solid #666;'>")
@@ -114,16 +116,16 @@ class AttendeeList extends Component {
     onEditAttendee(cell, row) {
         let componentRef = this;
         return <Link to={`${componentRef.props.match.url}/registration/${row.id}`}>
-                  <i className="fa fa-pencil"></i>
-               </Link>
+            <i className="fa fa-pencil"></i>
+        </Link>
     }
 
     // Method for print individual QR code
     onPrintAttendeeQRCode(cell, row) {
         let componentRef = this;
-        return <Link to={this}  onClick={() => componentRef.onGenerateQRcode(row)}>
-                  <i class="fa fa-print"></i>
-               </Link>
+        return <Link to={this} onClick={() => componentRef.onGenerateQRcode(row)}>
+            <i class="fa fa-print"></i>
+        </Link>
     }
 
     // Method for get selected row keys for print all QR Code
@@ -134,44 +136,44 @@ class AttendeeList extends Component {
     handleSelectChange(value) {
         let attendeeList = [], attendeeData = [];
         this.setState({
-            value           
+            value
         });
-        if(value != null){
+        if (value != null) {
             // Query for get attendance data by session Id
             DBUtil.getDocRef("Attendee")
-            .get().then((snapshot) => {
-                snapshot.forEach(function (doc) {
-                    let attendeeObj = doc.data();
-                    if((attendeeObj.profileServices instanceof Array  
-                        && attendeeObj.profileServices.includes(value)) || (attendeeObj.profileServices[0] == value)){
-                        attendeeData.push({                    
-                            id: doc.id,
-                            name: attendeeObj.firstName + ' ' + attendeeObj.lastName,
-                            email: attendeeObj.email,
-                            password:attendeeObj.password,
-                            contactNo: attendeeObj.contactNo,
-                            timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MMM HH:SS') : '',
-                            attendeeLabel: attendeeObj.attendeeLabel,
-                            attendeeCount: attendeeObj.attendeeCount,
-                            attendeeCode: attendeeObj.attendeeLabel != undefined && attendeeObj.attendeeCount != undefined ? attendeeObj.attendeeLabel + "-" + attendeeObj.attendeeCount : '',
-                            briefInfo: attendeeObj.briefInfo,
-                            profileServices: value
-                        });
-                    }
-                });   
-               
-                this.setState({attendeeData : attendeeData});
-            });
+                .get().then((snapshot) => {
+                    snapshot.forEach(function (doc) {
+                        let attendeeObj = doc.data();
+                        if ((attendeeObj.profileServices instanceof Array
+                            && attendeeObj.profileServices.includes(value)) || (attendeeObj.profileServices[0] == value)) {
+                            attendeeData.push({
+                                id: doc.id,
+                                name: attendeeObj.firstName + ' ' + attendeeObj.lastName,
+                                email: attendeeObj.email,
+                                password: attendeeObj.password,
+                                contactNo: attendeeObj.contactNo,
+                                timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MMM HH:SS') : '',
+                                attendeeLabel: attendeeObj.attendeeLabel,
+                                attendeeCount: attendeeObj.attendeeCount,
+                                attendeeCode: attendeeObj.attendeeLabel != undefined && attendeeObj.attendeeCount != undefined ? attendeeObj.attendeeLabel + "-" + attendeeObj.attendeeCount : '',
+                                briefInfo: attendeeObj.briefInfo,
+                                profileServices: value
+                            });
+                        }
+                    });
+
+                    this.setState({ attendeeData: attendeeData });
+                });
         }
         else {
             // Set default value for current state
-            this.setState({attendeeData : attendeeData});
+            this.setState({ attendeeData: attendeeData });
         }
     }
 
     render() {
 
-        const { value } = this.state; 
+        const { value } = this.state;
         const profileOptions = this.state.profileDropDown;
 
         // Define constant for sorting
@@ -180,14 +182,14 @@ class AttendeeList extends Component {
             defaultSortOrder: 'asc',
             sizePerPageList: [{
                 text: '250', value: 250
-              },{
+            }, {
                 text: '500', value: 500
-              },{
+            }, {
                 text: '1000', value: 1000
-              }, {
+            }, {
                 text: 'All', value: this.state.attendeeData.length
-              } ], // you can change the dropdown list for size per page
-              sizePerPage: 250,  // which size per page you want to locate as default
+            }], // you can change the dropdown list for size per page
+            sizePerPage: 250,  // which size per page you want to locate as default
         };
         // Define constant for checkbox      
         const selectRowProp = {
@@ -202,18 +204,18 @@ class AttendeeList extends Component {
                             <Card>
                                 <CardHeader>
                                     <FormGroup row className="marginBottomZero">
-                                            <Col xs="12" md="9">
-                                                <h1 className="regHeading paddingTop8">Attendee List</h1>
-                                            </Col>
-                                            <Col xs="12" md="3">
-                                                <Select
-                                                    placeholder="Select Profile"
-                                                    simpleValue
-                                                    value={value}
-                                                    options={profileOptions}
-                                                    onChange={this.handleSelectChange}
-                                                    />
-                                            </Col>
+                                        <Col xs="12" md="9">
+                                            <h1 className="regHeading paddingTop8">Attendee List</h1>
+                                        </Col>
+                                        <Col xs="12" md="3">
+                                            <Select
+                                                placeholder="Select Profile"
+                                                simpleValue
+                                                value={value}
+                                                options={profileOptions}
+                                                onChange={this.handleSelectChange}
+                                            />
+                                        </Col>
                                     </FormGroup>
                                 </CardHeader>
                                 <CardBody>
@@ -235,15 +237,13 @@ class AttendeeList extends Component {
                                             <TableHeaderColumn dataField='password' headerAlign='left' width='120' dataSort>Password</TableHeaderColumn>
                                             <TableHeaderColumn dataField='name' headerAlign='left' width='160' dataSort>Name</TableHeaderColumn>
                                             <TableHeaderColumn dataField='email' headerAlign='left' width='160'>Email</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='profileServices' headerAlign='left' width='80'>Profile</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='timestamp' headerAlign='left' width='80'>Date</TableHeaderColumn>
                                             <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
                                             <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
                                         </BootstrapTable>
                                     </div>
-                                </CardBody> 
+                                </CardBody>
                             </Card>
-                        </Col>   
+                        </Col>
                     </Row>
                 </div>
             </div>
