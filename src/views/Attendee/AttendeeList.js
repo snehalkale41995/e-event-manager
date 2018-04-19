@@ -114,15 +114,16 @@ class AttendeeList extends Component {
     onEditAttendee(cell, row) {
         let componentRef = this;
         return <Link to={`${componentRef.props.match.url}/registration/${row.id}`}>
-            <Button type="button" color="primary"><i className="fa fa-pencil"></i> Edit</Button>
-        </Link>
+                  <i className="fa fa-pencil"></i>
+               </Link>
     }
 
     // Method for print individual QR code
     onPrintAttendeeQRCode(cell, row) {
         let componentRef = this;
-        return <Button type="button" onClick={() => componentRef.onGenerateQRcode(row)} color="success">
-            <i className="icon-note"></i>Print</Button>
+        return <Link to={this}  onClick={() => componentRef.onGenerateQRcode(row)}>
+                  <i class="fa fa-print"></i>
+               </Link>
     }
 
     // Method for get selected row keys for print all QR Code
@@ -149,7 +150,7 @@ class AttendeeList extends Component {
                             email: attendeeObj.email,
                             password:attendeeObj.password,
                             contactNo: attendeeObj.contactNo,
-                            timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MM-YYYY') : '',
+                            timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MMM HH:SS') : '',
                             attendeeLabel: attendeeObj.attendeeLabel,
                             attendeeCount: attendeeObj.attendeeCount,
                             attendeeCode: attendeeObj.attendeeLabel != undefined && attendeeObj.attendeeCount != undefined ? attendeeObj.attendeeLabel + "-" + attendeeObj.attendeeCount : '',
@@ -231,14 +232,13 @@ class AttendeeList extends Component {
                                             selectRow={selectRowProp} options={options} >
                                             <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
                                             <TableHeaderColumn dataField='attendeeCode' headerAlign='left' width='100' dataSort>Code</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='password' headerAlign='left' width='200' dataSort>Password</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='name' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='email' headerAlign='left' width='200'>Email</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='contactNo' headerAlign='left' width='100'>Contact No</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='profileServices' headerAlign='left' width='140'>Profile</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='timestamp' headerAlign='left' width='100'>Date</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='100'>Delete</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='100'>Print</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='password' headerAlign='left' width='120' dataSort>Password</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='name' headerAlign='left' width='160' dataSort>Name</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='email' headerAlign='left' width='160'>Email</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='profileServices' headerAlign='left' width='80'>Profile</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='timestamp' headerAlign='left' width='80'>Date</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
+                                            <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
                                         </BootstrapTable>
                                     </div>
                                 </CardBody> 
