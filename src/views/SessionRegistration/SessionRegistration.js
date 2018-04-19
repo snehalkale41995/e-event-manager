@@ -3,6 +3,8 @@ import { Row, Col, Card, CardBody, CardHeader,
     CardFooter, FormGroup,Button
   } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -15,13 +17,30 @@ class SessionRegistration extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            response: []
+            response: [],
+            eventDropDown: []
         }
+        this.handleSelectChange = this.handleSelectChange.bind(this);
         this.getRegistrationResponseData = this.getRegistrationResponseData.bind(this);
         this.deleteRegistrationData = this.deleteRegistrationData.bind(this);
     }
     
     componentWillMount() {
+        let componentRef = this;
+        DBUtil.getDocRef("Sessions")
+        .get().then((snapshot) => {
+            let events  = [], eventList = [], eventsID = [];
+            snapshot.forEach(function (doc) {
+                if(doc.data().sessionType != "break"){
+                    eventList.push({                    
+                        label: doc.data().eventName,
+                        value: doc.id
+                    });
+                }
+            });   
+            componentRef.setState({eventDropDown : eventList});
+        });
+
        this.getRegistrationResponseData();
     }
 
@@ -35,11 +54,40 @@ class SessionRegistration extends Component{
                 registrationList.push({                    
                     id: doc.id,
                     fullName: Object.keys(doc.data().attendee).length != 0 ?  doc.data().attendee.firstName + ' ' + doc.data().attendee.lastName : '',
-                    sessionName: doc.data().session != undefined ? doc.data().session.eventName : ''
+                    sessionName: doc.data().session != undefined ? doc.data().session.eventName : '',
+                    email: Object.keys(doc.data().attendee).length != 0 ? doc.data().attendee.email : ''
                 });
             });  
             componentRef.setState({response : registrationList});
         });
+    }
+
+
+    handleSelectChange(value) {
+        let registrationList = []; 
+        this.setState({
+            value           
+        });
+        if(value != null){
+            // Query for get attendance data by session Id
+            DBUtil.getDocRef("RegistrationResponse")
+            .where("sessionId", "==", value)
+            .get().then((snapshot) => {
+                snapshot.forEach(function (doc) {
+                    registrationList.push({                    
+                        id: doc.id,
+                        fullName: Object.keys(doc.data().attendee).length != 0 ?  doc.data().attendee.firstName + ' ' + doc.data().attendee.lastName : '',
+                        sessionName: doc.data().session != undefined ? doc.data().session.eventName : '',
+                        email: Object.keys(doc.data().attendee).length != 0 ? doc.data().attendee.email : ''
+                    });
+                });   
+                this.setState({response : registrationList});
+            });
+        }
+        else {
+            // Set default value for current state
+            this.getRegistrationResponseData();
+        }
     }
 
     // Method for delete records
@@ -62,6 +110,9 @@ class SessionRegistration extends Component{
     }
 
     render(){
+        const { value } = this.state; 
+        const eventOptions = this.state.eventDropDown;
+
         // Define constant for sorting
         const options = {
             sizePerPageList: [{
@@ -87,15 +138,25 @@ class SessionRegistration extends Component{
                                         <Col xs="12" md="9">
                                             <h1 className="regHeading paddingTop8">Session Registration List</h1>
                                         </Col>
+                                        <Col xs="12" md="3">
+                                                <Select
+                                                    placeholder="Select Session"
+                                                    simpleValue
+                                                    value={value}
+                                                    options={eventOptions}
+                                                    onChange={this.handleSelectChange}
+                                                    />
+                                            </Col>
                                 </FormGroup>
                             </CardHeader>
                             <CardBody>
                                 <div>
-                                     <BootstrapTable ref='table' data={this.state.response} pagination={true} search={true} options={options}>
+                                     <BootstrapTable ref='table' data={this.state.response} pagination={true} search={true} options={options}  exportCSV={ true }>
                                          <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
-                                         <TableHeaderColumn dataField='fullName' headerAlign='left' width='160'>Name</TableHeaderColumn>
-                                         <TableHeaderColumn dataField='sessionName' headerAlign='left' width='300'>Session Name</TableHeaderColumn>
-                                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteRegistration.bind(this)} headerAlign='left' width='100'>Action</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='fullName' headerAlign='left' width='160' csvHeader='Name'>Name</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='email' headerAlign='left' width='160' csvHeader='Email'>Email</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='sessionName' headerAlign='left' width='300' csvHeader='Session Name'>Session Name</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteRegistration.bind(this)} headerAlign='left' width='100' export={false}>Action</TableHeaderColumn>
                                      </BootstrapTable>
                                      <ToastContainer autoClose={2000} />
                                 </div>  
