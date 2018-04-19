@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Row, Col, Card, CardBody, CardHeader, 
     CardFooter, FormGroup,Button
   } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -55,8 +56,9 @@ class SessionRegistration extends Component{
     // Method for declare delete button
     ondeleteRegistration(cell, row) {
         let componentRef = this;
-        return <Button type="button" onClick={() => componentRef.deleteRegistrationData(row)} color="danger">
-            <i className="fa fa-trash"></i> Delete</Button>
+        return  <Link to={this}  onClick={() => componentRef.deleteRegistrationData(row)}>
+                    <i className="fa fa-trash"></i>
+                </Link>        
     }
 
     render(){
@@ -91,9 +93,9 @@ class SessionRegistration extends Component{
                                 <div>
                                      <BootstrapTable ref='table' data={this.state.response} pagination={true} search={true} options={options}>
                                          <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
-                                         <TableHeaderColumn dataField='fullName' headerAlign='left' width='200'>Name</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='fullName' headerAlign='left' width='160'>Name</TableHeaderColumn>
                                          <TableHeaderColumn dataField='sessionName' headerAlign='left' width='300'>Session Name</TableHeaderColumn>
-                                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteRegistration.bind(this)} headerAlign='left' width='100'>Delete</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteRegistration.bind(this)} headerAlign='left' width='100'>Action</TableHeaderColumn>
                                      </BootstrapTable>
                                      <ToastContainer autoClose={2000} />
                                 </div>  
