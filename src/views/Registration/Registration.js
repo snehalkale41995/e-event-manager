@@ -240,7 +240,7 @@ class Registration extends Component {
     compRef.setState({ attendeeLabel: attendeeLabel });
     compRef.onHandleValidations(user);
 
-    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
+    if (user.firstName && user.lastName && !this.state.invalidEmail &&!this.state.invalidProfile) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       if (user.profileServices.length > 0) {
         let length = user.profileServices.length;
@@ -293,7 +293,7 @@ class Registration extends Component {
     let attendeeLabel = this.state.attendeeLabel;
     let attendeeCountId = this.state.attendeeCountId;
     let attendeeCode = attendeeLabel+"-"+attendeeCount;
-    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidContact) {
+    if (user.firstName && user.lastName && !this.state.invalidEmail && !this.state.invalidProfile) {
       let tblAttendance = "Attendance", tblAttendee = "Attendee";
       let randomstring = 'ES' + Math.floor(1000 + Math.random() * 9000);
       this.setState({ attendeePassword: randomstring ,
@@ -418,7 +418,6 @@ class Registration extends Component {
         profileImageURL: '',
         linkedInURL: ''
       },
-      invalidContact: false,
       invalidEmail: false,
       submitted: false
 
@@ -517,15 +516,12 @@ class Registration extends Component {
                       }
                     </InputGroup>
                   </Col>
-                  <Col md="6" className={(submitted && this.state.invalidContact ? ' has-error' : '')}  >
+                  <Col md="6">
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText><i className="icon-phone"></i></InputGroupText>
                       </InputGroupAddon>
                       <Input type="text" placeholder="Contact" maxLength={10} name="contactNo" onKeyPress={(e) => this.setInputToNumeric(e)} value={this.state.user.contactNo} onChange={this.changeFunction} required />
-                      {submitted && this.state.invalidContact &&
-                        <div style={{ color: "red" }} className="help-block">{this.state.contactError} </div>
-                      }
                     </InputGroup>
                   </Col>
                 </FormGroup>
@@ -550,7 +546,7 @@ class Registration extends Component {
                         options={options}
                       />
                     </FormGroup>
-                    {submitted && this.state.invalidProfile && <div className="help-block" style={{ color: "red", marginTop: -13 }}>*Please select Speakers</div>}
+                    {submitted && this.state.invalidProfile && <div className="help-block" style={{ color: "red", marginTop: -13 }}>*Please select profile</div>}
                   </Col>
                 </FormGroup>
                 <FormGroup row>
