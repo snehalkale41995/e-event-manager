@@ -77,6 +77,7 @@ class SessionRegistration extends Component{
                 snapshot.forEach(function (doc) {
                     registrationList.push({                    
                         id: doc.id,
+                        sessionId: doc.data().sessionId,
                         fullName: Object.keys(doc.data().attendee).length != 0 ?  doc.data().attendee.firstName + ' ' + doc.data().attendee.lastName : '',
                         sessionName: doc.data().session != undefined ? doc.data().session.eventName : '',
                         email: Object.keys(doc.data().attendee).length != 0 ? doc.data().attendee.email : ''
@@ -95,7 +96,7 @@ class SessionRegistration extends Component{
     deleteRegistrationData(row){
         let compRef = this;
         DBUtil.getDocRef("RegistrationResponse").doc(row.id).delete().then(function (response) {
-            compRef.getRegistrationResponseData();
+            compRef.handleSelectChange(row.sessionId);
             toast.success("Deleted successfully.", {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
@@ -159,6 +160,7 @@ class SessionRegistration extends Component{
                                          <TableHeaderColumn dataField='email' headerAlign='left' width='160' csvHeader='Email'>Email</TableHeaderColumn>
                                          <TableHeaderColumn dataField='sessionName' headerAlign='left' width='300' csvHeader='Session Name'>Session Name</TableHeaderColumn>
                                          <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteRegistration.bind(this)} headerAlign='left' width='100' export={false}>Action</TableHeaderColumn>
+                                         <TableHeaderColumn dataField='sessionId' headerAlign='left' export={false} hidden></TableHeaderColumn>
                                      </BootstrapTable>
                                      <ToastContainer autoClose={2000} />
                                 </div>  
