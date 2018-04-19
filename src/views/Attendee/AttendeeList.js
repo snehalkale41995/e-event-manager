@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Row, Col, Card, CardBody, CardHeader,
-    CardFooter, FormGroup, Button
+    CardFooter, FormGroup, Button, Label
 } from 'reactstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -19,7 +19,8 @@ class AttendeeList extends Component {
         super(props);
         this.state = {
             profileDropDown: [],
-            attendeeData: []
+            attendeeData: [],
+            attendeeCount: 0
         }
 
         this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -124,7 +125,7 @@ class AttendeeList extends Component {
     onPrintAttendeeQRCode(cell, row) {
         let componentRef = this;
         return <Link to={this} onClick={() => componentRef.onGenerateQRcode(row)}>
-            <i class="fa fa-print"></i>
+            <i className="fa fa-print"></i>
         </Link>
     }
 
@@ -150,7 +151,7 @@ class AttendeeList extends Component {
                                 id: doc.id,
                                 name: attendeeObj.firstName + ' ' + attendeeObj.lastName,
                                 email: attendeeObj.email,
-                                password: attendeeObj.password,
+                                password: attendeeObj.password != undefined ? attendeeObj.password : '',
                                 contactNo: attendeeObj.contactNo,
                                 timestamp: attendeeObj.timestamp != undefined ? moment(attendeeObj.timestamp).format('DD-MMM HH:SS') : '',
                                 attendeeLabel: attendeeObj.attendeeLabel,
@@ -162,12 +163,12 @@ class AttendeeList extends Component {
                         }
                     });
 
-                    this.setState({ attendeeData: attendeeData });
+                    this.setState({ attendeeData: attendeeData, attendeeCount: attendeeData.length});
                 });
         }
         else {
             // Set default value for current state
-            this.setState({ attendeeData: attendeeData });
+            this.setState({ attendeeData: attendeeData, attendeeCount: 0 });
         }
     }
 
@@ -229,16 +230,18 @@ class AttendeeList extends Component {
                                         <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
                                             <i className="fa fa-print"></i>
                                             Print QR Code For All
-                                        </Button>
+                                        </Button> &nbsp;&nbsp;
+                                        <Label>Count : </Label> {this.state.attendeeCount}
+                                        <br/><br/>
                                         <BootstrapTable ref='table' data={this.state.attendeeData} pagination={true} search={true}
-                                            selectRow={selectRowProp} options={options} >
+                                            selectRow={selectRowProp} options={options} exportCSV={ true } >
                                             <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='attendeeCode' headerAlign='left' width='100' dataSort>Code</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='password' headerAlign='left' width='120' dataSort>Password</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='name' headerAlign='left' width='160' dataSort>Name</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='email' headerAlign='left' width='160'>Email</TableHeaderColumn>
-                                            <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
-                                            <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='30'></TableHeaderColumn>
+                                            <TableHeaderColumn dataField='attendeeCode' headerAlign='left' width='100' dataSort csvHeader='Code'>Code</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='password' headerAlign='left' width='120' dataSort csvHeader='Password'>Password</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='name' headerAlign='left' width='160' dataSort csvHeader='Name'>Name</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='email' headerAlign='left' width='160' csvHeader='Email'>Email</TableHeaderColumn>
+                                            <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
+                                            <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
                                         </BootstrapTable>
                                     </div>
                                 </CardBody>
