@@ -71,7 +71,7 @@ class AttendeeList extends Component {
         //layer1
         newWindow.document.write("<div style='height:29%;'> </div>")
         //layer2
-        newWindow.document.write("<div style='padding: 0 30px;max-height:150px;height:150px;margin-left:-15px;'><h1 style='font-size: 2.2rem;font-family:'Arial';padding: 10px 0 0 0;margin: 0;margin-bottom:-10px;'>" + user.name + "</h1>")
+        newWindow.document.write("<div style='margin-top:30px;padding: 0 30px;max-height:150px;height:150px;margin-left:-15px;'><h1 style='font-size: 2.2rem;font-family:'Arial';padding: 10px 0 0 0;margin-top:40px;margin-bottom:-10px;'>" + user.name + "</h1>")
         newWindow.document.write("<p style='margin-top:-16px;font-size: 1.5rem;font-family:'Avenir-Book';'>" + CompanyName + "</p>")
         //newWindow.document.write("<p style='margin-top:-16px;font-size: 1.5rem;font-family:'Avenir-Book';'>MarketAxis Consulting</p>")
         newWindow.document.write("</div>")
