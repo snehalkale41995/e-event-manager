@@ -311,7 +311,7 @@ class Registration extends Component {
           this.state.user.roleName = serviceArray[0];
         }
       }
-
+      let atendeeCountString = attendeeCount.toString()
       fetch('https://us-central1-tiecon-pune.cloudfunctions.net/registerUser',{
         method: 'POST',
         mode: 'no-cors',
@@ -336,7 +336,7 @@ class Registration extends Component {
             registrationType: 'On Spot Registration',
             briefInfo: user.briefInfo,
             info: user.info,
-            attendeeCount: attendeeCount,
+            attendeeCount: atendeeCountString,
             attendeeLabel: attendeeLabel,
             attendanceId: '',
             sessionId: '',
