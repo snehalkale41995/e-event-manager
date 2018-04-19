@@ -5,7 +5,7 @@ var serviceAccount = require('./tie-app.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://tie-con-management.firebaseio.com'
+    databaseURL: 'https://tiecon-pune.firebaseio.com'
 });
 
 const mailTransport = nodemailer.createTransport({
@@ -33,9 +33,7 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     if (!req.displayName) {
         return response.status(400).send('Invalid display name');
     }
-    if (!req.contactNo) {
-        return response.status(400).send('Invalid contactNo');
-    }
+   
     if (!req.firstName) {
         return response.status(400).send('Invalid firstName');
     }
@@ -49,9 +47,7 @@ exports.registerUser = functions.https.onRequest((request, response) => {
     if (!req.roleName) {
         return response.status(400).send('Invalid roleName');
     }
-    if (!req.address) {
-        return response.status(400).send('Invalid address');
-    }
+   
     return admin.auth().createUser({
         email: req.userEmail,
         emailVerified: false,
