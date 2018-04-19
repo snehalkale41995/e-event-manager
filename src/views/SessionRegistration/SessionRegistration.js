@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Row, Col, Card, CardBody, CardHeader, 
-    CardFooter, FormGroup,Button
+    CardFooter, FormGroup,Button, Label
   } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
@@ -18,7 +18,8 @@ class SessionRegistration extends Component{
         super(props);
         this.state = {
             response: [],
-            eventDropDown: []
+            eventDropDown: [],
+            attendeeCount: ''
         }
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.getRegistrationResponseData = this.getRegistrationResponseData.bind(this);
@@ -57,8 +58,8 @@ class SessionRegistration extends Component{
                     sessionName: doc.data().session != undefined ? doc.data().session.eventName : '',
                     email: Object.keys(doc.data().attendee).length != 0 ? doc.data().attendee.email : ''
                 });
-            });  
-            componentRef.setState({response : registrationList});
+            });              
+            componentRef.setState({response : registrationList, attendeeCount: registrationList.length});
         });
     }
 
@@ -80,8 +81,8 @@ class SessionRegistration extends Component{
                         sessionName: doc.data().session != undefined ? doc.data().session.eventName : '',
                         email: Object.keys(doc.data().attendee).length != 0 ? doc.data().attendee.email : ''
                     });
-                });   
-                this.setState({response : registrationList});
+                });  
+                this.setState({response : registrationList, attendeeCount: registrationList.length});
             });
         }
         else {
@@ -150,6 +151,7 @@ class SessionRegistration extends Component{
                                 </FormGroup>
                             </CardHeader>
                             <CardBody>
+                                <div><Label>Count : </Label> {this.state.attendeeCount} </div>
                                 <div>
                                      <BootstrapTable ref='table' data={this.state.response} pagination={true} search={true} options={options}  exportCSV={ true }>
                                          <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
