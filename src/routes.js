@@ -14,6 +14,7 @@ const routes = {
   '/attendee' : 'Attendee',
   '/attendeeReport' : 'Attendee Report',
   '/sessionReport' : 'Session Report',
+  '/sessionsReport' : 'Sessions',
   '/aboutUs' : 'About Us',
   '/sponsor' : 'Sponsor',
   '/login' : 'Login',

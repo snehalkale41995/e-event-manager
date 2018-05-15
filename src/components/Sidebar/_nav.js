@@ -64,6 +64,11 @@ export default {
       icon: 'icon-pie-chart',
     },
     {
+      name: 'Live Sessions Report',
+      url: '/sessionsReport',
+      icon: 'icon-pie-chart',
+    },
+    {
       title: true,
       name: 'Users',
       wrapper: {

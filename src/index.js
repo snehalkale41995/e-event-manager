@@ -32,6 +32,7 @@ ReactDOM.render((
       <Route path="/aboutUs" name="Home" component={Full} />
       <Route path='/attendeeReport' name='Home' component={Full} />
       <Route path='/sessionReport' name='Home' component={Full} />
+      <Route path='/sessionsReport' name='Home' component={Full} />
       <Route path="/user" name="Home" component={Full} />
       <Route path="/role" name="Home" component={Full} />
       <Route path='/initialQuestions' name='Home' component={Full} />

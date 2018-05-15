@@ -19,6 +19,7 @@ import RegistrationList from '../../views/RegistrationList/registrationList';
 import Attendee from '../../views/Attendee/Attendee';
 import AttendeeReport from '../../views/Reports/Attendee Report/AttendeeReport';
 import SessionReport from '../../views/Reports/Sessions Report/SessionReport';
+import SessionsReport from '../../views/Reports/Sessions/sessions';
 import AboutUs from '../../views/AboutUs/AboutUs';
 import Sponsor from '../../views/Sponsor/Sponsor';
 import Logout from '../../views/Pages/logOut/';
@@ -78,6 +79,7 @@ class Full extends Component {
                     <Route path='/attendee' name='Attendee' component={Attendee} />
                     <Route path='/attendeeReport' name='Attendee Report' component={AttendeeReport} />
                     <Route path='/sessionReport' name='Session Report' component={SessionReport} />
+                    <Route path='/sessionsReport' name='Session Report' component={SessionsReport} />
                     <Route path='/aboutUs' name='AboutUs' component={AboutUs} />
                     <Route path='/sponsor' name='Sponsor' component={Sponsor} />
                     <Route path='/logOut' name='logOut' component={Logout} />

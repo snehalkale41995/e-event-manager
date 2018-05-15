@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "tiecon-portal",
+  "private_key_id": "360bccfa3b40401948f85723bbd8bb9a148b8c16",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCdet9Si7hOXZX5\nLXlZ8fQeKY+SCy6igXgH8MDB/qk3UO9Z1EhPfc4j05BoUUtfTpoBrp3d0WSbF9Jy\nwA139pe/a9KvphHcBKGsRhtqsF3dRPS1OF+R/rIVC/Aeqbjv7zG0u8caTDdxEWcN\nvWv+cNP+pr9HQ1lWuTtpiFdi76+rJjxAX5ER4cAXg8XpIFDoVl4we6kp6dS885sY\ntqrVcQF6R/lpcVgMqEnrl27X/ZZAYYOUcahoBzh+RRrpo1KkxPrtfQH2DNgqIUO/\noeFkrpR9BeCiZNRzD2yK5U6JzqH2RBtpWNNtoec9gNfQrI7xr9rMvNf76iSRESmt\nq4Y3acSBAgMBAAECggEAC9asmrE/u/5rk5WgUYtvoWPY8+7sxNEsU5Z8+yh4kpy+\nPZfIjtdDi6xwJvNzkdjgGX/FxOLkqAcgrjkzWgEa88w4hLVckthzSfbkQT88czGn\nnsb74kcOHqhs1vVF3p2x9CcIpvizU0fuYhlLGM/lE/f3mbUdrngS2BJklV60604A\nc2CQQ7jwkaOF+aAos+WfLMJu3CWCe0mzuBgj76aG4DW7fL564WSZwRu9O/F+hovl\nZjwPweo2l4fJasw4lnJISJTfTt4h6xjOC6492/7nIOr8SNvPmqNqkLq0+pOHhoN9\nQysWQ6RCvIPUnV81a40UfU5WevOKryExQ+tQ9xGvZQKBgQDd0YaupXtc0nHMf/iM\nTjhr3WJrEhk0leoiMRh7MNOxiVqAlspzDxzhPvXh1ux6oW5HPiOwY6Y9dzdcr83A\nQ9CGLl1TPTHKo3Ax2KqMI4Zaly0ja08O8tkCz+f1VToLYn+vxZLQg6ZCfhxOjpwQ\nrPnw4oqwv3h/qufXtEiQq8RWHQKBgQC1v0T7gX+jh14yCm+gVIYmroTPICyrEypP\nuRtfQ2xFweWnkC6mVO5tJSfNAsuwdjQgBkKkRRJ0LO0+eY66hef13UQjmK6IflPK\nx/F/kIpPPLueCJZ36ZAZuoIB9fQnEPDshXmUdWF0dhkRmAR5mrgsA/OhB/zn/C+3\nhs7MN17KtQKBgDnznb5PGZW8nWKSJHtzjCYSJr5WciNc71iTfxPgQ85kVjK2Mpow\n3piyfEbOgeXf+xG92FEjF7GDTgF3JMgQb5A+2L8Ag9uvK4a6VoRaW6WbTX2tcXA0\nXiHv82gTJiEHUNi5Q4waePtyOy8C7x8kMgCPDzDyNScVnZCrVzIEzjy5AoGAUqIN\nFiDRzKMOc8gE6qujdtDgN2AUjw+erDKoPE7mWm0HIoFOhHeXE+7Rwsdjnu6PUoQm\nJpP1CPcoQsB34Vxik4mvolOX/x0Ysdjodyxbhh1B3F9hMlHyH5CJ7aRLBrwQHimt\nlo8r6QyM50/rsPJkjDabvXppRXyGoXXcbkM6iQUCgYBAaYWAYG5IR/jebj6r4JVB\ncYa/BRoY/WWikUvapqPuuqasWLYStMAML+N88VtdYSL3vxLIT92GPlybD7rLVuTl\nf5OMOeKSS/4jttS+ff6DqmnL41FYxtiboiKkkRVvORuHnk6FjLrD/BN+CkxSswvV\nUMu9x9FcpObvCp17lEve2g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-q2iaj@tiecon-portal.iam.gserviceaccount.com",
+  "client_id": "107268347050050546182",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-q2iaj%40tiecon-portal.iam.gserviceaccount.com"
+}

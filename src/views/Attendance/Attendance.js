@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Row, Col, Card, CardBody, CardHeader, 
-         CardFooter, FormGroup
+         CardFooter, FormGroup, Label
        } from 'reactstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -18,7 +18,8 @@ class Attendance extends React.Component {
             attendanceList: [],
             eventDropDown: [],
             attendee: [],
-            attendanceData: []
+            attendanceData: [],
+            attendeeCount: 0
         }
 
         this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -68,13 +69,13 @@ class Attendance extends React.Component {
                 }
                 else{
                     // Set default value for current state
-                    this.setState({attendanceData : attendanceData});
+                    this.setState({attendanceData : attendanceData, attendeeCount : attendanceList.length});
                 }
             });
         }
         else {
             // Set default value for current state
-            this.setState({attendanceData : attendanceData});
+            this.setState({attendanceData : attendanceData, attendeeCount : 0});
         }
     }
 
@@ -91,7 +92,7 @@ class Attendance extends React.Component {
                     fullName: doc.data().fullName != undefined ? doc.data().fullName : '',
                     profiles: doc.data().profileServices[0]
                 });
-                componentRef.setState({attendanceData : attendanceData});
+                componentRef.setState({attendanceData : attendanceData, attendeeCount : attendanceData.length});
             });
         }
     }
@@ -139,10 +140,11 @@ class Attendance extends React.Component {
                                     </FormGroup>
                                 </CardHeader>
                                  <CardBody>
-                                    <BootstrapTable ref='table' data={this.state.attendanceData} pagination={true} options={sortingOptions}>
+                                    <div><Label>Count : </Label> {this.state.attendeeCount} </div>
+                                    <BootstrapTable ref='table' data={this.state.attendanceData} pagination={true} options={sortingOptions} exportCSV={ true }>
                                         <TableHeaderColumn dataField='id' headerAlign='left' isKey hidden>ID</TableHeaderColumn>
-                                        <TableHeaderColumn dataField='fullName' headerAlign='left' width='200' dataSort>Name</TableHeaderColumn>
-                                        <TableHeaderColumn dataField='profiles' headerAlign='left' width='250'>Profile Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField='fullName' headerAlign='left' width='200' dataSort csvHeader='Name'>Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField='profiles' headerAlign='left' width='250' csvHeader='Profile Name'>Profile Name</TableHeaderColumn>
                                     </BootstrapTable>
                                 </CardBody> 
                             </Card>

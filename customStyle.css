@@ -266,3 +266,11 @@ text-align: center;
 color: #4F4F4F;
 }
 
+.refresh {
+    font-size: 15pt;
+    font-weight: bold;
+    margin-top: 3px;
+    cursor: pointer;
+    color:#E7060E;
+}
+
