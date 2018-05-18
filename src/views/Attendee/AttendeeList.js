@@ -117,7 +117,7 @@ class AttendeeList extends Component {
         let Label = user.attendeeLabel
         let Count = user.attendeeCount;
         let AttendeeCode = Label + "-" + Count;
-        QRCode.toDataURL("TIE" + ":" + AttendeeCode + ":" + userName)
+        QRCode.toDataURL("TIE" + ":" + AttendeeCode + ":" + id + ":" + userName)
             .then(url => {
                 generatedQR = url;
                 compRef.setState({ Qrurl: url })
