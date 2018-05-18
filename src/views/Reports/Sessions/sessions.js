@@ -46,45 +46,44 @@ class SessionReport extends React.Component {
                 value: sessions[key]['id']
             });
         }
+     
+         this.setState({ eventDropDown: eventList });
 
+        // DBUtil.getDocRef("Attendee")
+        //     .get().then((snapshot) => {
+        //         snapshot.forEach(function (doc) {
+        //             let data = doc.data();
+        //             attendee.push({
+        //                 fullName: data.fullName,
+        //                 userRole: data.roleName,
+        //                 userId: doc.id,
+        //             });
+        //         });
 
-        DBUtil.getDocRef("Attendee")
-            .get().then((snapshot) => {
-                snapshot.forEach(function (doc) {
-                    let data = doc.data();
-                    attendee.push({
-                        fullName: data.fullName,
-                        userRole: data.roleName,
-                        userId: doc.id,
-                    });
-                });
+        //         DBUtil.getDocRef("Attendance")
+        //             .onSnapshot((snapshot) => {
+        //                 snapshot.forEach(function (doc) {
+        //                     let data = doc.data();
+        //                     if (!data.userName || data.userName.trim() == "") {
+        //                         let user = _.filter(attendee, { userId: data.userId })[0];
+        //                         data.userName = user ? user.fullName : data.userName;
+        //                         data.userRole = user ? user.userRole : data.userRole;
+        //                     }
+        //                     attendance.push({
+        //                         fullName: data.userName,
+        //                         profiles: data.userRole,
+        //                         userId: data.userId,
+        //                         session: data.sessionId,
+        //                         entry: data.timestamp,
+        //                     });
+        //                 });
 
-                DBUtil.getDocRef("Attendance")
-                    .onSnapshot((snapshot) => {
-                        snapshot.forEach(function (doc) {
-                            let data = doc.data();
-                            if (!data.userName || data.userName.trim() == "") {
-                                let user = _.filter(attendee, { userId: data.userId })[0];
-                                data.userName = user ? user.fullName : data.userName;
-                                data.userRole = user ? user.userRole : data.userRole;
-                            }
-                            attendance.push({
-                                fullName: data.userName,
-                                profiles: data.userRole,
-                                userId: data.userId,
-                                session: data.sessionId,
-                                entry: data.timestamp,
-                            });
-                        });
-
-                        attendance = _.orderBy(attendance, ['userId', 'entry'], ['asc', 'desc']);
-                        attendance = _.uniqBy(attendance, 'userId');
-                        componentRef.setState({ eventDropDown: eventList, attendance });
-                        this.refresh();
-                    })
-            });
-
-
+        //                 attendance = _.orderBy(attendance, ['userId', 'entry'], ['asc', 'desc']);
+        //                 attendance = _.uniqBy(attendance, 'userId');
+        //                 componentRef.setState({ eventDropDown: eventList, attendance });
+        //                 this.refresh();
+        //             })
+        //     });
     }
     refresh() {
         this.handleSelectChange(this.state.value);

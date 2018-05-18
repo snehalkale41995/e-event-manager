@@ -34,48 +34,61 @@ class SessionReport extends React.Component {
     // Method for get attendance data
     componentWillMount() {
         let componentRef = this;
-        let events = [], eventList = [], eventsID = [],attendee=[];
-        DBUtil.getDocRef("Sessions")
-            .get().then((snapshot) => {
-                snapshot.forEach(function (doc) {
-                    eventList.push({
-                        label: doc.data().eventName,
-                        value: doc.id
-                    });
-                });
+        let events = [], eventList = [], eventsID = [], attendee = [];
+        // DBUtil.getDocRef("Sessions")
+        //     .get().then((snapshot) => {
+        //         snapshot.forEach(function (doc) {
+        //             eventList.push({
+        //                 label: doc.data().eventName,
+        //                 value: doc.id
+        //             });
+        //         });
 
+        //     });
+        let sessionList = localStorage.getItem('sessionList');
+        var sessions = JSON.parse(sessionList);
+
+        for (var key in sessions) {
+            eventList.push({
+                label: sessions[key]['sessionInfo']['eventName'],
+                value: sessions[key]['id']
             });
-            DBUtil.getDocRef("Attendee")
-            .get().then((snapshot) => {
-                snapshot.forEach(function (doc) {
-                    let data = doc.data();
-                    if (!data.userName || data.userName.trim()=="") {
-                        let user = _.filter(attendee, { userId: data.userId })[0];
-                        data.userName = user?user.fullName:data.userName;
-                        data.userRole = user?user.userRole:data.userRole;
-                    }
-                    attendee.push({
-                        fullName: data.fullName,
-                        userRole: data.roleName,
-                        userId: doc.id,
-                    });
-                });
-        const docRef = firestoredb.collection('Attendance')
-        docRef
-            .where("userName", "==", "")
-            .get()
-            .then(querySnapshot => {
-                // add data from the 5 most recent comments to the array
-                querySnapshot.forEach(doc => {
-                    firestoredb.collection('Attendee').doc(doc.data().userId)
-                        .get()
-                        .then(item => {
-                            docRef.doc(doc.id).update({ userName: item.data().fullName, userRole: item.data().roleName })
-                        }).catch(err => console.log(err));
-                });
-            }).catch(err => console.log(err))
-             componentRef.setState({eventDropDown : eventList});
-        });
+        }
+         this.setState({ eventDropDown: eventList });
+         
+        // DBUtil.getDocRef("Attendee")
+        //     .get().then((snapshot) => {
+        //         snapshot.forEach(function (doc) {
+        //             let data = doc.data();
+        //             console.log("data", data);
+        //             if (!data.userName || data.userName.trim() == "") {
+                        
+        //                 let user = _.filter(attendee, { userId: data.userId })[0];
+        //                 data.userName = user ? user.fullName : data.userName;
+        //                 data.userRole = user ? user.userRole : data.userRole;
+        //             }
+        //             attendee.push({
+        //                 fullName: data.fullName,
+        //                 userRole: data.roleName,
+        //                 userId: doc.id,
+        //             });
+        //         });
+        //         const docRef = firestoredb.collection('Attendance')
+        //         docRef
+        //             .where("userName", "==", "")
+        //             .get()
+        //             .then(querySnapshot => {
+        //                 // add data from the 5 most recent comments to the array
+        //                 querySnapshot.forEach(doc => {
+        //                     firestoredb.collection('Attendee').doc(doc.data().userId)
+        //                         .get()
+        //                         .then(item => {
+        //                             docRef.doc(doc.id).update({ userName: item.data().fullName, userRole: item.data().roleName })
+        //                         }).catch(err => console.log(err));
+        //                 });
+        //             }).catch(err => console.log(err))
+        //         componentRef.setState({ eventDropDown: eventList });
+        //     });
     }
     refresh() {
         this.handleSelectChange(this.state.value);
@@ -112,7 +125,7 @@ class SessionReport extends React.Component {
                 .where("sessionId", "==", value)
                 .get().then((snapshot) => {
                     snapshot.forEach(function (doc) {
-                        var data =  doc.data();
+                        var data = doc.data();
                         attendanceData.push({
                             id: doc.id,
                             fullName: data.userName,
@@ -121,9 +134,11 @@ class SessionReport extends React.Component {
                         });
                         roles.add(data.userRole);
                     });
-                        // Set default value for current state
-                        this.setState({ attendanceData:Object.assign([],_.uniqBy(attendanceData,'userId')), roles,value,
-                            tableVisible: false });
+                    // Set default value for current state
+                    this.setState({
+                        attendanceData: Object.assign([], _.uniqBy(attendanceData, 'userId')), roles, value,
+                        tableVisible: false
+                    });
                 });
             this.renderCounts();
         }
